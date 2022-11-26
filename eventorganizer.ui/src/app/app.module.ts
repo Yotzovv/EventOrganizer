@@ -4,14 +4,15 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
-import { LoginFormComponent } from './login-form.component';
+import { LoginFormComponent } from './login-form/login-form.component';
 
 import { MaterialModule } from './material.module';
+import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
-  imports:      [ BrowserModule, ReactiveFormsModule, MaterialModule, BrowserAnimationsModule],
+  imports:      [ AppRoutingModule, BrowserModule, ReactiveFormsModule, MaterialModule, BrowserAnimationsModule],
   declarations: [ AppComponent, LoginFormComponent ],
-  bootstrap:    [ AppComponent ]
+  bootstrap:    [ AppComponent ],
 })
 export class AppModule { 
 }
