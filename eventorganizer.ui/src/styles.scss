@@ -15,3 +15,12 @@ $my-theme: mat.define-light-theme((
 ));
 
 @include mat.all-component-themes($my-theme);
+
+body {
+  margin: 0;
+  background: #ebebeb;
+}
+
+.mat-toolbar.mat-primary {
+  background: #282c42
+}

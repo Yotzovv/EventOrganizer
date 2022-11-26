@@ -8,10 +8,12 @@ import { LoginFormComponent } from './login-form/login-form.component';
 
 import { MaterialModule } from './material.module';
 import { AppRoutingModule } from './app-routing.module';
+import { MainLayoutModule } from './main-layout/main-layout.module';
+import { HomePageComponent } from './home-page/home-page.component';
 
 @NgModule({
-  imports:      [ AppRoutingModule, BrowserModule, ReactiveFormsModule, MaterialModule, BrowserAnimationsModule],
-  declarations: [ AppComponent, LoginFormComponent ],
+  imports:      [ MainLayoutModule, AppRoutingModule, BrowserModule, ReactiveFormsModule, MaterialModule, BrowserAnimationsModule],
+  declarations: [ AppComponent, LoginFormComponent, HomePageComponent ],
   bootstrap:    [ AppComponent ],
 })
 export class AppModule { 
