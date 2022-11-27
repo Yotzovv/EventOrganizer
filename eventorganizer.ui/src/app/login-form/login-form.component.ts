@@ -1,4 +1,4 @@
-import { Input, Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 
 @Component({
@@ -7,14 +7,14 @@ import { FormGroup, FormControl } from '@angular/forms';
   styleUrls: ['./login-form.component.css'],
 })
 export class LoginFormComponent {
-  form: FormGroup = new FormGroup({
+  loginForm: FormGroup = new FormGroup({
     username: new FormControl(''),
     password: new FormControl(''),
   });
 
   submit() {
-    if (this.form.valid) {
-      this.submitEM.emit(this.form.value);
+    if (this.loginForm.valid) {
+      this.submitEM.emit(this.loginForm.value);
     }
   }
 
