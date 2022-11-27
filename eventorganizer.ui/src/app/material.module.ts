@@ -1,3 +1,4 @@
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { NgModule } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
@@ -8,6 +9,7 @@ import {MatIconModule} from '@angular/material/icon'
 import { MatToolbarModule } from '@angular/material/toolbar'
 import { MatMenuModule} from '@angular/material/menu';
 import {MatListModule} from '@angular/material/list';
+import { MatDialogModule } from '@angular/material/dialog';
 
 const modules = [
   CommonModule,
@@ -15,6 +17,8 @@ const modules = [
   MatInputModule,
   MatButtonModule,
   FormsModule,
+  MatDialogModule,
+  MatFormFieldModule,
   ReactiveFormsModule,
   MatToolbarModule,
   MatIconModule,

@@ -1,8 +1,5 @@
 <mat-toolbar color="primary">
-    <!-- <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
-    <mat-icon>menu</mat-icon>
-    </button> -->
-    <!-- <span>Event organizer</span> -->
+
     <a routerLink=""
         class="text-nodecoration">
          <span>
@@ -12,10 +9,14 @@
 
     <span class="example-spacer"></span>
 
-    <!-- <mat-nav-list> -->
+    <span class="example-spacer"></span>
+    <span class="example-spacer"></span>
+    <span class="example-spacer"></span>
+    <span class="example-spacer"></span>
 
-    <!-- </mat-nav-list> -->
 
+    <button mat-raised-button color="primary" (click)="openCreateEventDialog('0ms', '0ms')">Create Event</button>
+    <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon"></button>
     <button mat-icon-button
             class="example-icon"
             [matMenuTriggerFor]="profileMenu"
@@ -37,9 +38,6 @@
             <span>Logout</span>
         </button>
     </mat-menu>
-
-
-
 
 </mat-toolbar>
 <ng-content #main></ng-content>

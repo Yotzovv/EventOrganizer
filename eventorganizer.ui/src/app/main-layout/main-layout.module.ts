@@ -2,6 +2,7 @@ import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { MaterialModule } from "../material.module";
+import { DialogAnimationsExampleDialog } from "./create-event-dialog/create-event-dialog.component";
 import { MainLayoutComponent } from "./main-layout.component";
 import { MainRoutingModule } from "./main-layout.routing.module";
 
@@ -14,10 +15,11 @@ import { MainRoutingModule } from "./main-layout.routing.module";
     ],
     exports: [
         MainRoutingModule,
-        MainLayoutComponent
+        MainLayoutComponent,
     ],
     declarations: [
-        MainLayoutComponent
+        MainLayoutComponent,
+        DialogAnimationsExampleDialog
     ],
 })
 export class MainLayoutModule {
