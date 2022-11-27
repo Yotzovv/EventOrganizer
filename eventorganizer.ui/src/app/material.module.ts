@@ -18,12 +18,12 @@ const modules = [
   MatButtonModule,
   FormsModule,
   MatDialogModule,
-  MatFormFieldModule,
   ReactiveFormsModule,
   MatToolbarModule,
   MatIconModule,
   MatMenuModule,
-  MatListModule
+  MatListModule,
+  MatFormFieldModule
 ];
 
 @NgModule({
