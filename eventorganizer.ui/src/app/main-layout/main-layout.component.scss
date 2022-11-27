@@ -1,0 +1,12 @@
+mat-toolbar {
+    display: flex;
+    justify-content: space-between;
+}
+
+.text-nodecoration {
+    text-decoration: none;
+    &:visited {
+        text-decoration: none;
+        color: white;
+    }
+}

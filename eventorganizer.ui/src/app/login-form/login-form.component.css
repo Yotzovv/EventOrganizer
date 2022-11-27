@@ -27,7 +27,3 @@ display: flex;
 justify-content: flex-end;
 }
 
-mat-card-title span.card-title {
-    font-size: 1.4em;
-    margin: 15px;
-}

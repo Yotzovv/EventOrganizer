@@ -24,3 +24,12 @@ body {
 .mat-toolbar.mat-primary {
   background: #282c42
 }
+
+* {
+  box-sizing: border-box;
+}
+
+mat-card-title span.card-title {
+  font-size: 1.4em;
+  margin: 15px;
+}

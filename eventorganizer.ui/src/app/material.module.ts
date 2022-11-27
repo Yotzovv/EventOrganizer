@@ -6,6 +6,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import {MatIconModule} from '@angular/material/icon'
 import { MatToolbarModule } from '@angular/material/toolbar'
+import { MatMenuModule} from '@angular/material/menu';
+import {MatListModule} from '@angular/material/list';
 
 const modules = [
   CommonModule,
@@ -15,7 +17,9 @@ const modules = [
   FormsModule,
   ReactiveFormsModule,
   MatToolbarModule,
-  MatIconModule
+  MatIconModule,
+  MatMenuModule,
+  MatListModule
 ];
 
 @NgModule({

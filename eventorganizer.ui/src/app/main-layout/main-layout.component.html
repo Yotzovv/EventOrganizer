@@ -2,10 +2,44 @@
     <!-- <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
     <mat-icon>menu</mat-icon>
     </button> -->
-    <span>Event organizer</span>
+    <!-- <span>Event organizer</span> -->
+    <a routerLink=""
+        class="text-nodecoration">
+         <span>
+            Event organizer
+         </span>
+    </a>
+
     <span class="example-spacer"></span>
-    <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
-    <mat-icon>person</mat-icon>
+
+    <!-- <mat-nav-list> -->
+
+    <!-- </mat-nav-list> -->
+
+    <button mat-icon-button
+            class="example-icon"
+            [matMenuTriggerFor]="profileMenu"
+            matTooltip="test@mail.com"
+            >
+        <mat-icon>person</mat-icon>
     </button>
+
+    <mat-menu #profileMenu="matMenu"
+                [overlapTrigger]="false">
+        <button mat-menu-item
+                routerLink="/profile">
+            <mat-icon>info</mat-icon>
+            <span>Profile</span>
+        </button>
+        <button mat-menu-item
+                routerLink="/login">
+            <mat-icon>exit_to_app</mat-icon>
+            <span>Logout</span>
+        </button>
+    </mat-menu>
+
+
+
+
 </mat-toolbar>
 <ng-content #main></ng-content>

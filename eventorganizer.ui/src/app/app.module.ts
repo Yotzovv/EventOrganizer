@@ -11,11 +11,12 @@ import { MainLayoutModule } from './main-layout/main-layout.module';
 import { HomePageComponent } from './home-page/home-page.component';
 import { CommonModule } from '@angular/common';
 import { AuthService } from './register-form/auth.service';
+import { ProfilePageComponent } from './profile-page/profile-page.component';
 
 @NgModule({
   imports:      [ CommonModule, MainLayoutModule, AppRoutingModule, BrowserModule, ReactiveFormsModule, MaterialModule, BrowserAnimationsModule],
-  declarations: [ AppComponent, LoginFormComponent, RegisterComponent ],
-  bootstrap:    [ AppComponent, LoginFormComponent, HomePageComponent ],
+  declarations: [ AppComponent, LoginFormComponent, RegisterComponent, ProfilePageComponent ],
+  bootstrap:    [ AppComponent, LoginFormComponent, HomePageComponent, ProfilePageComponent ],
   providers:    [ AuthService ],
 })
 export class AppModule { 
