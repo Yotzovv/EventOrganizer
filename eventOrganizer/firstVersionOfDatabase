@@ -1,0 +1,14 @@
+CREATE DATABASE IF NOT EXISTS eventorganizer;
+
+CREATE  TABLE IF NOT EXISTS `eventorganizer`.`users` (
+  `id` INT  auto_increment ,
+  `username` VARCHAR(150) NOT NULL,
+  `password` VARCHAR(255) NOT NULL,
+  `email` VARCHAR(255) ,
+  PRIMARY KEY (`id`) )
+ENGINE = InnoDB;
+
+
+
+
+

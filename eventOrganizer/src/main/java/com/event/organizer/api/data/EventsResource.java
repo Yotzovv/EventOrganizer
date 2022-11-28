@@ -1,13 +1,12 @@
-package eventOrganizer.src.main.java.com.event.organizer.api.data;
+package com.event.organizer.api.data;
 
 import io.swagger.annotations.ApiModelProperty;
+import java.util.Arrays;
+import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Arrays;
-import java.util.List;
 
 @RestController
 @RequestMapping("/rest/events")
@@ -16,8 +15,8 @@ public class EventsResource {
     @GetMapping
     public List<Event> getEvents() {
         return Arrays.asList(
-                new Event("Sofia", 3),
-                new Event("Pazardzhik", 4)
+            new Event("Sofia", 3),
+            new Event("Pazardzhik", 4)
         );
     }
 

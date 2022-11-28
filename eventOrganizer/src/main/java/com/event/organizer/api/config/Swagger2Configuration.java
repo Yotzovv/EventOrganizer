@@ -1,4 +1,6 @@
-package eventOrganizer.src.main.java.com.event.organizer.api.config;
+package com.event.organizer.api.config;
+
+import static springfox.documentation.builders.PathSelectors.regex;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -7,8 +9,6 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import static springfox.documentation.builders.PathSelectors.regex;
-
 @EnableSwagger2
 @Configuration
 public class Swagger2Configuration {
@@ -16,9 +16,9 @@ public class Swagger2Configuration {
     @Bean
     public Docket productApi() {
         return new Docket(DocumentationType.SWAGGER_2)
-                .select()
-                .apis(RequestHandlerSelectors.basePackage("com.example.swagger"))
-                .paths(regex("/rest.*"))
-                .build();
+            .select()
+            .apis(RequestHandlerSelectors.basePackage("com.example.swagger"))
+            .paths(regex("/rest.*"))
+            .build();
     }
 }
