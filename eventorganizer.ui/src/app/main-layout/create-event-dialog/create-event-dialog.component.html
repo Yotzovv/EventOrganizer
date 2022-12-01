@@ -1,6 +1,5 @@
 <h1 mat-dialog-title>Create Event</h1>
 <div mat-dialog-content>
-  <p>What's your favorite animal?</p>
   <form [formGroup]="eventForm">
   <p>
       <mat-form-field>
@@ -8,7 +7,24 @@
           <input readonly type="text" matInput placeholder="Name" formControlName="name">
       </mat-form-field>
   </p>
-
+  <p>
+    <mat-form-field>
+        <mat-label>Description</mat-label>
+        <input readonly type="text" matInput placeholder="Description" formControlName="description">
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+        <mat-label>Date</mat-label>
+        <input readonly type="datetime" matInput placeholder="Date" formControlName="date">
+    </mat-form-field>
+  </p>
+  <p>
+    <mat-form-field>
+        <mat-label>Type</mat-label>
+        <input readonly type="text" matInput placeholder="Type" formControlName="Type">
+    </mat-form-field>
+  </p>
       
   </form>
 
