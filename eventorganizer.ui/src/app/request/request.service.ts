@@ -25,4 +25,10 @@ export class RequestService {
         });
     }
 
+    createEvent(body: EventDto) {
+        return this.http.post(`${this.API_URL}/api/v1/createEvent`, {
+            body,
+        })
+    }
+
 }

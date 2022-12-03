@@ -12,7 +12,7 @@ export class HomePageComponent {
 
   constructor(requestService: RequestService) {
     requestService.getAllEvents$().subscribe((res) => {
-      this.allEvents = res; // TODO: Remove commenting after testing with mock data
+      this.allEvents = res;
     });
   }
 }
