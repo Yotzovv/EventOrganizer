@@ -23,6 +23,9 @@ public class EventService {
         if (event.getId() != null && eventRepository.existsById(event.getId())) {
             throw new EventOrganizerException("Event already exist");
         }
+        // TODO: Now its possible to create event with nulls for everything. 
+        // Create validation for Name, localDateTime, status.
+
         return eventRepository.save(event);
     }
 

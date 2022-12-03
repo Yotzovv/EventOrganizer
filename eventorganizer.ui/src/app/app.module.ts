@@ -1,3 +1,4 @@
+import { MatCardModule } from '@angular/material/card';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -14,7 +15,7 @@ import { AuthService } from './register-form/auth.service';
 import { ProfilePageComponent } from './profile-page/profile-page.component';
 
 @NgModule({
-  imports:      [ CommonModule, MainLayoutModule, AppRoutingModule, BrowserModule, ReactiveFormsModule, MaterialModule, BrowserAnimationsModule],
+  imports:      [ MatCardModule, CommonModule, MainLayoutModule, AppRoutingModule, BrowserModule, ReactiveFormsModule, MaterialModule, BrowserAnimationsModule],
   declarations: [ AppComponent, LoginFormComponent, RegisterComponent, ProfilePageComponent ],
   bootstrap:    [ AppComponent, LoginFormComponent, HomePageComponent, ProfilePageComponent ],
   providers:    [ AuthService ],
