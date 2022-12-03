@@ -14,10 +14,10 @@ import lombok.Setter;
 @Setter
 @Valid
 public class EventRequestDto {
-
+    // TODO: Add Description
     private Long id;
     @NotNull
     private String name;
-    private LocalDateTime localDateTime;
+    private LocalDateTime localDateTime;    // TODO: Rename to Start Date, Add also End Date
     private String status;
 }

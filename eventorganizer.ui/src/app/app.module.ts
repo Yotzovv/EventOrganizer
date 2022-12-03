@@ -18,7 +18,8 @@ import { AuthModule } from './auth/auth.module';
     AppRoutingModule, BrowserModule, ReactiveFormsModule, MaterialModule, BrowserAnimationsModule,
     HttpClientModule,
   ],
-  declarations: [ AppComponent, ProfilePageComponent ],
+  declarations: [ AppComponent, ProfilePageComponent, 
+  HomePageComponent ],
   bootstrap:    [ AppComponent ],
   providers:    [ RequestService ],
 })
