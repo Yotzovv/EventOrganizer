@@ -5,6 +5,7 @@ import {
   Validators,
   FormGroupDirective,
 } from '@angular/forms';
+import { RequestService } from '../request/request.service';
 import { AuthService } from './auth.service';
 
 @Component({
@@ -15,7 +16,9 @@ import { AuthService } from './auth.service';
 export class RegisterComponent implements OnInit {
   registerForm: FormGroup | undefined;
   fieldRequired: string = 'This field is required';
-  constructor(private auth: AuthService) {}
+  constructor(
+    private request: RequestService
+    ) {}
 
   ngOnInit() {
     this.createForm();
@@ -24,12 +27,12 @@ export class RegisterComponent implements OnInit {
     let emailregex: RegExp =
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     this.registerForm = new FormGroup({
-      username: new FormControl(null, [Validators.required]),
-      email: new FormControl(null, [
+      username: new FormControl('pesho_pi4a', [Validators.required]),
+      email: new FormControl('pesho_pi4a@abv.bg', [
         Validators.required,
         Validators.pattern(emailregex),
       ]),
-      password: new FormControl(null, [
+      password: new FormControl('Qwerty123', [
         Validators.required,
         this.checkPassword,
       ]),
@@ -67,10 +70,27 @@ export class RegisterComponent implements OnInit {
     formData: FormGroup,
     formDirective: FormGroupDirective
   ): void {
+    console.log('submit')
+    console.log('submit')
+    console.log('submit')
+    console.log('submit')
+    console.log('submit')
     const email = formData.value.email;
     const password = formData.value.password;
     const username = formData.value.username;
-    this.auth.registerUSer(email, password, username);
+    console.log({
+      username,
+      email,
+      password
+    })
+    this.request.registerUser$({
+      username,
+      email,
+      password
+    }).subscribe(res => {
+      console.log(res);
+    })
+
     formDirective.resetForm();
     this.registerForm.reset();
   }

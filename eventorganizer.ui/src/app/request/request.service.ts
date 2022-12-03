@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../environment/environment';
 import { EventDto } from '../types/event.type';
+import { CreateUserDto } from '../types/user.type';
 
 @Injectable()
 export class RequestService {
@@ -16,6 +17,12 @@ export class RequestService {
 
     getAllEvents$(): Observable<any> {
         return this.http.get(`${this.API_URL}/api/v1/events`);
+    }
+
+    registerUser$(body: CreateUserDto) {
+        return this.http.post(`${this.API_URL}/api/v1/registration`, {
+            body,
+        });
     }
 
 }

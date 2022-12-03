@@ -21,7 +21,7 @@ import { HttpClientModule } from '@angular/common/http';
     HttpClientModule,
   ],
   declarations: [ AppComponent, LoginFormComponent, RegisterComponent, ProfilePageComponent ],
-  bootstrap:    [ AppComponent, LoginFormComponent, HomePageComponent, ProfilePageComponent ],
+  bootstrap:    [ AppComponent ],
   providers:    [ AuthService,RequestService ],
 })
 export class AppModule { 
