@@ -1,4 +1,3 @@
-import { MatCardModule } from '@angular/material/card';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -17,11 +16,12 @@ import { RequestService } from './request/request.service';
 import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
-  imports:      [ MatCardModule, CommonModule, MainLayoutModule,
+  imports:      [ CommonModule, MainLayoutModule,
     AppRoutingModule, BrowserModule, ReactiveFormsModule, MaterialModule, BrowserAnimationsModule,
     HttpClientModule,
   ],
-  declarations: [ AppComponent, LoginFormComponent, RegisterComponent, ProfilePageComponent ],
+  declarations: [ AppComponent, LoginFormComponent, RegisterComponent, ProfilePageComponent, 
+  HomePageComponent ],
   bootstrap:    [ AppComponent ],
   providers:    [ AuthService,RequestService ],
 })
