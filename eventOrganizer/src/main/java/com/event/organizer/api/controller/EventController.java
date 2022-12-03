@@ -61,30 +61,13 @@ public class EventController {
         return event;
     }
 
-    private List<Event> getAllEvents(List<EventRequestDto> eventRequestDtos) {
-        List<Event> allEvents = new ArrayList<>();
-        eventRequestDtos.forEach(event -> {
-            Event newEvent = new Event();
-            newEvent.setId(event.getId());
-            newEvent.setName(event.getName());
-            newEvent.setTime(event.getLocalDateTime());
-            if (Event.STATUSES.contains(event.getStatus())) {
-                newEvent.setStatus(event.getStatus());
-            } else {
-                newEvent.setStatus(Event.NONE_STATUS);
-            }
-            if (!allEvents.contains(newEvent)) {
-                allEvents.add(newEvent);
-            }
-        });
-        return allEvents;
+    @GetMapping
+    public List<Event> getAllPendingEvents() {
+        return eventService.getAllPendingEvents();
     }
 
-    private List<Event> getAllEventsFA() {
-        return findAll();
-    }
-
-    private void changeEventStatus(long EventId, String status) {
+    @GetMapping
+    public void changeEventStatus(long EventId, String status) {
         List<Event> allEvents = findAll();
         allEvents.stream().filter(event -> event.getId() == EventId).forEach(event -> {
             if (Event.STATUSES.contains(status)) {
