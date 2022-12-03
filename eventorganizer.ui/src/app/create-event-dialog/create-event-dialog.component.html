@@ -2,7 +2,7 @@
 <form [formGroup]="eventForm" (ngSubmit)="submit()">
 <div mat-dialog-content>
   <p>
-      <mat-form-field>
+      <mat-form-field style="display: flex;">
           <mat-label>Name</mat-label>
           <input type="text" matInput placeholder="Name" formControlName="name">
       </mat-form-field>
@@ -16,9 +16,11 @@
   <p>
     <mat-form-field>
         <mat-label>Date</mat-label>
-        <input type="datetime" matInput placeholder="Date" formControlName="localDateTime">
-    </mat-form-field>
-  </p>
+        <input [matDatepicker]="picker" type="datetime" matInput placeholder="Date" formControlName="localDateTime">
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </p>  
   <!-- <p>
     <mat-form-field>
         <mat-label>Type</mat-label>

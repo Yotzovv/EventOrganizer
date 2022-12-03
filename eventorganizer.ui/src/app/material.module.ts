@@ -11,9 +11,13 @@ import { MatMenuModule} from '@angular/material/menu';
 import {MatListModule} from '@angular/material/list';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 const modules = [
   CommonModule,
+  MatDatepickerModule,
+  MatNativeDateModule,
   MatCardModule,
   MatInputModule,
   MatButtonModule,
