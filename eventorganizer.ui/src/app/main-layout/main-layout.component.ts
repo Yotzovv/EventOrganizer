@@ -1,5 +1,6 @@
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Component } from "@angular/core";
+import { Router } from '@angular/router';
 import { DialogAnimationsExampleDialog } from '../create-event-dialog/create-event-dialog.component'
 
 @Component({
@@ -10,9 +11,15 @@ import { DialogAnimationsExampleDialog } from '../create-event-dialog/create-eve
 export class MainLayoutComponent {
     createEventDialog: MatDialogRef<DialogAnimationsExampleDialog>;
 
-    constructor(private dialogModel: MatDialog) { }
+    constructor(private dialogModel: MatDialog, private router: Router) { }
 
     openCreateEventDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
         this.createEventDialog = this.dialogModel.open(DialogAnimationsExampleDialog);
     }
+
+    logout() {
+        window.localStorage.removeItem('user-token');
+        this.router.navigate(['auth/login']);
+    }
+
 }

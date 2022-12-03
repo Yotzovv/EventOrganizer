@@ -37,11 +37,13 @@
             <span>Profile</span>
         </button>
         <button mat-menu-item
-                routerLink="/login">
+                (click)="logout()">
             <mat-icon>exit_to_app</mat-icon>
             <span>Logout</span>
         </button>
     </mat-menu>
 
 </mat-toolbar>
-<ng-content #main></ng-content>
+<div class="main">
+    <router-outlet></router-outlet>
+</div>

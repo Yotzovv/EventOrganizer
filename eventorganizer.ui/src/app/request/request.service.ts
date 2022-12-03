@@ -20,9 +20,10 @@ export class RequestService {
     }
 
     registerUser$(body: CreateUserDto) {
-        return this.http.post(`${this.API_URL}/api/v1/registration`, {
+        return this.http.request('POST', `${this.API_URL}/api/v1/registration`, {
             body,
-        });
+            responseType: 'text'
+        })
     }
 
     createEvent(body: EventDto) {
