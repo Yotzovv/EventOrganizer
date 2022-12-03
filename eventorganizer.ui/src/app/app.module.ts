@@ -12,12 +12,17 @@ import { HomePageComponent } from './home-page/home-page.component';
 import { CommonModule } from '@angular/common';
 import { AuthService } from './register-form/auth.service';
 import { ProfilePageComponent } from './profile-page/profile-page.component';
+import { RequestService } from './request/request.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
-  imports:      [ CommonModule, MainLayoutModule, AppRoutingModule, BrowserModule, ReactiveFormsModule, MaterialModule, BrowserAnimationsModule],
+  imports:      [ CommonModule, MainLayoutModule,
+    AppRoutingModule, BrowserModule, ReactiveFormsModule, MaterialModule, BrowserAnimationsModule,
+    HttpClientModule,
+  ],
   declarations: [ AppComponent, LoginFormComponent, RegisterComponent, ProfilePageComponent ],
   bootstrap:    [ AppComponent, LoginFormComponent, HomePageComponent, ProfilePageComponent ],
-  providers:    [ AuthService ],
+  providers:    [ AuthService,RequestService ],
 })
 export class AppModule { 
 }

@@ -6,6 +6,8 @@ import com.event.organizer.api.model.dto.EventRequestDto;
 import com.event.organizer.api.service.EventService;
 import java.util.List;
 import lombok.AllArgsConstructor;
+
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("api/v1/events")
 @AllArgsConstructor
+@CrossOrigin
 public class EventController {
 
     private final EventService eventService;

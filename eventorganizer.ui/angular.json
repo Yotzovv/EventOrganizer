@@ -58,6 +58,10 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "eventorganizer.ui:build",
+            "proxyConfig": "src/proxy.conf.json"
+        } ,
           "configurations": {
             "production": {
               "browserTarget": "eventorganizer.ui:build:production"
