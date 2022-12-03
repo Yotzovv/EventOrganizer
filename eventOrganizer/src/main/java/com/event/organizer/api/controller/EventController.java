@@ -48,7 +48,8 @@ public class EventController {
         return "deleted";
     }
 
-    private Event getEvent(EventRequestDto eventRequestDto) {
+    @GetMapping
+    public Event getEvent(EventRequestDto eventRequestDto) {
         Event event = new Event();
         event.setId(eventRequestDto.getId());
         event.setName(eventRequestDto.getName());
