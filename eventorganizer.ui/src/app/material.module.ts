@@ -10,6 +10,7 @@ import { MatToolbarModule } from '@angular/material/toolbar'
 import { MatMenuModule} from '@angular/material/menu';
 import {MatListModule} from '@angular/material/list';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 const modules = [
   CommonModule,
@@ -23,7 +24,8 @@ const modules = [
   MatIconModule,
   MatMenuModule,
   MatListModule,
-  MatFormFieldModule
+  MatFormFieldModule,
+  MatSnackBarModule,
 ];
 
 @NgModule({

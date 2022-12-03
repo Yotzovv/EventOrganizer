@@ -22,8 +22,8 @@ color: white;
 background-color: red;
 }
 
-.button {
+.actions {
 display: flex;
-justify-content: flex-end;
+justify-content: space-between;
 }
 
