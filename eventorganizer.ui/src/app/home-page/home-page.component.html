@@ -1,14 +1,21 @@
 
 <div class="container" style="width: 100%; margin-left: 5%;">
+    
     <mat-card *ngFor="let event of allEvents">
         <mat-card-header>
+            <button (click)="openCreateEventDialog('0ms', '0ms')" class="grey-icon" style="margin-left: 50%; font-size: x-small" mat-icon-button>
+                <mat-icon>edit</mat-icon>
+            </button>
             <mat-card-subtitle style="font-weight: 700;">{{event.time | date: 'MMMM dd'}}</mat-card-subtitle>
             <mat-card-title>{{event.name}}</mat-card-title>
             <mat-card-subtitle>Cool Bar</mat-card-subtitle>
             <mat-card-subtitle>150 going . 40 interested</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-            The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan. A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally bred for hunting.
+            <p>
+                The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan. A small, agile dog
+                that copes very well with mountainous terrain, the Shiba Inu was originally bred for hunting.
+            </p>    
         </mat-card-content>
         <p></p>
         <mat-divider></mat-divider>
