@@ -4,7 +4,10 @@ import com.event.organizer.api.exception.EventOrganizerException;
 import com.event.organizer.api.model.Event;
 import com.event.organizer.api.model.dto.EventRequestDto;
 import com.event.organizer.api.service.EventService;
+
+import java.util.ArrayList;
 import java.util.List;
+
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -56,5 +59,37 @@ public class EventController {
             event.setStatus(Event.NONE_STATUS);
         }
         return event;
+    }
+
+    private List<Event> getAllEvents(List<EventRequestDto> eventRequestDtos) {
+        List<Event> allEvents = new ArrayList<>();
+        eventRequestDtos.forEach(event -> {
+            Event newEvent = new Event();
+            newEvent.setId(event.getId());
+            newEvent.setName(event.getName());
+            newEvent.setTime(event.getLocalDateTime());
+            if (Event.STATUSES.contains(event.getStatus())) {
+                newEvent.setStatus(event.getStatus());
+            } else {
+                newEvent.setStatus(Event.NONE_STATUS);
+            }
+            if (!allEvents.contains(newEvent)) {
+                allEvents.add(newEvent);
+            }
+        });
+        return allEvents;
+    }
+
+    private List<Event> getAllEventsFA() {
+        return findAll();
+    }
+
+    private void changeEventStatus(long EventId, String status) {
+        List<Event> allEvents = findAll();
+        allEvents.stream().filter(event -> event.getId() == EventId).forEach(event -> {
+            if (Event.STATUSES.contains(status)) {
+                event.setStatus(status);
+            }
+        });
     }
 }
