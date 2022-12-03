@@ -1,6 +1,6 @@
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Component } from "@angular/core";
-import { DialogAnimationsExampleDialog } from './create-event-dialog/create-event-dialog.component';
+import { DialogAnimationsExampleDialog } from '../create-event-dialog/create-event-dialog.component'
 
 @Component({
     selector: 'main-layout',

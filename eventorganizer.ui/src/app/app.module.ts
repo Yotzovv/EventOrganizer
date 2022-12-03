@@ -1,3 +1,4 @@
+import { MatCardModule } from '@angular/material/card';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -16,7 +17,7 @@ import { RequestService } from './request/request.service';
 import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
-  imports:      [ CommonModule, MainLayoutModule,
+  imports:      [ MatCardModule, CommonModule, MainLayoutModule,
     AppRoutingModule, BrowserModule, ReactiveFormsModule, MaterialModule, BrowserAnimationsModule,
     HttpClientModule,
   ],
