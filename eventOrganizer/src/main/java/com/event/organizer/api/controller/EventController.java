@@ -4,9 +4,12 @@ import com.event.organizer.api.exception.EventOrganizerException;
 import com.event.organizer.api.model.Event;
 import com.event.organizer.api.model.dto.EventRequestDto;
 import com.event.organizer.api.service.EventService;
+
+import java.security.Principal;
 import java.util.List;
 import lombok.AllArgsConstructor;
 
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +28,7 @@ public class EventController {
     private final EventService eventService;
 
     @GetMapping
-    public List<Event> findAll() {
+    public List<Event> findAll(Principal principal) {
         return eventService.findAll();
     }
 
