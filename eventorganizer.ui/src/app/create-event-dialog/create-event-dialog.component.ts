@@ -1,3 +1,4 @@
+import { EventDto } from './../types/event.type';
 import { RequestService } from './../request/request.service';
 import {Component, Inject, Output, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -8,19 +9,29 @@ import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog
   styleUrls: ['./create-event-dialog.component.scss'],
   templateUrl: './create-event-dialog.component.html',
 })
-export class DialogAnimationsExampleDialog {
+
+export class DialogAnimationsExampleDialog {   // TODO: Rename
   requestService: RequestService;
-    // TODO: Rename
-  constructor(public dialogRef: MatDialogRef<DialogAnimationsExampleDialog>, @Inject(MAT_DIALOG_DATA) public data: any,
-  requestService: RequestService) {
+  public eventId = new FormControl(null);
+  private eventName = new FormControl('');
+  private eventLocalTime = new FormControl(null);
+   
+  constructor(public dialogRef: MatDialogRef<DialogAnimationsExampleDialog>, @Inject(MAT_DIALOG_DATA) public data: any, requestService: RequestService) {
     this.requestService = requestService;
+    if(data && data.event) {
+      this.eventId.setValue(data.event.id)
+      this.eventName.setValue(data.event.name);
+      this.eventLocalTime.setValue(data.event.time);
+    }
   }
 
+  
   eventForm: FormGroup = new FormGroup({
-      name: new FormControl(''),
-      localDateTime: new FormControl(''),
+      name: this.eventName,
+      localDateTime: this.eventLocalTime,
       // description: new FormControl(''),  // TODO: Uncomment when api supports it
-      // Type: new FormControl(''),       // TODO: uncomment when api supports is
+      // Location: new FormControl(''),
+      // Type: new FormControl(''),
   });
   
   submit() {

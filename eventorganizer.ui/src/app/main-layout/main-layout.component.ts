@@ -14,7 +14,9 @@ export class MainLayoutComponent {
     constructor(private dialogModel: MatDialog, private router: Router) { }
 
     openCreateEventDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
-        this.createEventDialog = this.dialogModel.open(DialogAnimationsExampleDialog);
+        this.createEventDialog = this.dialogModel.open(DialogAnimationsExampleDialog, {
+            data: undefined
+        });
     }
 
     logout() {

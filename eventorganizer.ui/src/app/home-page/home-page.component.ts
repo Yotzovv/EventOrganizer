@@ -20,7 +20,11 @@ export class HomePageComponent {
     });
   }
 
-  openCreateEventDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
-    this.createEventDialog = this.dialogModel.open(DialogAnimationsExampleDialog);
+  openEditEventDialog(enterAnimationDuration: string, exitAnimationDuration: string, event: EventDto): void {
+    this.createEventDialog = this.dialogModel.open(DialogAnimationsExampleDialog, {
+      data: {
+        event: event
+      }
+    });
   }
 }

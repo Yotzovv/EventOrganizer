@@ -1,4 +1,6 @@
-<h1 mat-dialog-title>Create Event</h1>
+<h1 *ngIf="eventId.value == null" mat-dialog-title>Create Event</h1>
+<h1 *ngIf="eventId.value !== null" mat-dialog-title>Edit Event</h1>
+
 <form [formGroup]="eventForm" (ngSubmit)="submit()">
 <div mat-dialog-content>
   <p>
