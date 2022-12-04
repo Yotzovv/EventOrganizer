@@ -14,7 +14,7 @@ import lombok.Setter;
 @Setter
 @Valid
 public class EventRequestDto {
-    // TODO: Add Description
+    // TODO: Add Description and Location
     private Long id;
     @NotNull
     private String name;

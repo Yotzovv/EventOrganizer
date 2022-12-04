@@ -26,6 +26,12 @@ export class RequestService {
         })
     }
 
+    updateEvent(body: EventDto) {
+        return this.http.post(`${this.API_URL}/api/v1/updateEvent`, {
+            body,
+        })
+    }
+
     createEvent(body: EventDto) {
         return this.http.post(`${this.API_URL}/api/v1/createEvent`, {
             body,

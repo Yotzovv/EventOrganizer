@@ -37,9 +37,12 @@ export class DialogAnimationsExampleDialog {   // TODO: Rename
   submit() {
     if(this.eventForm.valid) {
       this.submitEM.emit(this.eventForm.value);
-      this.requestService.createEvent(this.eventForm.value).subscribe((res) => {
-        console.log(res);
-      });
+
+      if(this.eventId.value) {
+        this.requestService.updateEvent(this.eventForm.value).subscribe((res) => {});
+      } else {
+        this.requestService.createEvent(this.eventForm.value).subscribe((res) => {});        
+      }
     }
   }
 
