@@ -1,8 +1,8 @@
 package com.event.organizer.api.service;
 
 import com.event.organizer.api.exception.EventOrganizerException;
+import com.event.organizer.api.model.Comment;
 import com.event.organizer.api.model.Event;
-import com.event.organizer.api.model.dto.EventRequestDto;
 import com.event.organizer.api.repository.EventRepository;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -40,5 +40,17 @@ public class EventService {
             throw new EventOrganizerException("Event does not exist");
         }
         eventRepository.delete(event);
+    }
+
+    public void AddComment(Comment comment, Event event) throws EventOrganizerException  {
+        if (!eventRepository.existsById(event.getId())) {
+            throw new EventOrganizerException("Event does not exist");
+        }
+        var allComments = event.getComments();
+
+        allComments.add(comment);
+        event.setComments(allComments);
+
+        eventRepository.save(event);
     }
 }

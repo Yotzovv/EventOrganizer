@@ -1,6 +1,7 @@
 package com.event.organizer.api.controller;
 
 import com.event.organizer.api.exception.EventOrganizerException;
+import com.event.organizer.api.model.Comment;
 import com.event.organizer.api.model.Event;
 import com.event.organizer.api.model.dto.EventRequestDto;
 import com.event.organizer.api.service.EventService;
@@ -49,6 +50,11 @@ public class EventController {
         Event event = getEvent(eventRequestDto);
         eventService.deleteEvent(event);
         return "deleted";
+    }
+
+    @PostMapping
+    public void AddComment(Comment comment, Event event) throws EventOrganizerException {
+        eventService.AddComment(comment, event);
     }
 
     private Event getEvent(EventRequestDto eventRequestDto) {

@@ -3,6 +3,7 @@ package com.event.organizer.api.model;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -44,4 +45,5 @@ public class Event {
     private String name;
     private LocalDateTime time;
     private String status;
+    private List<Comment> comments;
 }
