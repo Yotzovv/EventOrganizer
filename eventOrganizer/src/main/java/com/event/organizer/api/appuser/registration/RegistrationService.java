@@ -6,6 +6,7 @@ import com.event.organizer.api.appuser.AppUserService;
 import com.event.organizer.api.appuser.registration.token.ConfirmationToken;
 import com.event.organizer.api.appuser.registration.token.ConfirmationTokenService;
 import java.time.LocalDateTime;
+import javax.servlet.ServletException;
 import javax.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ public class RegistrationService {
 
     private final ConfirmationTokenService confirmationTokenService;
 
-    public String register(RegistrationRequest registrationRequest) {
+    public String register(RegistrationRequest registrationRequest) throws ServletException {
         boolean validEmail = emailValidator.test(registrationRequest.getEmail());
 
         if (!validEmail) {
@@ -48,7 +49,7 @@ public class RegistrationService {
     }
 
     @Transactional
-    public String confirmToken(String token) {
+    public String confirmToken(String token) throws ServletException {
         ConfirmationToken confirmationToken = confirmationTokenService.getToken(token);
 
         //if (confirmationToken.getConfirmedAt() != null) {

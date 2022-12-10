@@ -44,4 +44,12 @@ public class Event {
     private String name;
     private LocalDateTime time;
     private String status;
+    // start time , end time. location. AppUser
+
+    // return token check token in request
+    // if expired
+
+    //api/v1/login   check token
+
+
 }

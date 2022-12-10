@@ -9,7 +9,6 @@ import java.security.Principal;
 import java.util.List;
 import lombok.AllArgsConstructor;
 
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
