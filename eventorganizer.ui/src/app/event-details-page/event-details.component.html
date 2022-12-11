@@ -1,0 +1,58 @@
+<mat-card style="width: 80%; margin-left: 10%">
+  <mat-card-header>
+    <mat-card-subtitle>27 Jan 2022 AT 8pm</mat-card-subtitle>
+    <mat-card-title>Festival</mat-card-title>
+    <mat-card-subtitle>CyberCreed Clique Club</mat-card-subtitle>
+    <div style="padding: 4%"></div>
+  </mat-card-header>
+</mat-card>
+
+<mat-card style="width: 45%; margin-top: 1%; margin-left: 10%">
+  <mat-form-field size="large" class="large-input">
+    <input matInput placeholder="What are you thinking of?" />
+  </mat-form-field>
+  <mat-button-toggle
+    style="width: 88%; margin-left: 5%; margin-bottom: 3%"
+    value="right"
+    >Publish</mat-button-toggle
+  >
+</mat-card>
+
+<div style="display: flex; margin-left: 10%">
+  <mat-card style="margin-top: 1%; width: 50%">
+    <mat-card-content>
+      <div mat-dialog-content class="mat-typography">
+        <mat-list>
+          <mat-list-item
+            *ngFor="let comment of comments"
+            style="display: contents"
+          >
+            <h3>{{ comment.publisher }}</h3>
+            <p>{{ comment.text }}</p>
+          </mat-list-item>
+        </mat-list>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card style="margin-top: -13%; margin-left: 1%; width: 38%; height: 40%">
+    <mat-card-content>
+      <p><mat-icon>people</mat-icon> 9.1k people responded</p>
+      <p><mat-icon>person</mat-icon>Event by CyberCreed Clique</p>
+      <p><mat-icon>location_on</mat-icon> Location CyberCreed Clique Club</p>
+      <p>
+        It was a cold and snowy winter evening in the small town of Maple Grove.
+        The streets were quiet, except for the sound of snow crunching underfoot
+        and the occasional car passing by. A group of friends had gathered at
+        the local coffee shop to catch up and enjoy each other's company. The
+        warm, cozy atmosphere inside was a welcome relief from the frigid
+        weather outside. As they sipped their hot drinks and chatted, a sudden
+        power outage plunged the town into darkness. The group quickly gathered
+        their belongings and made their way cautiously through the pitch black
+        streets, using their phones as makeshift flashlights. After a few tense
+        moments, they reached their homes safely, grateful for the experience
+        and the reminder to always be prepared for the unexpected.
+      </p>
+    </mat-card-content>
+  </mat-card>
+</div>

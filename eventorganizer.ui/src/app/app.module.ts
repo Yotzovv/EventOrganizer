@@ -12,14 +12,28 @@ import { ProfilePageComponent } from './profile-page/profile-page.component';
 import { RequestService } from './request/request.service';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthModule } from './auth/auth.module';
+import { EventDetailsComponent } from './event-details-page/event-details.component';
+import {MatTabsModule} from '@angular/material/tabs';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
 
 @NgModule({
-  imports:      [ CommonModule, MainLayoutModule, AuthModule,
-    AppRoutingModule, BrowserModule, ReactiveFormsModule, MaterialModule, BrowserAnimationsModule,
-    HttpClientModule,
+  imports:      [ CommonModule, 
+    MainLayoutModule, 
+    AuthModule,
+    AppRoutingModule, 
+    BrowserModule,
+    ReactiveFormsModule, 
+    MaterialModule, 
+    BrowserAnimationsModule,
+    HttpClientModule, 
+    MatTabsModule,
+    MatButtonToggleModule 
   ],
-  declarations: [ AppComponent, ProfilePageComponent, 
-  HomePageComponent ],
+  declarations: [ 
+  AppComponent, 
+  ProfilePageComponent, 
+  HomePageComponent,
+  EventDetailsComponent ],
   bootstrap:    [ AppComponent ],
   providers:    [ RequestService ],
 })
