@@ -26,7 +26,7 @@ const routes: Routes = [
         component: ProfilePageComponent,
       },
       {
-        path: 'event-details',
+        path: 'event-details/:id',
         component: EventDetailsComponent
       }
     ]

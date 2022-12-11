@@ -19,6 +19,10 @@ export class RequestService {
         return this.http.get(`${this.API_URL}/api/v1/events`);
     }
 
+    getEvent(id: number): Observable<any> {
+        return this.http.get(`${this.API_URL}/api/v1/events`)
+    }
+
     registerUser$(body: CreateUserDto) {
         return this.http.request('POST', `${this.API_URL}/api/v1/registration`, {
             body,
