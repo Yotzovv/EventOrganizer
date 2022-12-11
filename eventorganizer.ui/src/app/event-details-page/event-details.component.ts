@@ -14,16 +14,20 @@ import { EventDto } from "../types/event.type";
 
 export class EventDetailsComponent {
     event: EventDto;
-    
-    constructor(requestService: RequestService, private route: ActivatedRoute) {
+    requestService: RequestService;
+    comment: string;
+
+    constructor(_requestService: RequestService, private route: ActivatedRoute) {
         const eventId: number = Number(this.route.snapshot.paramMap.get('id'));
         
-        requestService.getEvent(eventId).subscribe((res) => {
-            event = res;
+        this.requestService = _requestService;
+
+        _requestService.getEvent(eventId).subscribe((res) => {
+            this.event = res;
         });        
     }
     
     addComment() {
-        
+        this.requestService.addComment(this.event.id, this.comment).subscribe((res) => { });
     }
 }

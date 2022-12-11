@@ -42,4 +42,10 @@ export class RequestService {
         })
     }
 
+    addComment(eventId: number, comment: string): Observable<any> {
+        return this.http.post(`${this.API_URL}/api/v1/addComment`, {
+            eventId,
+            comment,
+        })
+    }
 }
