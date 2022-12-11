@@ -23,10 +23,14 @@ public class AppUserService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
 
-    public void EditAccount(AppUser editedUser) throws UsernameNotFoundException {
+    public void editAccount(AppUser editedUser) throws UsernameNotFoundException {
         if(editedUser == null){
             throw new UsernameNotFoundException("User is not found.");
         }
+        //blocked by ev3
+        //if(editedUser != loggedInUser) {
+        //    throw new Exception("Permission denied.")
+        //}
          var currentUser = userRepository.findByEmail(editedUser.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MESSAGE, editedUser.getEmail())));
 
