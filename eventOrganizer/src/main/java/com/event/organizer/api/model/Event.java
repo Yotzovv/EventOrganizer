@@ -22,6 +22,7 @@ import lombok.Setter;
 @EqualsAndHashCode
 @Getter
 @Setter
+@Table(name = "events")
 public class Event {
 
     public static final String ACCEPTED_STATUS = "Accepted";

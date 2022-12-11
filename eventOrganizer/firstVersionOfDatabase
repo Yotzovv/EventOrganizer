@@ -8,7 +8,19 @@ CREATE  TABLE IF NOT EXISTS `eventorganizer`.`users` (
   PRIMARY KEY (`id`) )
 ENGINE = InnoDB;
 
+CREATE TABLE IF NOT EXISTS 'events' {
+	Id int,
+	Description varchar(255),
+	Location varchar(255),
+	StartDate DateTime,
+	EndDate DateTime
+}
 
-
+CREATE TABLE IF NOT EXISTS 'comments' {
+	Id int,
+	EventId int,
+	Content varchar(255),
+	CreatedDate	DateTime
+}
 
 
