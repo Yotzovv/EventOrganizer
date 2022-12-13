@@ -1,4 +1,4 @@
-package com.event.organizer.api.controller;
+package com.event.organizer.api.filter.controller;
 
 import com.event.organizer.api.model.dto.EventRequestDto;
 import com.event.organizer.api.model.dto.LoginBody;
