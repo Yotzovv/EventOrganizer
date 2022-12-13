@@ -2,7 +2,19 @@ package com.event.organizer.api;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import com.event.organizer.api.exception.EventOrganizerException;
+import com.event.organizer.api.model.Comment;
+import com.event.organizer.api.model.Event;
+import com.event.organizer.api.repository.EventRepository;
+import com.event.organizer.api.service.EventService;
+
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.Optional;
 
 @SpringBootTest
 class EventOrganizerApplicationTests {
@@ -11,20 +23,20 @@ class EventOrganizerApplicationTests {
 	void contextLoads() {
 	}
 		@Test
-		void testAddComment_eventExists() throws EventOrganizerException {
+		void GivenExistingEvent_WhenAddingComment_CommentIsAdded() throws EventOrganizerException {
 			// Create an event and a comment to add to the event
 			Event event = new Event();
-			event.setId(1);
+			event.setId(1l);
 			Comment comment = new Comment();
-			comment.setText("This is a comment");
+			comment.setContent("This is a comment");
 
 			// Set up a mock event repository that will return the event when findById is called
 			EventRepository eventRepository = mock(EventRepository.class);
-			when(eventRepository.findById(1)).thenReturn(Optional.of(event));
+			when(eventRepository.findById(1l)).thenReturn(Optional.of(event));
 
 			// Create an EventOrganizer instance and call the addComment method
-			EventOrganizer eventOrganizer = new EventOrganizer(eventRepository);
-			eventOrganizer.addComment(comment, event);
+			EventService eventService = new EventService(eventRepository);
+			eventService.AddComment(comment.getContent(), event.getId());
 
 			// Verify that the comment was added to the event
 			assertTrue(event.getComments().contains(comment));
@@ -34,21 +46,21 @@ class EventOrganizerApplicationTests {
 		}
 
 		@Test
-		void testAddComment_eventDoesNotExist() {
+		void GivenNonExistingEvent_WhenAddingComment_ThrowsException() {
 			// Create a comment to add to the event
 			Comment comment = new Comment();
-			comment.setText("This is a comment");
+			comment.setContent("This is a comment");
 
 			// Set up a mock event repository that will return an empty Optional when findById is called
 			EventRepository eventRepository = mock(EventRepository.class);
-			when(eventRepository.findById(1)).thenReturn(Optional.empty());
+			when(eventRepository.findById(1l)).thenReturn(Optional.empty());
 
 			// Create an EventOrganizer instance and call the addComment method
-			EventOrganizer eventOrganizer = new EventOrganizer(eventRepository);
+			EventService eventService = new EventService(eventRepository);
 
 			// Verify that an EventOrganizerException is thrown when the event does not exist
 			assertThrows(EventOrganizerException.class, () -> {
-				eventOrganizer.addComment(comment, new Event());
+				eventService.AddComment(comment.getContent(), 0l);
 			});
 		}
 	}

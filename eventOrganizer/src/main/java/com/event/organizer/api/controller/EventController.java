@@ -53,8 +53,8 @@ public class EventController {
     }
 
     @PostMapping
-    public void addComment(String comment, int eventId) throws EventOrganizerException {
-        eventService.AddComment(comment, event);
+    public void addComment(String comment, Long eventId) throws EventOrganizerException {
+        eventService.AddComment(comment, eventId);
     }
 
     private Event getEvent(EventRequestDto eventRequestDto) {
