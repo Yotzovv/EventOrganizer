@@ -50,6 +50,16 @@ public class EventController {
         return "deleted";
     }
 
+    @GetMapping
+    public void changeEventStatus(long EventId, String status) {
+        List<Event> allEvents = eventService.findAll();
+        allEvents.stream().filter(event -> event.getId() == EventId).forEach(event -> {
+            if (Event.STATUSES.contains(status)) {
+                event.setStatus(status);
+            }
+        });
+    }
+
     private Event getEvent(EventRequestDto eventRequestDto) {
         Event event = new Event();
         event.setId(eventRequestDto.getId());
@@ -62,4 +72,6 @@ public class EventController {
         }
         return event;
     }
+
+
 }
