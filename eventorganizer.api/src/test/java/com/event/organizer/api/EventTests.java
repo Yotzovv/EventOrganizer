@@ -184,4 +184,27 @@ class EventTests {
         Assertions.assertTrue(eventsList.size() == 2);
         Assertions.assertTrue(eventsList.stream().allMatch(event1 -> event.getStatus().equals(Event.NONE_STATUS)));
     }
+
+    @Test
+    void GivenEvent_WhenChangeStatus_ThenStatusIsChangedSuccessfully()
+    {
+        Event event = new Event();
+        event.setName("EventTest");
+        event.setTime(LocalDateTime.now().plusYears(1));
+        event.setStatus(Event.NONE_STATUS);
+        event.setId(1L);
+        List<Event> eventsList = new ArrayList();
+        eventsList.add(event);
+
+        EventRepository eventRepository = mock(EventRepository.class);
+        EventService eventService = new EventService(eventRepository);
+
+        when(eventRepository.findAll()).thenReturn(eventsList);
+
+        eventService.changeEventStatus(event.getId(), Event.ACCEPTED_STATUS);
+
+        Event result = eventRepository.findAll().stream().findFirst().get();
+
+        Assertions.assertTrue(result.getStatus().equals(Event.ACCEPTED_STATUS));
+    }
 }

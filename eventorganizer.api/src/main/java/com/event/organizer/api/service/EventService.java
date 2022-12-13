@@ -2,7 +2,6 @@ package com.event.organizer.api.service;
 
 import com.event.organizer.api.exception.EventOrganizerException;
 import com.event.organizer.api.model.Event;
-import com.event.organizer.api.model.dto.EventRequestDto;
 import com.event.organizer.api.repository.EventRepository;
 
 import java.time.LocalDateTime;
@@ -57,6 +56,14 @@ public class EventService {
                 .collect(Collectors.toList());
     }
 
+    public void changeEventStatus(long eventId, String status) {
+        List<Event> allEvents = findAll();
+        allEvents.stream().filter(event -> event.getId() == eventId).forEach(event -> {
+            if (Event.STATUSES.contains(status)) {
+                event.setStatus(status);
+            }
+        });
+    }
 }
 
 

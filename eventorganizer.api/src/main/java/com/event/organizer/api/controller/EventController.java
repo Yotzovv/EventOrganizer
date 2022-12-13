@@ -51,13 +51,13 @@ public class EventController {
     }
 
     @GetMapping
-    public void changeEventStatus(long EventId, String status) {
-        List<Event> allEvents = eventService.findAll();
-        allEvents.stream().filter(event -> event.getId() == EventId).forEach(event -> {
-            if (Event.STATUSES.contains(status)) {
-                event.setStatus(status);
-            }
-        });
+    public void changeEventStatus(long eventId, String status) {
+        eventService.changeEventStatus(eventId, status);
+    }
+
+    @GetMapping
+    public List<Event> getAllPendingEvents() {
+        return eventService.getAllPendingEvents();
     }
 
     private Event getEvent(EventRequestDto eventRequestDto) {
