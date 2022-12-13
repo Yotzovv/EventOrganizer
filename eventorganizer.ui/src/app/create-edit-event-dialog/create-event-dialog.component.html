@@ -1,0 +1,38 @@
+<h1 *ngIf="eventId.value == null" mat-dialog-title>Create Event</h1>
+<h1 *ngIf="eventId.value !== null" mat-dialog-title>Edit Event</h1>
+
+<form [formGroup]="eventForm" (ngSubmit)="submit()">
+<div mat-dialog-content>
+  <p>
+      <mat-form-field style="display: flex;">
+          <mat-label>Name</mat-label>
+          <input type="text" matInput placeholder="Name" formControlName="name">
+      </mat-form-field>
+  </p>
+  <!-- <p>
+    <mat-form-field>
+        <mat-label>Description</mat-label>
+        <input type="text" matInput placeholder="Description" formControlName="description">
+    </mat-form-field>
+  </p> -->
+  <p>
+    <mat-form-field>
+        <mat-label>Date</mat-label>
+        <input [matDatepicker]="picker" type="datetime" matInput placeholder="Date" formControlName="localDateTime">
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </p>  
+  <!-- <p>
+    <mat-form-field>
+        <mat-label>Type</mat-label>
+        <input type="text" matInput placeholder="Type" formControlName="Type">
+    </mat-form-field>
+  </p>
+       -->
+</div>
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>No</button>
+  <button type="submit" mat-button mat-dialog-close cdkFocusInitial>Ok</button>
+</div>
+</form>

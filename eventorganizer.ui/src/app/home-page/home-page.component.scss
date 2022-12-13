@@ -3,3 +3,23 @@
     justify-content: center;
     margin: 100px 0px;
 }
+
+mat-card-title:hover {
+    background-color: lightgray;
+    cursor: pointer;
+}
+
+mat-card {
+    margin-left: 1%;
+    margin-bottom: 2%;
+    display: inline-block;
+    max-width: 30%;    
+}
+
+.grey-icon {
+    color: grey;
+}
+/* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
+.grey-icon svg {
+    fill: grey;
+}

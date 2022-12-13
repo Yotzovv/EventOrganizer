@@ -7,6 +7,14 @@
         <form [formGroup]="profileForm"
             #formDirective="ngForm" 
             (ngSubmit)="onSubmit()">
+
+            <p>
+                <mat-form-field>
+                    <mat-label>Username</mat-label>
+                    <input readonly type="text" matInput placeholder="Username" formControlName="username">
+                </mat-form-field>
+            </p>
+
             <p>
                 <mat-form-field>
                     <mat-label>Email</mat-label>
@@ -16,15 +24,29 @@
     
             <p>
                 <mat-form-field>
-                    <mat-label>Username</mat-label>
-                    <input  type="text" matInput placeholder="Username" formControlName="username">
+                    <mat-label>First name</mat-label>
+                    <input  type="text" matInput placeholder="First name" formControlName="firstName">
                 </mat-form-field>
             </p>
     
             <p>
                 <mat-form-field>
+                    <mat-label>Last name</mat-label>
+                    <input  type="text" matInput placeholder="Last name" formControlName="lastName">
+                </mat-form-field>
+            </p>
+
+            <p>
+                <mat-form-field>
                     <mat-label>Password</mat-label>
                     <input type="password" autocomplete="false" matInput placeholder="Password" formControlName="password">
+                </mat-form-field>
+            </p>
+
+            <p>
+                <mat-form-field>
+                    <mat-label>Confirm password</mat-label>
+                    <input type="password" autocomplete="false" matInput placeholder="Confirm password" formControlName="confirmPassword">
                 </mat-form-field>
             </p>
                 

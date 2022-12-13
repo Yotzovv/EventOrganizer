@@ -1,0 +1,43 @@
+<mat-card style="width: 80%; margin-left: 10%">
+  <mat-card-header>
+    <mat-card-subtitle>{{ event.time | date: 'MMMM dd AT hh:mm'}}</mat-card-subtitle>
+    <mat-card-title>{{ event.name }}</mat-card-title>
+    <mat-card-subtitle>{{ event.location }}</mat-card-subtitle>
+    <div style="padding: 4%"></div>
+  </mat-card-header>
+</mat-card>
+
+<mat-card style="width: 45%; margin-top: 1%; margin-left: 10%">
+  <mat-form-field size="large" class="large-input">
+    <input matInput placeholder="What are you thinking of?" [(ngModel)]="comment" />
+  </mat-form-field>
+  <mat-button-toggle (click)="addComment()" style="width: 88%; margin-left: 5%; margin-bottom: 3%" value="right">Publish</mat-button-toggle
+  >
+</mat-card>
+
+<div style="display: flex; margin-left: 10%">
+  <mat-card style="margin-top: 1%; width: 50%">
+    <mat-card-content>
+      <div mat-dialog-content class="mat-typography">
+        <mat-list>
+          <mat-list-item
+            *ngFor="let comment of event.comments"
+            style="display: contents"
+          >
+            <h3>{{ comment.publisher }}</h3>
+            <p>{{ comment.text }}</p>
+          </mat-list-item>
+        </mat-list>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card style="margin-top: -13%; margin-left: 1%; width: 38%; height: 40%">
+    <mat-card-content>
+      <p><mat-icon>people</mat-icon> {{ event.interested }} people responded</p>
+      <p><mat-icon>person</mat-icon>Event by {{ event.publisher }}</p>
+      <p><mat-icon>location_on</mat-icon>{{ event.location }}</p>
+      <p>{{event.description}}</p>
+    </mat-card-content>
+  </mat-card>
+</div>

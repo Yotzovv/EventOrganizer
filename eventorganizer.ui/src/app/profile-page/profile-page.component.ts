@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-profile-page',
@@ -7,8 +7,20 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./profile-page.component.css']
 })
 export class ProfilePageComponent {
+
+  constructor(
+  ) {
+  }
+
+  // TODO: fix
   profileForm: FormGroup = new FormGroup({
-    username: new FormControl('pesho', [
+    username: new FormControl('pesho_pi4a', [
+      // Validators.required
+    ]),
+    firstName: new FormControl('Pesho', [
+      // Validators.required
+    ]),
+    lastName: new FormControl('Petrov', [
       // Validators.required
     ]),
     email: new FormControl('pesho@abv.bg', [
@@ -16,6 +28,10 @@ export class ProfilePageComponent {
       // Validators.pattern(emailregex),
     ]),
     password: new FormControl('qwerty123', [
+      // Validators.required,
+      // this.checkPassword,
+    ]),
+    confirmPassword: new FormControl('qwerty123', [
       // Validators.required,
       // this.checkPassword,
     ]),

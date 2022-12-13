@@ -1,1 +1,37 @@
-<h3>Home page component</h3>
+
+<div class="container" style="width: 100%; margin-left: 5%;">
+    
+    <mat-card *ngFor="let event of allEvents">
+        <mat-card-header>
+            <!-- TODO: only show edit icon if user owns the event -->
+            <button (click)="openEditEventDialog('0ms', '0ms', event)" class="grey-icon" style="margin-left: 30%;" mat-icon-button>
+                <mat-icon>edit</mat-icon>
+            </button>
+            <!-- TODO: If edit icon is not shown add margin-left: 50% -->
+            <!-- When clicked, replace with <mat-icon>favorite</mat-icon> -->
+            <!-- <button color="warn" style="margin-left: 50%;" mat-icon-button>
+                <mat-icon>favorite_border</mat-icon>
+            </button> -->
+            <mat-card-subtitle style="font-weight: 700;">{{event.time | date: 'MMMM dd'}}</mat-card-subtitle>
+            <mat-card-title [routerLink]="['/event-details', event.id]">
+                <mat-icon class="grey-icon">event</mat-icon>
+                {{event.name}}
+            </mat-card-title>
+            <!-- When both edit and favorite buttons are shown, this is displayed on 2 lines -->
+            <mat-card-subtitle>CyberCreed Clique Club</mat-card-subtitle>
+            <mat-card-subtitle>150 going . 40 interested</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <p>
+                The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan. A small, agile dog
+                that copes very well with mountainous terrain, the Shiba Inu was originally bred for hunting.
+            </p>    
+        </mat-card-content>
+        <p></p>
+        <mat-divider></mat-divider>
+        <mat-card-actions align="end">
+            <button mat-button style="font-weight: 500; font-size: large;">I'm going</button>
+            <button mat-button>SHARE</button>
+        </mat-card-actions>        
+    </mat-card>
+</div>

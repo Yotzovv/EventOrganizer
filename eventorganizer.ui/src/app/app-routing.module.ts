@@ -1,31 +1,14 @@
-import { RegisterComponent } from './register-form/register.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HomePageComponent } from './home-page/home-page.component';
-import { LoginFormComponent } from './login-form/login-form.component';
-import { ProfilePageComponent } from './profile-page/profile-page.component';
+import { MainGuardService } from './main-layout/main-guard.service';
 
 const routes: Routes = [
-  {
-    path: '',
-    component: HomePageComponent,
-  },
-  {
-    path: 'login',
-    component: LoginFormComponent,
-  },
-  {
-    path: 'register',
-    component: RegisterComponent
-  },
-  {
-    path: 'profile',
-    component: ProfilePageComponent,
-  }
+  // { path: '**', component: HomePageComponent }
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  providers: [MainGuardService]
 })
 export class AppRoutingModule { }
