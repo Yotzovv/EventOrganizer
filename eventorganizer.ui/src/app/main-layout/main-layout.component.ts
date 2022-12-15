@@ -1,7 +1,7 @@
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Component } from "@angular/core";
 import { Router } from '@angular/router';
-import { DialogAnimationsExampleDialog } from '../create-event-dialog/create-event-dialog.component'
+import { DialogAnimationsExampleDialog } from '../create-edit-event-dialog/create-event-dialog.component'
 
 @Component({
     selector: 'main-layout',

@@ -2,7 +2,7 @@ import { RequestService } from './../request/request.service';
 import { Component } from '@angular/core';
 import { EventDto } from '../types/event.type';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { DialogAnimationsExampleDialog } from '../create-event-dialog/create-event-dialog.component'
+import { DialogAnimationsExampleDialog } from '../create-edit-event-dialog/create-event-dialog.component'
 
 @Component({
   selector: 'home-page',

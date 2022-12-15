@@ -1,6 +1,7 @@
 import { AdminPageComponent } from './../admin-page/admin-page.component';
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
+import { EventDetailsComponent } from "../event-details-page/event-details.component";
 import { HomePageComponent } from "../home-page/home-page.component";
 import { ProfilePageComponent } from "../profile-page/profile-page.component";
 import { MainGuardService } from "./main-guard.service";
