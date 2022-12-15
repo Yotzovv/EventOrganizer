@@ -27,7 +27,7 @@ public class AppUserService implements UserDetailsService {
         if(editedUser == null){
             throw new UsernameNotFoundException("User is not found.");
         }
-        //blocked by ev3
+        //TODO: blocked by ev3
         //if(editedUser != loggedInUser) {
         //    throw new Exception("Permission denied.")
         //}

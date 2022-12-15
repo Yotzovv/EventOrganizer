@@ -16,6 +16,6 @@ public class AccountController {
     private final AppUserService userService;
 
     public void EditAccount(AppUser account){
-         userService.EditAccount(account);
+         userService.editAccount(account);
     }
 }
