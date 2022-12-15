@@ -50,14 +50,9 @@ public class EventController {
         return "deleted";
     }
 
-    @GetMapping
-    public void changeEventStatus(long eventId, String status) {
-        eventService.changeEventStatus(eventId, status);
-    }
-
-    @GetMapping
-    public List<Event> getAllPendingEvents() {
-        return eventService.getAllPendingEvents();
+    @PostMapping
+    public void addComment(String comment, Long eventId) throws EventOrganizerException {
+        eventService.addComment(comment, eventId);
     }
 
     private Event getEvent(EventRequestDto eventRequestDto) {
@@ -72,6 +67,4 @@ public class EventController {
         }
         return event;
     }
-
-
 }

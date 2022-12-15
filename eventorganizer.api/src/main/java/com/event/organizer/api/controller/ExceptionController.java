@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import javax.servlet.ServletException;
-
 @ControllerAdvice
 public class ExceptionController {
 
@@ -24,13 +22,4 @@ public class ExceptionController {
         final String message = ex.getMessage();
         return new ErrorMessage(message);
     }
-
-    @ExceptionHandler(value = {ServletException.class})
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    @ResponseBody
-    public ErrorMessage forbidden(final ServletException ex) {
-        final String message = ex.getMessage();
-        return new ErrorMessage(message);
-    }
-
 }

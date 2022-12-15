@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.ServletException;
-
 @RestController
 @RequestMapping(path = "api/v1/registration")
 @AllArgsConstructor
@@ -21,12 +19,12 @@ public class RegistrationController {
     private final RegistrationService registrationService;
 
     @PostMapping
-    public String register(@RequestBody RegistrationRequest registrationRequest) throws ServletException {
+    public String register(@RequestBody RegistrationRequest registrationRequest) {
         return registrationService.register(registrationRequest);
     }
 
     @GetMapping
-    public String confirm(@RequestParam("token") String token) throws ServletException {
+    public String confirm(@RequestParam("token") String token) {
         return registrationService.confirmToken(token);
     }
 

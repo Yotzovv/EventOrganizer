@@ -1,14 +1,10 @@
 package com.event.organizer.api.service;
 
 import com.event.organizer.api.exception.EventOrganizerException;
+import com.event.organizer.api.model.Comment;
 import com.event.organizer.api.model.Event;
 import com.event.organizer.api.repository.EventRepository;
-
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,9 +21,6 @@ public class EventService {
     public Event saveEvent(Event event) throws EventOrganizerException {
         if (event.getId() != null && eventRepository.existsById(event.getId())) {
             throw new EventOrganizerException("Event already exist");
-        }
-        if (event.getTime().isBefore(LocalDateTime.now())) {
-            throw new EventOrganizerException("Event can not be created prior to current date");
         }
         // TODO: Now its possible to create event with nulls for everything. 
         // Create validation for Name, localDateTime, status.
@@ -49,22 +42,18 @@ public class EventService {
         eventRepository.delete(event);
     }
 
-    public List<Event> getAllPendingEvents() {
-        return this.findAll()
-                .stream()
-                .filter(event -> Objects.equals(event.getStatus(), Event.NONE_STATUS))
-                .collect(Collectors.toList());
-    }
+    public void addComment(String comment, Long eventId) throws EventOrganizerException  {
+        if (!eventRepository.existsById(eventId)) {
+            throw new EventOrganizerException("Event does not exist");
+        }
+        Event event = eventRepository.findById(eventId).get();
+        var allComments = event.getComments();
 
-    public void changeEventStatus(long eventId, String status) {
-        List<Event> allEvents = findAll();
-        allEvents.stream().filter(event -> event.getId() == eventId).forEach(event -> {
-            if (Event.STATUSES.contains(status)) {
-                event.setStatus(status);
-            }
-        });
+        Comment commentModel = new Comment();
+        commentModel.setContent(comment);
+        allComments.add(commentModel);
+        event.setComments(allComments);
+
+        eventRepository.save(event);
     }
 }
-
-
-

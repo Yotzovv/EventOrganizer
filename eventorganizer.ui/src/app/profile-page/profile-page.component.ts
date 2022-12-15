@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { RequestService } from '../request/request.service';
 
 @Component({
   selector: 'app-profile-page',
@@ -12,7 +13,6 @@ export class ProfilePageComponent {
   ) {
   }
 
-  // TODO: fix
   profileForm: FormGroup = new FormGroup({
     username: new FormControl('pesho_pi4a', [
       // Validators.required

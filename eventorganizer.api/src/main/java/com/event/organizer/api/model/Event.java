@@ -3,12 +3,15 @@ package com.event.organizer.api.model;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -21,6 +24,7 @@ import lombok.Setter;
 @EqualsAndHashCode
 @Getter
 @Setter
+@Table(name = "events")
 public class Event {
 
     public static final String ACCEPTED_STATUS = "Accepted";
@@ -44,12 +48,5 @@ public class Event {
     private String name;
     private LocalDateTime time;
     private String status;
-    // start time , end time. location. AppUser
-
-    // return token check token in request
-    // if expired
-
-    //api/v1/login   check token
-
-
+    private List<Comment> comments;
 }
