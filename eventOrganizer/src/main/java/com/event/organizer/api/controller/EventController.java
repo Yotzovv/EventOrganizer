@@ -1,7 +1,6 @@
 package com.event.organizer.api.controller;
 
 import com.event.organizer.api.exception.EventOrganizerException;
-import com.event.organizer.api.model.Comment;
 import com.event.organizer.api.model.Event;
 import com.event.organizer.api.model.dto.EventRequestDto;
 import com.event.organizer.api.service.EventService;
@@ -10,7 +9,6 @@ import java.security.Principal;
 import java.util.List;
 import lombok.AllArgsConstructor;
 
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,7 +52,7 @@ public class EventController {
 
     @PostMapping
     public void addComment(String comment, Long eventId) throws EventOrganizerException {
-        eventService.AddComment(comment, eventId);
+        eventService.addComment(comment, eventId);
     }
 
     private Event getEvent(EventRequestDto eventRequestDto) {

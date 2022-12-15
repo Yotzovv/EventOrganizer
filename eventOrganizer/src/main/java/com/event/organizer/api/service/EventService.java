@@ -5,8 +5,6 @@ import com.event.organizer.api.model.Comment;
 import com.event.organizer.api.model.Event;
 import com.event.organizer.api.repository.EventRepository;
 import java.util.List;
-import java.util.Optional;
-
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +42,7 @@ public class EventService {
         eventRepository.delete(event);
     }
 
-    public void AddComment(String comment, Long eventId) throws EventOrganizerException  {
+    public void addComment(String comment, Long eventId) throws EventOrganizerException  {
         if (!eventRepository.existsById(eventId)) {
             throw new EventOrganizerException("Event does not exist");
         }
