@@ -19,6 +19,14 @@ export class RequestService {
         return this.http.get(`${this.API_URL}/api/v1/events`);
     }
 
+    getAllUsers(): Observable<any> {
+        return this.http.get(`${this.API_URL}/api/v1/getAllUsers`);
+    }
+
+    getEvent(id: number): Observable<any> {
+        return this.http.get(`${this.API_URL}/api/v1/events`)
+    }
+
     registerUser$(body: CreateUserDto) {
         return this.http.request('POST', `${this.API_URL}/api/v1/registration`, {
             body,
@@ -38,4 +46,29 @@ export class RequestService {
         })
     }
 
+    addComment(eventId: number, comment: string): Observable<any> {
+        return this.http.post(`${this.API_URL}/api/v1/addComment`, {
+            eventId,
+            comment,
+        })
+    }
+
+    activateUser(email: string): Observable<any> {
+        return this.http.post(`${this.API_URL}/api/v1/activateUser`, {
+            email
+        })
+    }
+
+    deactivateUser(email: string): Observable<any> {
+        return this.http.post(`${this.API_URL}/api/v1/deactivateUser`, {
+            email
+        })
+    }
+
+    changeUserRole(email: string, newRole: string): Observable<any> {
+        return this.http.post(`${this.API_URL}/api/v1/changeRole`, {
+            email,
+            newRole
+        })
+    }
 }

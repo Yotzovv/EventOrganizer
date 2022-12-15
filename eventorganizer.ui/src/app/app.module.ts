@@ -1,3 +1,4 @@
+import { AdminPageComponent } from './admin-page/admin-page.component';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -12,14 +13,34 @@ import { ProfilePageComponent } from './profile-page/profile-page.component';
 import { RequestService } from './request/request.service';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthModule } from './auth/auth.module';
+import { EventDetailsComponent } from './event-details-page/event-details.component';
+import {MatTabsModule} from '@angular/material/tabs';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @NgModule({
-  imports:      [ CommonModule, MainLayoutModule, AuthModule,
-    AppRoutingModule, BrowserModule, ReactiveFormsModule, MaterialModule, BrowserAnimationsModule,
-    HttpClientModule,
+  imports:      [ CommonModule, 
+    MainLayoutModule, 
+    AuthModule,
+    AppRoutingModule,
+    
+    BrowserModule,
+    
+    ReactiveFormsModule,
+    
+    MaterialModule, 
+    
+    BrowserAnimationsModule,
+    HttpClientModule, 
+    MatTabsModule,
+    MatButtonToggleModule,
+    MatFormFieldModule
   ],
-  declarations: [ AppComponent, ProfilePageComponent, 
-  HomePageComponent ],
+  declarations: [ 
+  AppComponent, 
+  ProfilePageComponent, AdminPageComponent,
+  HomePageComponent,
+  EventDetailsComponent ],
   bootstrap:    [ AppComponent ],
   providers:    [ RequestService ],
 })

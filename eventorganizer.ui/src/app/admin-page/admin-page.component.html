@@ -1,0 +1,41 @@
+<mat-table [dataSource]="users">
+  <ng-container matColumnDef="name">
+    <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+    <mat-cell *matCellDef="let user">{{ user.username }}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="email">
+    <mat-header-cell *matHeaderCellDef>Email</mat-header-cell>
+    <mat-cell *matCellDef="let user">{{ user.email }}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="roles">
+    <mat-header-cell *matHeaderCellDef>Role</mat-header-cell>
+    <mat-cell *matCellDef="let user">
+      <button mat-button [matMenuTriggerFor]="menu">{{ user.role }}</button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="onChangeRole(user, $event)">Admin</button>
+        <button mat-menu-item (click)="onChangeRole(user, $event)">User</button>
+        <button mat-menu-item (click)="onChangeRole(user, $event)">Client</button>
+        <button mat-menu-item (click)="onChangeRole(user, $event)">Organizer</button>
+      </mat-menu>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="buttons">
+    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+    <mat-cell *matCellDef="let user">
+      <button (click)="deactivateUser(user)" [hidden]="!user.isActive" color="warn" style="margin-right: 20%" mat-raised-button>
+        Deactivate
+      </button>
+      <button (click)="activateUser(user)" [hidden]="user.isActive" style="background-color:green; color:aliceblue; margin-right: 20%" mat-raised-button>
+        Activate
+      </button>
+    </mat-cell>
+  </ng-container>
+
+  <mat-select [(ngModel)]="users">
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+  </mat-select>
+</mat-table>
