@@ -1,3 +1,4 @@
+import { AdminPageComponent } from './admin-page/admin-page.component';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -15,23 +16,29 @@ import { AuthModule } from './auth/auth.module';
 import { EventDetailsComponent } from './event-details-page/event-details.component';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @NgModule({
   imports:      [ CommonModule, 
     MainLayoutModule, 
     AuthModule,
-    AppRoutingModule, 
+    AppRoutingModule,
+    
     BrowserModule,
-    ReactiveFormsModule, 
+    
+    ReactiveFormsModule,
+    
     MaterialModule, 
+    
     BrowserAnimationsModule,
     HttpClientModule, 
     MatTabsModule,
-    MatButtonToggleModule 
+    MatButtonToggleModule,
+    MatFormFieldModule
   ],
   declarations: [ 
   AppComponent, 
-  ProfilePageComponent, 
+  ProfilePageComponent, AdminPageComponent,
   HomePageComponent,
   EventDetailsComponent ],
   bootstrap:    [ AppComponent ],

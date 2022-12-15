@@ -1,3 +1,4 @@
+import { AdminPageComponent } from './../admin-page/admin-page.component';
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 import { EventDetailsComponent } from "../event-details-page/event-details.component";
@@ -28,6 +29,10 @@ const routes: Routes = [
       {
         path: 'event-details/:id',
         component: EventDetailsComponent
+      },
+      {
+        path: 'adminpage',
+        component: AdminPageComponent
       }
     ]
   },
