@@ -22,6 +22,21 @@ public class AppUserService implements UserDetailsService {
     private final ConfirmationTokenService confirmationTokenService;
 
     private final PasswordEncoder passwordEncoder;
+
+    public void editAccount(AppUser editedUser) throws UsernameNotFoundException {
+        if(editedUser == null){
+            throw new UsernameNotFoundException("User is not found.");
+        }
+        //TODO: blocked by ev3
+        //if(editedUser != loggedInUser) {
+        //    throw new Exception("Permission denied.")
+        //}
+         var currentUser = userRepository.findByEmail(editedUser.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MESSAGE, editedUser.getEmail())));
+
+        userRepository.save(currentUser);
+    }
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepository.findByEmail(email)
