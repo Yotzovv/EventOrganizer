@@ -5,10 +5,93 @@ Tutorial: https://www.youtube.com/watch?v=2c2fUOgZMmY&ab_channel=AmitThinks
 
 
 Create environment variable:
-ROOT_MYSQL_PASSOWORD
+ROOT_MYSQL_PASSWORD
 The value of the this variable is you root password in mysql.
 
 Once you create the environment variable if you are using windows
 restart pc since app might not notice that the variable is there
 
+Application
 
+(by default
+endpoints api/v1/login, api/v1/registration , api/v1/refreshToken do not required accessToken
+and can be called without having user login)
+
+AUTHENTICATION and AUTHORIZATION mechanism
+JWT
+In order to authenticate a user is required to pass a jwt token
+in the request headers
+
+The token is passed in the request headers in the format
+
+Authorization: Bearer {jwt_token}
+
+How to obtain the token:
+First we have to create a user (we do not have to create a new user if we alredy have one and know user and pass)
+
+To create a user we need to call the registration endpoint
+
+POST: api/v1/registration
+with requestBody
+{
+    "username" : "RandomUser",
+    "email": "RandomUser",
+    "password": "RandomPass"
+}
+
+After a successful call of the endpoint we should get response:
+User RandomUser is created with status 200
+
+The user is successfully created
+Now we need to login with the user credentials to get the jwt access tokens
+username and password
+
+POST: api/v1/login
+with xxx-www-form-urlencoded
+
+username: RandomUser
+password: RandomPass
+
+After a successful login we should get response
+200
+with
+{
+    "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJrcmlzZWx2ZWxpZXYxIiwicm9sZXMiOlsiVVNFUiJdLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODgvYXBpL3YxL2xvZ2luIiwiZXhwIjoxNjcxMTQyNDE4fQ.HoeyYrQEULwAzJwa-0zxzgh932HAwC_aweTmOkqKrwI",
+    "refresh_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJrcmlzZWx2ZWxpZXYxIiwicm9sZXMiOlsiVVNFUiJdLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODgvYXBpL3YxL2xvZ2luIiwiZXhwIjoxNjcxMTQzNjE4fQ.fFW6l5r0A0VjDXpWjADtc8LKMBAlptgxr4Yp23cFCKU"
+}
+
+the access token should be passed in every subsequent request in the headers
+Authorization: Bearer {access_token}
+otherwise will get forbidden error code if we try to access any endpoint not in (registration, login and refreshToken)
+
+
+the refresh token is used to generate new access token when the access token expires
+for the refreshToken we need to pass in request header
+
+Authorization: Bearer {REFRESH_TOKEN_HERE) (we need to pass the refresh token not the access token here)
+
+GET: api/v1/refreshToken
+
+After a successful refresh we should get response
+200
+with
+{
+    "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJrcmlzZWx2ZWxpZXYxIiwicm9sZXMiOlsiVVNFUiJdLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODgvYXBpL3YxL2xvZ2luIiwiZXhwIjoxNjcxMTQyNDE4fQ.HoeyYrQEULwAzJwa-0zxzgh932HAwC_aweTmOkqKrwI",
+    "refresh_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJrcmlzZWx2ZWxpZXYxIiwicm9sZXMiOlsiVVNFUiJdLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwODgvYXBpL3YxL2xvZ2luIiwiZXhwIjoxNjcxMTQzNjE4fQ.fFW6l5r0A0VjDXpWjADtc8LKMBAlptgxr4Yp23cFCKU"
+}
+
+now we have new access token
+
+In case refresh token expires we need to log in again
+calling the login endpoint
+
+ACCESS TOKEN EXPIRES AFTER 30 MINUTES
+
+REFRESH TOKEN EXPIRES AFTER 2 HOURS
+
+
+
+Logout functionality is not needed in backend when using jwt since
+jwt token cannot be expired manually after they have already been created
+So logout should be only on frontend side mainly just cleaning the stored tokens
+and prompting the user to login again

@@ -50,7 +50,7 @@ public class EventController {
         return "deleted";
     }
 
-    @PostMapping
+    @PostMapping("/addComment")
     public void addComment(String comment, Long eventId) throws EventOrganizerException {
         eventService.addComment(comment, eventId);
     }

@@ -5,12 +5,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -48,5 +43,8 @@ public class Event {
     private String name;
     private LocalDateTime time;
     private String status;
+
+    @OneToMany(cascade=CascadeType.ALL)
+    @JoinColumn(name="event_id")
     private List<Comment> comments;
 }

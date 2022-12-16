@@ -15,7 +15,7 @@ public class AccountController {
 
     private final AppUserService userService;
 
-    public void EditAccount(AppUser account){
+    public void editAccount(AppUser account){
          userService.editAccount(account);
     }
 }

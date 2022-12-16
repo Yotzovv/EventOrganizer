@@ -53,7 +53,7 @@ class AccountTests {
 
 		// Set up class under test
 		UserRepository userRepository = mock(UserRepository.class);
-		AppUserService appUserService = new AppUserService(userRepository, null, null);
+		AppUserService appUserService = new AppUserService(userRepository, null);
 
 		// Act
 		UsernameNotFoundException thrown = Assertions.assertThrows(UsernameNotFoundException.class,
@@ -73,7 +73,7 @@ class AccountTests {
 		when(mockedUserRepository.findByEmail(editedUser.getEmail())).thenReturn(Optional.empty());
 
 		// Set up class under test and inject mocked user repository	
-		AppUserService appUserService = new AppUserService(mockedUserRepository, null, null);
+		AppUserService appUserService = new AppUserService(mockedUserRepository, null);
 
 		// Act
 		UsernameNotFoundException thrown = Assertions.assertThrows(UsernameNotFoundException.class,

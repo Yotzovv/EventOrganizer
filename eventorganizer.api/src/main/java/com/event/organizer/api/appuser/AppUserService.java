@@ -1,10 +1,6 @@
 package com.event.organizer.api.appuser;
 
-import com.event.organizer.api.appuser.registration.token.ConfirmationToken;
-import com.event.organizer.api.appuser.registration.token.ConfirmationTokenService;
 import com.event.organizer.api.security.config.PasswordEncoder;
-import java.time.LocalDateTime;
-import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,9 +13,9 @@ public class AppUserService implements UserDetailsService {
 
     private static final String USER_NOT_FOUND_MESSAGE = "User with email %s not found";
 
-    private final UserRepository userRepository;
+    private static final String USER_CREATED = "User %s is created";
 
-    private final ConfirmationTokenService confirmationTokenService;
+    private final UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -43,7 +39,7 @@ public class AppUserService implements UserDetailsService {
             .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MESSAGE, email)));
     }
 
-    public ConfirmationToken signUpUser(AppUser appUser) {
+    public String signUpUser(AppUser appUser) {
         boolean userExists = userRepository.findByEmail(appUser.getEmail()).isPresent();
         if (userExists) {
             throw new IllegalStateException("User exists");
@@ -51,25 +47,11 @@ public class AppUserService implements UserDetailsService {
 
         String encodedPassword = passwordEncoder.bCryptPasswordEncoder().encode(appUser.getPassword());
         appUser.setPassword(encodedPassword);
+        appUser.setEnabled(true);
 
         userRepository.save(appUser);
 
-        //TODO: Send confirmation token this is what ui needs
-
-        String token = UUID.randomUUID().toString();
-        ConfirmationToken confirmationToken = new ConfirmationToken(
-            token,
-            LocalDateTime.now(),
-            LocalDateTime.now().plusMinutes(15), //this in config
-            LocalDateTime.now(), //this in config
-            appUser
-        );
-
-        confirmationTokenService.saveConfirmationToken(confirmationToken);
-        // CHECK IF TOKEN IS SAVED
-
-        // SEND EMAIL
-        return confirmationToken;
+        return String.format(USER_CREATED, appUser.getUsername());
     }
 
     public int enableAppUser(String email) {
