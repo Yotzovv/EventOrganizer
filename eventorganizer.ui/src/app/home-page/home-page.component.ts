@@ -11,10 +11,13 @@ import { DialogAnimationsExampleDialog } from '../create-edit-event-dialog/creat
 })
 export class HomePageComponent {
   createEventDialog: MatDialogRef<DialogAnimationsExampleDialog>;
+  requestService: RequestService;
 
   public allEvents: EventDto[] = [];
 
   constructor(requestService: RequestService, private dialogModel: MatDialog) {
+    this.requestService = requestService;
+
     requestService.getAllEvents$().subscribe((res) => {
       this.allEvents = res;
     });
@@ -26,5 +29,17 @@ export class HomePageComponent {
         event: event
       }
     });
+  }
+
+  userIsInterested(eventId: number): void {
+    // TODO: fetch user jwt token
+    var userToken: string = 'todo: take this fucking token';
+    this.requestService.userIsInterested(userToken, eventId).subscribe((res) => { })
+  }
+
+  userIsNotInterested(eventId: number): void {
+    // TODO: fetch user jwt token
+    var userToken: string = 'todo: take this fucking token';
+    this.requestService.userIsNotInterested(userToken, eventId).subscribe((res) => { })
   }
 }

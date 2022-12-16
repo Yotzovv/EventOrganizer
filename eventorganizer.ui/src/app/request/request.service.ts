@@ -71,4 +71,18 @@ export class RequestService {
             newRole
         })
     }
+
+    userIsInterested(userToken: string, eventId: number) {
+        return this.http.post(`${this.API_URL}/api/v1/userIsInterested`, {
+            userToken,
+            eventId
+        })
+    }
+
+    userIsNotInterested(userToken: string, eventId: number) {
+        return this.http.post(`${this.API_URL}/api/v1/userIsNotInterested`, {
+            userToken,
+            eventId
+        })
+    }
 }
