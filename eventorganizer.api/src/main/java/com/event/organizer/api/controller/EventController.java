@@ -6,6 +6,7 @@ import com.event.organizer.api.model.dto.EventRequestDto;
 import com.event.organizer.api.service.EventService;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 
@@ -32,9 +33,9 @@ public class EventController {
     }
 
     @PostMapping
-    public Event createEvent(@RequestBody EventRequestDto eventRequestDto) throws EventOrganizerException {
+    public Event createEvent(@RequestBody EventRequestDto eventRequestDto, Principal principal) throws EventOrganizerException {
         Event event = getEvent(eventRequestDto);
-        return eventService.saveEvent(event);
+        return eventService.saveEvent(event, principal.getName());
     }
 
     @PutMapping
@@ -55,16 +56,30 @@ public class EventController {
         eventService.addComment(comment, eventId);
     }
 
-    private Event getEvent(EventRequestDto eventRequestDto) {
+    private Event getEvent(EventRequestDto eventRequestDto) throws EventOrganizerException {
         Event event = new Event();
         event.setId(eventRequestDto.getId());
         event.setName(eventRequestDto.getName());
-        event.setTime(eventRequestDto.getLocalDateTime());
+
+        validateEndDateAfterStartDate(eventRequestDto.getStartDate(), eventRequestDto.getEndDate());
+        event.setStartDate(eventRequestDto.getStartDate());
+        event.setEndDate(eventRequestDto.getEndDate());
+
+        event.setDescription(eventRequestDto.getDescription());
+        event.setStatus(eventRequestDto.getStatus());
+        event.setLocation(eventRequestDto.getLocation());
+
         if (Event.STATUSES.contains(eventRequestDto.getStatus())) {
             event.setStatus(eventRequestDto.getStatus());
         } else {
             event.setStatus(Event.NONE_STATUS);
         }
         return event;
+    }
+
+    private void validateEndDateAfterStartDate(LocalDateTime startDate, LocalDateTime endDate) throws EventOrganizerException {
+        if(endDate.isBefore(startDate)) {
+            throw new EventOrganizerException("Start date should be before end date");
+        }
     }
 }

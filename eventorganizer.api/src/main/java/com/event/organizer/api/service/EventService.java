@@ -1,27 +1,42 @@
 package com.event.organizer.api.service;
 
+import com.event.organizer.api.appuser.AppUser;
+import com.event.organizer.api.appuser.AppUserService;
 import com.event.organizer.api.exception.EventOrganizerException;
 import com.event.organizer.api.model.Comment;
 import com.event.organizer.api.model.Event;
 import com.event.organizer.api.repository.EventRepository;
+
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Service
 @AllArgsConstructor
+@Transactional
 public class EventService {
 
     private final EventRepository eventRepository;
+
+    private final AppUserService appUserService;
 
     public List<Event> findAll() {
         return eventRepository.findAll();
     }
 
-    public Event saveEvent(Event event) throws EventOrganizerException {
+    public Event saveEvent(Event event, String username) throws EventOrganizerException {
         if (event.getId() != null && eventRepository.existsById(event.getId())) {
             throw new EventOrganizerException("Event already exist");
         }
+
+        AppUser creator = (AppUser) appUserService.loadUserByUsername(username);
+        event.setCreator(creator);
+        List<AppUser> appUsers = new ArrayList<>();
+        appUsers.add(creator);
+        event.setAppUsers(appUsers);
         // TODO: Now its possible to create event with nulls for everything. 
         // Create validation for Name, localDateTime, status.
 

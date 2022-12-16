@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 import javax.persistence.*;
 
+import com.event.organizer.api.appuser.AppUser;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -41,10 +42,21 @@ public class Event {
     )
     private Long id;
     private String name;
-    private LocalDateTime time;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
     private String status;
+    private String description;
+    private String location;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private AppUser creator;
 
     @OneToMany(cascade=CascadeType.ALL)
     @JoinColumn(name="event_id")
     private List<Comment> comments;
+
+    @ManyToMany(mappedBy = "events")
+    private List<AppUser> appUsers;
+
 }

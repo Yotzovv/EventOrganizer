@@ -2,13 +2,10 @@ package com.event.organizer.api.appuser;
 
 import java.util.Collection;
 import java.util.Collections;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
+import java.util.List;
+import javax.persistence.*;
+
+import com.event.organizer.api.model.Event;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -43,6 +40,13 @@ public class AppUser implements UserDetails {
     private AppUserRole role;
     private boolean locked = false;
     private boolean enabled = false;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_event",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "event_id"))
+    private List<Event> events;
 
     public AppUser(String name, String username, String email, String password, AppUserRole role) {
         this.name = name;

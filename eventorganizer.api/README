@@ -95,3 +95,6 @@ Logout functionality is not needed in backend when using jwt since
 jwt token cannot be expired manually after they have already been created
 So logout should be only on frontend side mainly just cleaning the stored tokens
 and prompting the user to login again
+
+
+Event dates will be passed in the following format :   dd/MM/yyyy HH:mm

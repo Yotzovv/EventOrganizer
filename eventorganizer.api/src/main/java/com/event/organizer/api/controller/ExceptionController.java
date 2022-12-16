@@ -28,4 +28,12 @@ public class ExceptionController {
         final String message = ex.getMessage();
         return new ErrorMessage(message);
     }
+
+    @ExceptionHandler(value = {Exception.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorMessage exception(final Exception ex) {
+        final String message = ex.getMessage();
+        return new ErrorMessage(message);
+    }
 }

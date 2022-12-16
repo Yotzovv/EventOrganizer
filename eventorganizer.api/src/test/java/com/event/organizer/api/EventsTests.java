@@ -1,5 +1,6 @@
 package com.event.organizer.api;
 
+import com.event.organizer.api.appuser.AppUserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
@@ -37,11 +38,12 @@ class EventOrganizerApplicationTests {
 		List<Comment> comments = new ArrayList<Comment>();
 		comments.add(comment);
 		EventRepository eventRepository = mock(EventRepository.class);
-		
+		AppUserService appUserService = mock(AppUserService.class);
+
 		when(eventRepository.existsById(event.getId())).thenReturn(true);
 
 		// Create an EventOrganizer instance and call the addComment method
-		EventService eventService = new EventService(eventRepository);
+		EventService eventService = new EventService(eventRepository, appUserService);
 		when(eventRepository.findById(event.getId())).thenReturn(Optional.of(event));
 		eventService.addComment(comment.getContent(), event.getId());
 
@@ -61,10 +63,12 @@ class EventOrganizerApplicationTests {
 		// Set up a mock event repository that will return an empty Optional when
 		// findById is called
 		EventRepository eventRepository = mock(EventRepository.class);
+		AppUserService appUserService = mock(AppUserService.class);
+
 		when(eventRepository.findById(1l)).thenReturn(Optional.empty());
 
 		// Create an EventOrganizer instance and call the addComment method
-		EventService eventService = new EventService(eventRepository);
+		EventService eventService = new EventService(eventRepository, appUserService);
 
 		// Verify that an EventOrganizerException is thrown when the event does not
 		// exist
