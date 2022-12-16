@@ -1,5 +1,7 @@
 package com.event.organizer.api.service;
 
+import com.event.organizer.api.appuser.AppUser;
+import com.event.organizer.api.appuser.UserRepository;
 import com.event.organizer.api.exception.EventOrganizerException;
 import com.event.organizer.api.model.Comment;
 import com.event.organizer.api.model.Event;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 public class EventService {
 
     private final EventRepository eventRepository;
+    private final UserRepository userRepository; //TODO:FIX - this creates errors in the EventsTests 
 
     public List<Event> findAll() {
         return eventRepository.findAll();
@@ -55,5 +58,13 @@ public class EventService {
         event.setComments(allComments);
 
         eventRepository.save(event);
+    }
+
+    public void userIsInterestedInEvent(String email, long eventId){
+        AppUser currentUser = userRepository.findByEmail(email).get();
+        Event currentEvent = eventRepository.findById(eventId).get();
+
+        currentEvent.getInterestedUsers().add(currentUser);
+        eventRepository.save(currentEvent);
     }
 }

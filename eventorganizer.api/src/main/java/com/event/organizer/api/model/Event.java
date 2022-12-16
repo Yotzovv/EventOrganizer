@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Set;
 import javax.persistence.*;
 
+import com.event.organizer.api.appuser.AppUser;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -47,4 +49,5 @@ public class Event {
     @OneToMany(cascade=CascadeType.ALL)
     @JoinColumn(name="event_id")
     private List<Comment> comments;
+    private List<AppUser> interestedUsers;
 }

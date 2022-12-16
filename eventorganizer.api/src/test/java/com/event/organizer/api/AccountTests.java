@@ -1,12 +1,10 @@
 package com.event.organizer.api;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 
-import org.apache.catalina.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,11 +14,10 @@ import org.springframework.test.context.ContextConfiguration;
 import com.event.organizer.api.appuser.AppUser;
 import com.event.organizer.api.appuser.AppUserService;
 import com.event.organizer.api.appuser.UserRepository;
-import com.event.organizer.api.exception.EventOrganizerException;
 
-@ContextConfiguration(classes = {UserRepository.class, AppUserService.class, AppUser.class})
-@SpringBootTest(properties = "spring.main.lazy-initialization=true",
-        		classes = {UserRepository.class, AppUserService.class, AppUser.class})
+@ContextConfiguration(classes = { UserRepository.class, AppUserService.class, AppUser.class })
+@SpringBootTest(properties = "spring.main.lazy-initialization=true", classes = { UserRepository.class,
+		AppUserService.class, AppUser.class })
 class AccountTests {
 
 	@Test
@@ -29,7 +26,8 @@ class AccountTests {
 		AppUser editedUser = new AppUser();
 		editedUser.setEmail("test@example.com");
 
-		// Set up mocked user repository to return the edited user when findByEmail is called
+		// Set up mocked user repository to return the edited user when findByEmail is
+		// called
 		UserRepository mockedUserRepository = mock(UserRepository.class);
 		when(mockedUserRepository.findByEmail(editedUser.getEmail())).thenReturn(Optional.of(editedUser));
 
@@ -68,11 +66,12 @@ class AccountTests {
 		AppUser editedUser = new AppUser();
 		editedUser.setEmail("test@example.com");
 
-		// Set up mocked user repository to return empty Optional when findByEmail is called
+		// Set up mocked user repository to return empty Optional when findByEmail is
+		// called
 		UserRepository mockedUserRepository = mock(UserRepository.class);
 		when(mockedUserRepository.findByEmail(editedUser.getEmail())).thenReturn(Optional.empty());
 
-		// Set up class under test and inject mocked user repository	
+		// Set up class under test and inject mocked user repository
 		AppUserService appUserService = new AppUserService(mockedUserRepository, null);
 
 		// Act

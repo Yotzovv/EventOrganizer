@@ -55,6 +55,12 @@ public class EventController {
         eventService.addComment(comment, eventId);
     }
 
+    @PostMapping()
+    public void userIsInterestedInEvent(String email, Long eventId) {
+        eventService.userIsInterestedInEvent(email, eventId);
+    }
+
+    //TODO: add mapping?
     private Event getEvent(EventRequestDto eventRequestDto) {
         Event event = new Event();
         event.setId(eventRequestDto.getId());
