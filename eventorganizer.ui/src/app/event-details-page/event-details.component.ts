@@ -21,9 +21,10 @@ export class EventDetailsComponent {
         const eventId: number = Number(this.route.snapshot.paramMap.get('id'));
         this.requestService = _requestService;
 
-        _requestService.getEvent(eventId).subscribe((res) => {
-            this.event = res;
-        });        
+        // TODO: Change to getEventById when API supports it.
+        _requestService.getAllEvents$().subscribe((res: EventDto[]) => {
+            this.event = res.find(e => e.id === eventId);
+        });
     }
     
     addComment() {
