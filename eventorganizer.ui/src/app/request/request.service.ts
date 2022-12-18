@@ -1,9 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../environment/environment';
 import { EventDto } from '../types/event.type';
-import { CreateUserDto } from '../types/user.type';
+import { CreateUserDto, LoginUserDto } from '../types/user.type';
 
 @Injectable()
 export class RequestService {
@@ -32,6 +32,36 @@ export class RequestService {
             body,
             responseType: 'text'
         })
+    }
+
+    loginUser$(body: LoginUserDto) {
+        const serializedForm = this.serializeLoginForm(body);
+        // const serializedForm = `username=${body.username}&password=${body.password}`;
+        return this.http.request('POST', `${this.API_URL}/api/v1/login`, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: serializedForm,
+            // responseType: 'arraybuffer',
+            // withCredentials: true,
+        });
+    }
+
+    serializeLoginForm(formToSerialize: Object) {
+        // const formBody = [];
+        // for (const property in formToSerialize) {
+        //     const encodedKey = encodeURIComponent(property);
+        //     const encodedValue = encodeURIComponent(formToSerialize[property]);
+        //   formBody.push(encodedKey + "=" + encodedValue);
+        // }
+        // const formBodySerialized = formBody.join("&");
+        // return formBodySerialized;
+        const params = new URLSearchParams();
+        const keys = Object.keys(formToSerialize);
+        keys.forEach((key, index, array) => {
+            params.append(key, formToSerialize[key]);
+        });
+        return params;
     }
 
     updateEvent(body: EventDto) {

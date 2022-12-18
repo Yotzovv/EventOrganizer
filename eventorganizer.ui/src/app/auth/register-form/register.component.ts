@@ -30,12 +30,12 @@ export class RegisterComponent implements OnInit {
     let emailregex: RegExp =
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     this.registerForm = new FormGroup({
-      username: new FormControl('pesho_pi4a', [Validators.required]),
-      email: new FormControl('pesho_pi4a@abv.bg', [
+      username: new FormControl('', [Validators.required]),
+      email: new FormControl('', [
         Validators.required,
         Validators.pattern(emailregex),
       ]),
-      password: new FormControl('Qwerty123', [
+      password: new FormControl('', [
         Validators.required,
         this.checkPassword,
       ]),

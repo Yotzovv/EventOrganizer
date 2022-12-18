@@ -6,13 +6,14 @@
     <form [formGroup]="loginForm" (ngSubmit)="submit()">
       <p>
         <mat-form-field>
-          <input type="text" matInput placeholder="Username" formControlName="username">
+          <input type="text" matInput placeholder="Email" formControlName="email">
         </mat-form-field>
       </p>
 
       <p>
         <mat-form-field>
           <input type="password" matInput placeholder="Password" formControlName="password">
+          <mat-hint class="login-error" *ngIf="loginErrored">Incorrect username or password.</mat-hint>
         </mat-form-field>
       </p>
 

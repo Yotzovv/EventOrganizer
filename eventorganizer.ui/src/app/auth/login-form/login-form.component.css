@@ -27,3 +27,6 @@ display: flex;
 justify-content: space-between;
 }
 
+.login-error {
+    color: red
+}

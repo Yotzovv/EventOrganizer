@@ -11,30 +11,28 @@ import { HomePageComponent } from './home-page/home-page.component';
 import { CommonModule } from '@angular/common';
 import { ProfilePageComponent } from './profile-page/profile-page.component';
 import { RequestService } from './request/request.service';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthModule } from './auth/auth.module';
 import { EventDetailsComponent } from './event-details-page/event-details.component';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { AuthInterceptor } from './auth/auth.interceptor';
 
 @NgModule({
-  imports:      [ CommonModule, 
+  imports:      [ 
+    CommonModule, 
     MainLayoutModule, 
     AuthModule,
     AppRoutingModule,
-    
     BrowserModule,
-    
     ReactiveFormsModule,
-    
     MaterialModule, 
-    
     BrowserAnimationsModule,
     HttpClientModule, 
     MatTabsModule,
     MatButtonToggleModule,
-    MatFormFieldModule
+    MatFormFieldModule,
   ],
   declarations: [ 
   AppComponent, 
@@ -42,7 +40,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   HomePageComponent,
   EventDetailsComponent ],
   bootstrap:    [ AppComponent ],
-  providers:    [ RequestService ],
+  providers:    [ 
+    RequestService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    }
+  ],
 })
 export class AppModule { 
 }
