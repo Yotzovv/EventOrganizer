@@ -24,7 +24,7 @@ export class RequestService {
     }
 
     getEvent(id: number): Observable<any> {
-        return this.http.get(`${this.API_URL}/api/v1/events`)
+        return this.http.get(`${this.API_URL}/api/v1/events/${id}`)
     }
 
     registerUser$(body: CreateUserDto) {
@@ -71,7 +71,7 @@ export class RequestService {
     }
 
     createEvent(body: EventDto) {
-        return this.http.post(`${this.API_URL}/api/v1/createEvent`, {
+        return this.http.post(`${this.API_URL}/api/v1/events`, {
             body,
         })
     }

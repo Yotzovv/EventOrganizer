@@ -2,17 +2,17 @@ import { RequestService } from './../request/request.service';
 import { Comment } from './comment.type'
 
 export class EventDto {
-    id: number;
+    id?: number;
     name: string;
     location: string;
     description: string;
-    comments: Comment[];
+    comments?: Comment[];
     time: Date;
-    status: string;
-    interestedPeple: number;
+    status?: string;
+    interestedPeple?: number;
     publisher: string;
-    isCurrentUserInterested: boolean;
-    cantBeEdited: boolean;
+    isCurrentUserInterested?: boolean;
+    cantBeEdited?: boolean;
 
     
     constructor(_id: number, _name: string, _time: Date, _status: string, _location: string, _description: string, isCurrentUserInterested: boolean, cantBeEdited: boolean) {

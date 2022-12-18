@@ -80,10 +80,18 @@ export class RegisterComponent implements OnInit {
       username,
       email,
       password
-    }).subscribe((token: string) => {
-      window.localStorage.setItem('user-token', token);
-      this._snackBar.open('Registration completed!', 'close');
-      this.router.navigate(['/'])
+    })
+    .subscribe((res) => {
+      this.request.loginUser$({
+        username: email,
+        password
+      })
+      .subscribe((res: any) => {
+          const { access_token } = res;
+          window.localStorage.setItem('user-token', access_token);
+          this._snackBar.open('Registration completed!', 'close');
+          this.router.navigate(['home']);
+        });
     });
 
     formDirective.resetForm();

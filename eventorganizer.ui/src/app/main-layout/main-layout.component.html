@@ -7,36 +7,16 @@
          </span>
     </a>
 
-    
-    <!-- TODO: find a better way -->
-    <span class="example-spacer"></span>
-    <span class="example-spacer"></span>
-    <span class="example-spacer"></span>
-    <span class="example-spacer"></span>
-    <span class="example-spacer"></span>
-    <span class="example-spacer"></span>
-    <span class="example-spacer"></span>
-    <span class="example-spacer"></span>
-    <span class="example-spacer"></span>
-    <span class="example-spacer"></span>
-    <span class="example-spacer"></span>
-    <span class="example-spacer"></span>
-    <span class="example-spacer"></span>
-    <span class="example-spacer"></span>
-    <span class="example-spacer"></span>
-    <span class="example-spacer"></span>
-    <span class="example-spacer"></span>
-
-
-    <button mat-raised-button color="primary" (click)="openCreateEventDialog('0ms', '0ms')">Create Event</button>
-    <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon"></button>
-    <button mat-icon-button
-            class="example-icon"
-            [matMenuTriggerFor]="profileMenu"
-            matTooltip="test@mail.com"
-            >
-        <mat-icon>person</mat-icon>
-    </button>
+    <div class="right-nav-container">
+        <button mat-raised-button color="primary" (click)="openCreateEventDialog('0ms', '0ms')">Create Event</button>
+        <button mat-icon-button
+                class="example-icon"
+                [matMenuTriggerFor]="profileMenu"
+                matTooltip="test@mail.com"
+                >
+            <mat-icon>person</mat-icon>
+        </button>
+    </div>
 
     <mat-menu #profileMenu="matMenu"
                 [overlapTrigger]="false">

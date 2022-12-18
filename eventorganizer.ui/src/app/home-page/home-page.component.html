@@ -3,28 +3,29 @@
     
     <mat-card *ngFor="let event of allEvents">
         <mat-card-header>
-            <button style="margin-left: 30%" [hidden]="!event.isCurrentUserInterested" (click)="userIsNotInterested(event.id)" color="warn" mat-icon-button>
+            <button [hidden]="!event.isCurrentUserInterested" (click)="userIsNotInterested(event.id)" color="warn" mat-icon-button>
                 <mat-icon>favorite</mat-icon>
             </button>
-            <button style="margin-left: 30%" [hidden]="event.isCurrentUserInterested" (click)="userIsInterested(event.id)" color="warn" mat-icon-button>
-                <mat-icon>favorite_border</mat-icon>
-            </button>
-            <button [hidden]="event.cantBeEdited" (click)="openEditEventDialog('0ms', '0ms', event)" class="grey-icon" mat-icon-button>
-                <mat-icon>edit</mat-icon>
-            </button>
+            <div>
+                <button [hidden]="event.isCurrentUserInterested" (click)="userIsInterested(event.id)" color="warn" mat-icon-button>
+                    <mat-icon>favorite_border</mat-icon>
+                </button>
+                <button [hidden]="event.cantBeEdited" (click)="openEditEventDialog('0ms', '0ms', event)" class="grey-icon" mat-icon-button>
+                    <mat-icon>edit</mat-icon>
+                </button>
+            </div>
             <mat-card-subtitle style="font-weight: 700;">{{event.time | date: 'MMMM dd'}}</mat-card-subtitle>
             <mat-card-title [routerLink]="['/event-details', event.id]">
                 <mat-icon class="grey-icon">event</mat-icon>
-                {{event.name}}
+                <span>{{event.name}}</span>
             </mat-card-title>
             <!-- When both edit and favorite buttons are shown, this is displayed on 2 lines -->
-            <mat-card-subtitle>CyberCreed Clique Club</mat-card-subtitle>
+            <mat-card-subtitle>{{event.location}}</mat-card-subtitle>
             <mat-card-subtitle>150 going . 40 interested</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
             <p>
-                The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan. A small, agile dog
-                that copes very well with mountainous terrain, the Shiba Inu was originally bred for hunting.
+                {{event.description}}
             </p>    
         </mat-card-content>
         <p></p>

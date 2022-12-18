@@ -19,7 +19,6 @@ export class EventDetailsComponent {
 
     constructor(_requestService: RequestService, private route: ActivatedRoute) {
         const eventId: number = Number(this.route.snapshot.paramMap.get('id'));
-        
         this.requestService = _requestService;
 
         _requestService.getEvent(eventId).subscribe((res) => {

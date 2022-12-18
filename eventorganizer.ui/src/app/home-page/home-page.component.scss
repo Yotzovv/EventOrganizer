@@ -4,9 +4,20 @@
     margin: 100px 0px;
 }
 
-mat-card-title:hover {
-    background-color: lightgray;
-    cursor: pointer;
+mat-card-title {
+    &:hover {
+        background-color: lightgray;
+        cursor: pointer;
+    }
+    & mat-icon {
+        padding-right: 30px;
+    }
+    display: flex;
+    align-items: center;
+}
+
+mat-card-header {
+    justify-content: space-between;
 }
 
 mat-card {
