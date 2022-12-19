@@ -65,8 +65,10 @@ export class RequestService {
     }
 
     updateEvent(body: EventDto) {
-        return this.http.post(`${this.API_URL}/api/v1/updateEvent`, {
-            body,
+        return this.http.put(`${this.API_URL}/api/v1/events`, JSON.stringify(body), {
+            headers: {
+                'Content-Type': 'application/json',
+            },
         })
     }
 

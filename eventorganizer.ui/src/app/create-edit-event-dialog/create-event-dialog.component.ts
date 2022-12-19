@@ -17,22 +17,29 @@ export class DialogAnimationsExampleDialog {   // TODO: Rename
   private startDate = new FormControl(null);
   private endDate = new FormControl(null);
   private status = new FormControl(null);
+  private description = new FormControl(null);
+  private location = new FormControl(null);
+  private type = new FormControl(null);
    
   constructor(public dialogRef: MatDialogRef<DialogAnimationsExampleDialog>, @Inject(MAT_DIALOG_DATA) public data: any, requestService: RequestService) {
     this.requestService = requestService;
     if(data && data.event) {
       this.eventId.setValue(data.event.id)
       this.eventName.setValue(data.event.name);
-      this.startDate.setValue(data.event.startDate);
-      this.endDate.setValue(data.event.endDate);
+      this.startDate.setValue(new Date(data.event.startDate));
+      this.endDate.setValue(new Date(data.event.endDate));
+      this.description.setValue(data.event.description);
+      this.location.setValue(data.event.location);
+      this.type.setValue(data.event.type);
     }
   }
 
   
   eventForm: FormGroup = new FormGroup({
+      id: this.eventId,
       name: this.eventName,
-      description: new FormControl(''),
-      location: new FormControl(''),
+      description: this.description,
+      location: this.location,
       startDate: this.startDate,
       endDate: this.endDate,
       status: this.status,

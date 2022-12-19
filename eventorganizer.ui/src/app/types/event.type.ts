@@ -14,8 +14,9 @@ export class EventDto {
     publisher: string;
     isCurrentUserInterested?: boolean;
     cantBeEdited?: boolean;
+    type?: string;  // TODO: map in the database
 
-    constructor(_id: number, _name: string, _time: Date, _endDate: Date, _status: string, _location: string, _description: string, isCurrentUserInterested: boolean, cantBeEdited: boolean) {
+    constructor(_id: number, _name: string, _time: Date, _endDate: Date, _status: string, _location: string, _description: string, isCurrentUserInterested: boolean, cantBeEdited: boolean, type: string) {
         this.id = _id;
         this.name = _name;
         this.startDate = _time;
@@ -25,5 +26,6 @@ export class EventDto {
         this.description = _description;
         this.isCurrentUserInterested = isCurrentUserInterested;
         this.cantBeEdited = cantBeEdited;
+        this.type = type;
     }
 }
