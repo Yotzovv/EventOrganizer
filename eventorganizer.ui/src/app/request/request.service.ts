@@ -81,10 +81,11 @@ export class RequestService {
     }
 
     addComment(eventId: number, comment: string): Observable<any> {
-        return this.http.post(`${this.API_URL}/api/v1/addComment`, {
-            eventId,
-            comment,
-        })
+        return this.http.post(`${this.API_URL}/api/v1/events/addComment`, {comment, eventId}, {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
     }
 
     activateUser(email: string): Observable<any> {

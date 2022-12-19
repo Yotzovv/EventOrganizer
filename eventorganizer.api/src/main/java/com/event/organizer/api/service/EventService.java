@@ -57,7 +57,7 @@ public class EventService {
         eventRepository.delete(event);
     }
 
-    public void addComment(String comment, Long eventId) throws EventOrganizerException  {
+    public void addComment(String comment, Long eventId, String username) throws EventOrganizerException  {
         if (!eventRepository.existsById(eventId)) {
             throw new EventOrganizerException("Event does not exist");
         }
@@ -66,6 +66,8 @@ public class EventService {
 
         Comment commentModel = new Comment();
         commentModel.setContent(comment);
+        commentModel.setOwnersUsername(username);
+
         allComments.add(commentModel);
         event.setComments(allComments);
 

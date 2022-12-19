@@ -3,12 +3,16 @@ package com.event.organizer.api.controller;
 import com.event.organizer.api.exception.EventOrganizerException;
 import com.event.organizer.api.model.Event;
 import com.event.organizer.api.model.dto.EventRequestDto;
+import com.event.organizer.api.model.dto.CommentRequestDto;
 import com.event.organizer.api.service.EventService;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,7 +37,8 @@ public class EventController {
     }
 
     @PostMapping
-    public Event createEvent(@RequestBody EventRequestDto eventRequestDto, Principal principal) throws EventOrganizerException {
+    public Event createEvent(@RequestBody EventRequestDto eventRequestDto, Principal principal)
+            throws EventOrganizerException {
         Event event = getEvent(eventRequestDto);
         return eventService.saveEvent(event, principal.getName());
     }
@@ -52,8 +57,8 @@ public class EventController {
     }
 
     @PostMapping("/addComment")
-    public void addComment(String comment, Long eventId) throws EventOrganizerException {
-        eventService.addComment(comment, eventId);
+    public void addComment(@RequestBody CommentRequestDto request, Principal principal) throws EventOrganizerException {
+        eventService.addComment(request.getComment(), request.getEventId(), principal.getName());
     }
 
     private Event getEvent(EventRequestDto eventRequestDto) throws EventOrganizerException {
@@ -77,8 +82,9 @@ public class EventController {
         return event;
     }
 
-    private void validateEndDateAfterStartDate(LocalDateTime startDate, LocalDateTime endDate) throws EventOrganizerException {
-        if(endDate.isBefore(startDate)) {
+    private void validateEndDateAfterStartDate(LocalDateTime startDate, LocalDateTime endDate)
+            throws EventOrganizerException {
+        if (endDate.isBefore(startDate)) {
             throw new EventOrganizerException("Start date should be before end date");
         }
     }

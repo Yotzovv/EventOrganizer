@@ -26,4 +26,5 @@ public class Comment {
     private long id;
     private String content;
     private LocalDateTime createdDate;
+    private String ownersUsername;
 }

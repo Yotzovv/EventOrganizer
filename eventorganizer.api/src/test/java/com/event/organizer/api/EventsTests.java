@@ -45,7 +45,7 @@ class EventOrganizerApplicationTests {
 		// Create an EventOrganizer instance and call the addComment method
 		EventService eventService = new EventService(eventRepository, appUserService);
 		when(eventRepository.findById(event.getId())).thenReturn(Optional.of(event));
-		eventService.addComment(comment.getContent(), event.getId());
+		eventService.addComment(comment.getContent(), event.getId(), "admin");
 
 		// Verify that the comment was added to the event
 		assertTrue(event.getComments().contains(comment));
@@ -73,7 +73,7 @@ class EventOrganizerApplicationTests {
 		// Verify that an EventOrganizerException is thrown when the event does not
 		// exist
 		assertThrows(EventOrganizerException.class, () -> {
-			eventService.addComment(comment.getContent(), 0l);
+			eventService.addComment(comment.getContent(), 0l, "admin");
 		});
 	}
 }

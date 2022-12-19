@@ -1,11 +1,13 @@
 export class Comment {
     publisher: string;
-    text: string;
+    content: string;
     publishedDate: Date;
+    ownersUsername: string;
 
-    constructor(_publisher: string, _content: string, _publishedDate: Date) {
+    constructor(_publisher: string, _content: string, _publishedDate: Date, _ownerUsername: string) {
         this.publisher = _publisher;
-        this.text = _content;
+        this.content = _content;
         this.publishedDate = _publishedDate;
+        this.ownersUsername = _ownerUsername
     }
 }

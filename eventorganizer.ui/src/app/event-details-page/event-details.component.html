@@ -24,8 +24,8 @@
             *ngFor="let comment of event.comments"
             style="display: contents"
           >
-            <h3>{{ comment.publisher }} </h3>
-            <p>{{ comment.text }}</p>
+            <h3>{{ comment.ownersUsername }} </h3>
+            <p>{{ comment.content }}</p>
           </mat-list-item>
         </mat-list>
       </div>
