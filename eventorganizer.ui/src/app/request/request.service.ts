@@ -70,10 +70,12 @@ export class RequestService {
         })
     }
 
-    createEvent(body: EventDto) {
-        return this.http.post(`${this.API_URL}/api/v1/events`, {
-            body,
-        })
+    createEvent(eventRequestDto: EventDto) {
+        return this.http.post(`${this.API_URL}/api/v1/events`, JSON.stringify(eventRequestDto), {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })          
     }
 
     addComment(eventId: number, comment: string): Observable<any> {

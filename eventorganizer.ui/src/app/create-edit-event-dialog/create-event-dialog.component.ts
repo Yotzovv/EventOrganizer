@@ -13,25 +13,29 @@ import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog
 export class DialogAnimationsExampleDialog {   // TODO: Rename
   requestService: RequestService;
   public eventId = new FormControl(null);
-  private eventName = new FormControl('');
-  private eventLocalTime = new FormControl(null);
+  private eventName = new FormControl(null);
+  private startDate = new FormControl(null);
+  private endDate = new FormControl(null);
+  private status = new FormControl(null);
    
   constructor(public dialogRef: MatDialogRef<DialogAnimationsExampleDialog>, @Inject(MAT_DIALOG_DATA) public data: any, requestService: RequestService) {
     this.requestService = requestService;
     if(data && data.event) {
       this.eventId.setValue(data.event.id)
       this.eventName.setValue(data.event.name);
-      this.eventLocalTime.setValue(data.event.time);
+      this.startDate.setValue(data.event.startDate);
+      this.endDate.setValue(data.event.endDate);
     }
   }
 
   
   eventForm: FormGroup = new FormGroup({
       name: this.eventName,
-      localDateTime: this.eventLocalTime,
-      // description: new FormControl(''),  // TODO: Uncomment when api supports it
-      // Location: new FormControl(''),
-      // Type: new FormControl(''),
+      description: new FormControl(''),
+      location: new FormControl(''),
+      startDate: this.startDate,
+      endDate: this.endDate,
+      status: this.status,
   });
   
   submit() {
@@ -41,7 +45,7 @@ export class DialogAnimationsExampleDialog {   // TODO: Rename
       if(this.eventId.value) {
         this.requestService.updateEvent(this.eventForm.value).subscribe((res) => {});
       } else {
-        this.requestService.createEvent(this.eventForm.value).subscribe((res) => {});        
+        this.requestService.createEvent(this.eventForm.value).subscribe((res) => {});
       }
     }
   }

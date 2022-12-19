@@ -9,27 +9,37 @@
           <input type="text" matInput placeholder="Name" formControlName="name">
       </mat-form-field>
   </p>
-  <!-- <p>
+  <p>
     <mat-form-field>
         <mat-label>Description</mat-label>
         <input type="text" matInput placeholder="Description" formControlName="description">
     </mat-form-field>
-  </p> -->
+  </p>
   <p>
     <mat-form-field>
-        <mat-label>Date</mat-label>
-        <input [matDatepicker]="picker" type="datetime" matInput placeholder="Date" formControlName="localDateTime">
-        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-      </mat-form-field>
-    </p>  
-  <!-- <p>
-    <mat-form-field>
-        <mat-label>Type</mat-label>
-        <input type="text" matInput placeholder="Type" formControlName="Type">
+        <mat-label>Location</mat-label>
+        <input type="text" matInput placeholder="Description" formControlName="location">
     </mat-form-field>
   </p>
-       -->
+  <p>
+    <mat-form-field appearance="fill">
+      <mat-label>Enter a date range</mat-label>
+      <mat-date-range-input [rangePicker]="picker">
+        <input matStartDate placeholder="Start date" formControlName="startDate">
+        <input matEndDate placeholder="End date" formControlName="endDate">
+      </mat-date-range-input>
+      <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
+  </p>  
+  <p>
+    <mat-form-field>
+        <mat-label>Type</mat-label>
+        <input type="text" matInput placeholder="Type" formControlName="status">
+    </mat-form-field>
+  </p>
+      
 </div>
 <div mat-dialog-actions>
   <button mat-button mat-dialog-close>No</button>
