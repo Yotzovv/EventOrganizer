@@ -20,7 +20,7 @@ export class RequestService {
     }
 
     getAllUsers(): Observable<any> {
-        return this.http.get(`${this.API_URL}/api/v1/getAllUsers`);
+        return this.http.get(`${this.API_URL}/api/v1/account/getAllUsers`);
     }
 
     getEvent(id: number): Observable<any> {
