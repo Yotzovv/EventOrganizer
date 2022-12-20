@@ -2,6 +2,8 @@ package com.event.organizer.api.service;
 
 public class AdminService {
 
-    private static final String USER_NOT_ADMIN_MESSAGE = "This user is not an admin.";
+    public static final String USER_NOT_ADMIN_MESSAGE = "This user is not an admin.";
+    public static final String USER_NOT_FOUND_MESSAGE = "User is not found.";
+
 
 }

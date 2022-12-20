@@ -1,12 +1,5 @@
 package com.event.organizer.api.appuser;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import javax.persistence.*;
-
-import com.event.organizer.api.EventOrganizerApplication;
-import com.event.organizer.api.exception.UserNotAdminException;
 import com.event.organizer.api.model.Event;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -15,6 +8,11 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import javax.persistence.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 @Getter
 @Setter
@@ -92,23 +90,5 @@ public class AppUser implements UserDetails {
     @Override
     public boolean isEnabled() {
         return enabled;
-    }
-
-    public boolean isUserAdmin() {
-        return this.getRole() == AppUserRole.ADMIN;
-    }
-
-    public void changeAccountRoles(AppUser editedUser, AppUserRole editedRole) throws UserNotAdminException {
-        if (isUserAdmin()) {
-            editedUser.setRole(editedRole);
-        }
-        else throw new UserNotAdminException("This user is not an admin.");
-    }
-
-    public void changeAccountStatus(AppUser editedUser, Boolean status) throws UserNotAdminException {
-        if (isUserAdmin()) {
-            editedUser.setEnabled(status);
-        }
-        else throw new UserNotAdminException("This user is not an admin");
     }
 }
