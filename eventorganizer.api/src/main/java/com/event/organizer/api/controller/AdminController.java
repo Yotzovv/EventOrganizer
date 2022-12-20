@@ -31,7 +31,7 @@ public class AdminController {
         } else throw new IllegalStateException(USER_NOT_FOUND_MESSAGE);
     }
 
-    private void changeAccountRole(
+    public void changeAccountRole(
             String adminUserEmail,
             String editedUserEmail,
             AppUserRole role
@@ -47,7 +47,7 @@ public class AdminController {
         } else throw new IllegalStateException(USER_NOT_FOUND_MESSAGE);
     }
 
-    private void changeAccountStatus(
+    public void changeAccountStatus(
             String adminUserEmail,
             String editedUserEmail,
             Boolean status
