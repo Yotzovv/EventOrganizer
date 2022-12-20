@@ -84,7 +84,7 @@ public class AdminTests {
     @Test
     void TryingToChangeAccStatus_WhenNotAdmin_ShouldThrowException() throws UserNotAdminException {
         AppUserService appUserService = mock(AppUserService.class);
-        AdminController adminController = mock(AdminController.class);
+        AdminController adminControllerV1 = mock(AdminController.class);
 
         AppUser user = new AppUser(
                 "user",
@@ -110,9 +110,9 @@ public class AdminTests {
         String emailOfUser = user.getEmail();
         String emailOfEditedUser = editedUser.getEmail();
 
-        doThrow(throwable).when(adminController).changeAccountStatus(emailOfUser, emailOfEditedUser, false);
+        doThrow(throwable).when(adminControllerV1).changeAccountStatus(emailOfUser, emailOfEditedUser, false);
 
-        UserNotAdminException thrown = Assertions.assertThrows(UserNotAdminException.class, () -> adminController.changeAccountStatus(
+        UserNotAdminException thrown = Assertions.assertThrows(UserNotAdminException.class, () -> adminControllerV1.changeAccountStatus(
                 user.getEmail(),
                 editedUser.getEmail(),
                 false
