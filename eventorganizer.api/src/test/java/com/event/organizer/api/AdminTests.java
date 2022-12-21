@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 
+import java.security.Principal;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
@@ -41,38 +42,28 @@ import static org.mockito.Mockito.*;
 public class AdminTests {
 
     @Test
-    void TryingToChangeAccRole_WhenNotAdmin_ShouldThrowException() throws UserNotAdminException {
+    void GivenNonAdmin_WhenChangingAccountRole_ThenThrowsException() throws Exception {
         AppUserService appUserService = mock(AppUserService.class);
-        AdminController adminController = mock(AdminController.class);
+        AdminService adminService = mock(AdminService.class);
 
-        AppUser user = new AppUser(
-                "user",
-                "userUsername",
-                "userEmail",
-                "userPassword",
-                AppUserRole.USER
-        );
+        AppUser user = new AppUser("user", "userUsername", "userEmail", "userPassword",
+                AppUserRole.USER);
 
-        AppUser editedUser = new AppUser(
-                "editedUser",
-                "editedUserUsername",
-                "editedUserEmail",
+        AppUser editedUser = new AppUser("editedUser", "editedUserUsername", "editedUserEmail",
                 "editedUserPassword",
-                AppUserRole.USER
-        );
+                AppUserRole.USER);
 
         when(appUserService.findUserByEmail(user.getEmail())).thenReturn(Optional.of(user));
         when(appUserService.findUserByEmail(editedUser.getEmail())).thenReturn(Optional.of(editedUser));
 
         UserNotAdminException throwable = new UserNotAdminException("User is not an admin.");
 
-        String emailOfUser = user.getEmail();
         String emailOfEditedUser = editedUser.getEmail();
         AppUserRole appUserRole = AppUserRole.CLIENT;
 
-        doThrow(throwable).when(adminController).changeAccountRole(emailOfUser, emailOfEditedUser, appUserRole);
+        doThrow(throwable).when(adminService).changeAccountRole(user.getEmail(), emailOfEditedUser, appUserRole);
 
-        UserNotAdminException thrown = Assertions.assertThrows(UserNotAdminException.class, () -> adminController.changeAccountRole(
+        UserNotAdminException thrown = Assertions.assertThrows(UserNotAdminException.class, () -> adminService.changeAccountRole(
                 user.getEmail(),
                 editedUser.getEmail(),
                 AppUserRole.CLIENT
@@ -82,37 +73,27 @@ public class AdminTests {
     }
 
     @Test
-    void TryingToChangeAccStatus_WhenNotAdmin_ShouldThrowException() throws UserNotAdminException {
+    void GivenNonAdmin_WhenChangingStatus_ThenThrowsException() throws Exception {
         AppUserService appUserService = mock(AppUserService.class);
-        AdminController adminControllerV1 = mock(AdminController.class);
+        AdminService adminService = mock(AdminService.class);
 
-        AppUser user = new AppUser(
-                "user",
-                "userUsername",
-                "userEmail",
-                "userPassword",
-                AppUserRole.USER
-        );
+        AppUser user = new AppUser("user", "userUsername", "userEmail", "userPassword",
+                AppUserRole.USER);
 
-        AppUser editedUser = new AppUser(
-                "editedUser",
-                "editedUserUsername",
-                "editedUserEmail",
+        AppUser editedUser = new AppUser("editedUser", "editedUserUsername", "editedUserEmail",
                 "editedUserPassword",
-                AppUserRole.USER
-        );
+                AppUserRole.USER);
 
         when(appUserService.findUserByEmail(user.getEmail())).thenReturn(Optional.of(user));
         when(appUserService.findUserByEmail(editedUser.getEmail())).thenReturn(Optional.of(editedUser));
 
         UserNotAdminException throwable = new UserNotAdminException("User is not an admin.");
 
-        String emailOfUser = user.getEmail();
         String emailOfEditedUser = editedUser.getEmail();
 
-        doThrow(throwable).when(adminControllerV1).changeAccountStatus(emailOfUser, emailOfEditedUser, false);
+        doThrow(throwable).when(adminService).changeAccountStatus(user.getEmail(), emailOfEditedUser, false);
 
-        UserNotAdminException thrown = Assertions.assertThrows(UserNotAdminException.class, () -> adminControllerV1.changeAccountStatus(
+        UserNotAdminException thrown = Assertions.assertThrows(UserNotAdminException.class, () -> adminService.changeAccountStatus(
                 user.getEmail(),
                 editedUser.getEmail(),
                 false

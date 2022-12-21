@@ -17,43 +17,32 @@ public class AdminService {
     public static final String USER_NOT_ADMIN_MESSAGE = "User is not an admin.";
     public static final String USER_NOT_FOUND_MESSAGE = "User is not found.";
 
-    private Boolean isUserAdmin(String email) {
-        Optional<AppUser> user = userRepository.findByEmail(email);
-        if (user.isPresent()) {
-            return user.get().getRole() == AppUserRole.ADMIN;
-        } else throw new IllegalStateException(USER_NOT_FOUND_MESSAGE);
+
+    private void checkIfUsersExistAndHavePrivileges(Optional<AppUser> currentUser, Optional<AppUser> editedUser) throws Exception {
+        if (currentUser.isEmpty() || editedUser.isEmpty()) {
+            throw new IllegalStateException(USER_NOT_FOUND_MESSAGE);
+        }
+
+        if (currentUser.get().getRole() != AppUserRole.ADMIN) {
+            throw new UserNotAdminException(USER_NOT_ADMIN_MESSAGE);
+        }
     }
 
-    public void changeAccountRole(
-            String adminUserEmail,
-            String editedUserEmail,
-            AppUserRole role
-    ) throws UserNotAdminException {
-        Optional<AppUser> admin = userRepository.findByEmail(adminUserEmail);
+    public void changeAccountRole(String currentUserEmail, String editedUserEmail, AppUserRole role)
+            throws Exception {
+        Optional<AppUser> currentUser = userRepository.findByEmail(currentUserEmail);
         Optional<AppUser> editedUser = userRepository.findByEmail(editedUserEmail);
-        if (admin.isPresent()) {
-            if (isUserAdmin(admin.get().getEmail())) {
-                if (editedUser.isPresent()) {
-                    editedUser.get().setRole(role);
-                } else throw new IllegalStateException(USER_NOT_FOUND_MESSAGE);
-            } else throw new UserNotAdminException(USER_NOT_ADMIN_MESSAGE);
-        } else throw new IllegalStateException(USER_NOT_FOUND_MESSAGE);
+        checkIfUsersExistAndHavePrivileges(currentUser, editedUser);
+
+        editedUser.get().setRole(role);
     }
 
-    public void changeAccountStatus(
-            String adminUserEmail,
-            String editedUserEmail,
-            Boolean status
-    ) throws UserNotAdminException {
-        Optional<AppUser> admin = userRepository.findByEmail(adminUserEmail);
+    public void changeAccountStatus(String currentUserEmail, String editedUserEmail, Boolean status)
+            throws Exception {
+        Optional<AppUser> currentUser = userRepository.findByEmail(editedUserEmail);
         Optional<AppUser> editedUser = userRepository.findByEmail(editedUserEmail);
-        if (admin.isPresent()) {
-            if (isUserAdmin(admin.get().getEmail())) {
-                if (editedUser.isPresent()) {
-                    editedUser.get().setEnabled(status);
-                } else throw new IllegalStateException(USER_NOT_FOUND_MESSAGE);
-            } else throw new UserNotAdminException(USER_NOT_ADMIN_MESSAGE);
-        } else throw new IllegalStateException(USER_NOT_FOUND_MESSAGE);
+        checkIfUsersExistAndHavePrivileges(currentUser, editedUser);
+        editedUser.get().setEnabled(status);
     }
 }
 
