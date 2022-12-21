@@ -1,10 +1,5 @@
 package com.event.organizer.api.appuser;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import javax.persistence.*;
-
 import com.event.organizer.api.model.Event;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -13,6 +8,11 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import javax.persistence.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 @Getter
 @Setter
