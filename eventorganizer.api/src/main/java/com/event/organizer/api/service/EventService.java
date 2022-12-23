@@ -34,7 +34,7 @@ public class EventService {
 
         List<Event> allEvents = eventRepository.findAll();
 
-        List<Event> userEventsFeed = new ArrayList<>();
+        List<Event> userEventsFeed = new ArrayList<Event>();
 
         for (Event event : allEvents) {
             AppUser eventCreator = event.getCreator();
@@ -53,9 +53,20 @@ public class EventService {
         AppUser currentUser = appUserService.findUserByEmail(currentUserEmail).get();
 
         Event event = eventRepository.findById(eventId).get();
-        List<Comment> eventCommentsList = event.getComments().stream().
-                filter(comment -> !currentUser.getBlockedUsers().
-                        contains(comment.getOwnersUsername())).collect(Collectors.toList());
+
+        List<Comment> eventCommentsList = new ArrayList<Comment>();
+
+        List<AppUser> blockedUsers = currentUser.getBlockedUsers();               
+
+        for(Comment comment : event.getComments()) {
+            String commentCreator = comment.getOwnersUsername();
+
+            for(AppUser blockedUser : blockedUsers) {
+                if(!blockedUser.getEmail().equals(commentCreator)) {
+                    eventCommentsList.add(comment);
+                }
+            }
+        }
 
         event.setComments(eventCommentsList);
 
