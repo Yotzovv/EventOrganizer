@@ -29,7 +29,7 @@ import java.util.Optional;
 @ContextConfiguration(classes = {EventRepository.class, EventService.class, Event.class, Comment.class})
 @SpringBootTest(properties = "spring.main.lazy-initialization=true",
         		classes = {EventRepository.class, EventService.class, Event.class, Comment.class})
-class EventTests {
+class EventsTests {
 
 	@Test
 	void GivenExistingEvent_WhenAddingComment_CommentIsAdded() throws EventOrganizerException {
@@ -37,12 +37,8 @@ class EventTests {
 		Event event = new Event();
 		event.setId(1l);
 		event.setComments(new ArrayList<Comment>());
-		Comment comment = new Comment();
-		comment.setContent("This is a comment");
 
 		// Set up a mock event repository that will return the event when findById is called
-		List<Comment> comments = new ArrayList<Comment>();
-		comments.add(comment);
 		EventRepository eventRepository = mock(EventRepository.class);
 		AppUserService appUserService = mock(AppUserService.class);
 
@@ -51,13 +47,11 @@ class EventTests {
 		// Create an EventOrganizer instance and call the addComment method
 		EventService eventService = new EventService(eventRepository, appUserService);
 		when(eventRepository.findById(event.getId())).thenReturn(Optional.of(event));
-		eventService.addComment(comment.getContent(), event.getId(), "admin");
+
+		eventService.addComment("This is a comment", event.getId(), "admin");
 
 		// Verify that the comment was added to the event
-		assertTrue(event.getComments().contains(comment));
-
-		// Verify that the save method was called on the event repository
-		verify(eventRepository).save(event);
+		assertTrue(event.getComments().stream().anyMatch(comment -> comment.getContent().equals("This is a comment")));
 	}
 
 	@Test
