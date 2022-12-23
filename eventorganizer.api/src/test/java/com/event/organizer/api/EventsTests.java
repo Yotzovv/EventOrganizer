@@ -1,5 +1,6 @@
 package com.event.organizer.api;
 
+import com.event.organizer.api.appuser.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
@@ -28,20 +29,21 @@ class EventOrganizerApplicationTests {
 	void GivenExistingEvent_WhenAddingComment_CommentIsAdded() throws EventOrganizerException {
 		// Create an event and a comment to add to the event
 		Event event = new Event();
-		event.setId(1l);
-		event.setComments(new ArrayList<Comment>());
+		event.setId(1L);
+		event.setComments(new ArrayList<>());
 		Comment comment = new Comment();
 		comment.setContent("This is a comment");
 
 		// Set up a mock event repository that will return the event when findById is called
-		List<Comment> comments = new ArrayList<Comment>();
+		List<Comment> comments = new ArrayList<>();
 		comments.add(comment);
 		EventRepository eventRepository = mock(EventRepository.class);
 		
 		when(eventRepository.existsById(event.getId())).thenReturn(true);
 
 		// Create an EventOrganizer instance and call the addComment method
-		EventService eventService = new EventService(eventRepository);
+		UserRepository userRepository = mock(UserRepository.class);
+		EventService eventService = new EventService(eventRepository, userRepository);
 		when(eventRepository.findById(event.getId())).thenReturn(Optional.of(event));
 		eventService.addComment(comment.getContent(), event.getId());
 
@@ -61,15 +63,16 @@ class EventOrganizerApplicationTests {
 		// Set up a mock event repository that will return an empty Optional when
 		// findById is called
 		EventRepository eventRepository = mock(EventRepository.class);
-		when(eventRepository.findById(1l)).thenReturn(Optional.empty());
+		when(eventRepository.findById(1L)).thenReturn(Optional.empty());
 
 		// Create an EventOrganizer instance and call the addComment method
-		EventService eventService = new EventService(eventRepository);
+		UserRepository userRepository = mock(UserRepository.class);
+		EventService eventService = new EventService(eventRepository, userRepository);
 
 		// Verify that an EventOrganizerException is thrown when the event does not
 		// exist
 		assertThrows(EventOrganizerException.class, () -> {
-			eventService.addComment(comment.getContent(), 0l);
+			eventService.addComment(comment.getContent(), 0L);
 		});
 	}
 }
