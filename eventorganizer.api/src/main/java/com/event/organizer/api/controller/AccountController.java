@@ -5,12 +5,10 @@ import com.event.organizer.api.appuser.AppUserService;
 
 import lombok.AllArgsConstructor;
 
+import java.security.Principal;
 import java.util.List;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "api/v1/account")
@@ -27,5 +25,10 @@ public class AccountController {
     @GetMapping("getAllUsers")
     public List<AppUser> getAllUsers() {
        return userService.getAllUsers();
+    }
+
+    @PutMapping("blockUser")
+    public void blockUser(Principal user, String emailOfUserToBlock) {
+        userService.blockUser(user.getName(), emailOfUserToBlock);
     }
 }

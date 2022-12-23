@@ -4,11 +4,16 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import org.apache.catalina.User;
+import org.junit.Before;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.ContextConfiguration;
@@ -81,4 +86,36 @@ class AccountTests {
 
 		Assertions.assertTrue(thrown.getMessage().contentEquals("User with email test@example.com not found"));
 	}
+
+
+	@Test
+	public void GivenValidData_WhenBlockingUser_ThenSuccess() {
+		UserRepository userRepository = mock(UserRepository.class);
+		AppUserService userService = new AppUserService(userRepository, null);
+
+		// Set up mock user data
+		AppUser currentUser = new AppUser();
+		currentUser.setEmail("current@example.com");
+		currentUser.setBlockedUsers(new ArrayList<AppUser>());
+
+		AppUser userToBlock = new AppUser();
+		userToBlock.setEmail("block@example.com");
+		userToBlock.setBlockedUsers(new ArrayList<AppUser>());
+
+		when(userRepository.findByEmail("current@example.com")).thenReturn(Optional.of(currentUser));
+		when(userRepository.findByEmail("block@example.com")).thenReturn(Optional.of(userToBlock));
+
+		// Invoke the method under test
+		userService.blockUser("current@example.com", "block@example.com");
+
+		// Verify the results
+		List<AppUser> blockedUsers = currentUser.getBlockedUsers();
+		Assertions.assertEquals(1, blockedUsers.size());
+		Assertions.assertEquals("block@example.com", blockedUsers.get(0).getEmail());
+
+		List<AppUser> usersBlocking = userToBlock.getBlockedUsers();
+		Assertions.assertEquals(1, usersBlocking.size());
+		Assertions.assertEquals("current@example.com", usersBlocking.get(0).getEmail());
+	}
 }
+

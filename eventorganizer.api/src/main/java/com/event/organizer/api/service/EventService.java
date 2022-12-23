@@ -7,8 +7,12 @@ import com.event.organizer.api.model.Comment;
 import com.event.organizer.api.model.Event;
 import com.event.organizer.api.repository.EventRepository;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +27,29 @@ public class EventService {
 
     private final AppUserService appUserService;
 
-    public List<Event> findAll() {
-        return eventRepository.findAll();
+    public List<Event> findAll(String currentUserEmail) {
+        Optional<AppUser> currentUserOptional = appUserService.findUserByEmail(currentUserEmail);
+        AppUser currentUser = currentUserOptional.get();
+
+        List<AppUser> currentUserBlockList = currentUser.getBlockedUsers();
+
+        List<Event> userEventsFeed = eventRepository.findAll().stream().
+                filter(event -> !currentUserBlockList.contains(event.getCreator())).collect(Collectors.toList());
+
+        return userEventsFeed;
+    }
+
+    public Event getEventById(long eventId, String currentUserEmail) {
+        AppUser currentUser = appUserService.findUserByEmail(currentUserEmail).get();
+
+        Event event = eventRepository.findById(eventId).get();
+        List<Comment> eventCommentsList = event.getComments().stream().
+                filter(comment -> !currentUser.getBlockedUsers().
+                        contains(comment.getOwnersUsername())).collect(Collectors.toList());
+
+        event.setComments(eventCommentsList);
+
+        return event;
     }
 
     public Event saveEvent(Event event, String username) throws EventOrganizerException {

@@ -72,4 +72,21 @@ public class AppUserService implements UserDetailsService {
     public int enableAppUser(String email) {
         return userRepository.enableAppUser(email);
     }
+
+    public void blockUser(String currentUserName, String userToBlockEmail) {
+        AppUser currentUser =  findUserByEmail(currentUserName).get();
+        AppUser userToBlock = findUserByEmail(userToBlockEmail).get();
+
+        List<AppUser> blockedUsersList = currentUser.getBlockedUsers();
+        blockedUsersList.add(userToBlock);
+
+        List<AppUser> userToBlockBlockList = userToBlock.getBlockedUsers();
+        userToBlockBlockList.add(currentUser);
+
+        currentUser.setBlockedUsers(blockedUsersList);
+        userToBlock.setBlockedUsers(userToBlockBlockList);
+
+        userRepository.save(currentUser);
+        userRepository.save(userToBlock);
+    }
 }

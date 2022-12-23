@@ -1,6 +1,10 @@
 package com.event.organizer.api;
 
+import com.event.organizer.api.appuser.AppUser;
+import com.event.organizer.api.appuser.AppUserRole;
 import com.event.organizer.api.appuser.AppUserService;
+import com.event.organizer.api.appuser.UserRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
@@ -16,7 +20,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -75,5 +81,51 @@ class EventOrganizerApplicationTests {
 		assertThrows(EventOrganizerException.class, () -> {
 			eventService.addComment(comment.getContent(), 0l, "admin");
 		});
+	}
+
+	@Test
+	void GivenBlockedUsers_WhenGettingAllEvents_ThenBlockedEventsAreExcluded() {	
+		EventRepository eventRepository = mock(EventRepository.class);
+		AppUserService appUserService = mock(AppUserService.class);
+		EventService eventService = new EventService(eventRepository, appUserService);
+
+		// Set up mock user data
+		AppUser currentUser = new AppUser();
+		currentUser.setEmail("current@example.com");
+		currentUser.setBlockedUsers(new ArrayList<AppUser>());
+
+		AppUser userToBlock = new AppUser();
+		userToBlock.setEmail("block@example.com");
+		userToBlock.setBlockedUsers(new ArrayList<AppUser>());
+
+		UserRepository userRepository = mock(UserRepository.class);
+		AppUserService userService = new AppUserService(userRepository, null);
+
+			// Invoke the method under test
+		userService.blockUser(currentUser.getEmail(), userToBlock.getEmail());
+
+		when(userRepository.findByEmail(currentUser.getEmail())).thenReturn(Optional.of(currentUser));
+		when(userRepository.findByEmail(userToBlock.getEmail())).thenReturn(Optional.of(userToBlock));
+		when(eventRepository.findAll()).thenReturn(dummyEventsList());
+
+		List<Event> currentUserEvents = eventService.findAll(currentUser.getEmail());
+
+		Assertions.assertEquals(currentUserEvents.size(), 2);
+	}
+
+	private List<Event> dummyEventsList() {
+		AppUser currentUser = new AppUser("Current User", "current", "current@example.com", "password123", AppUserRole.USER);
+		currentUser.setEnabled(true);
+		AppUser blockedUser = new AppUser("Blocked User", "block", "block@example.com", "password123", AppUserRole.USER);
+		blockedUser.setLocked(true);
+
+		List<Comment> emptyCommentsList = new ArrayList<Comment>();
+
+		List<Event> dummyEventsList = Arrays.asList(
+				new Event(1L, "Tech Conference", LocalDateTime.of(2022, 1, 15, 9, 0), LocalDateTime.of(2022, 1, 17, 17, 0), Event.ACCEPTED_STATUS, "A conference for software developers and IT professionals", "San Francisco, CA", currentUser, emptyCommentsList, null),
+				new Event(2L, "Art Exhibition", LocalDateTime.of(2022, 3, 5, 10, 0), LocalDateTime.of(2022, 3, 7, 18, 0), Event.NONE_STATUS, "A showcase of contemporary art from local artists", "Los Angeles, CA", currentUser, emptyCommentsList, null),
+				new Event(3L, "Music Festival", LocalDateTime.of(2022, 7, 20, 12, 0), LocalDateTime.of(2022, 7, 25, 0, 0), Event.REJECTED_STATUS, "A multi-day music festival featuring various genres and artists", "New York, NY", blockedUser, emptyCommentsList, null)
+		);
+		return dummyEventsList;
 	}
 }
