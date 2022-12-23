@@ -74,8 +74,8 @@ public class AppUserService implements UserDetailsService {
     }
 
     public void blockUser(String currentUserName, String userToBlockEmail) {
-        AppUser currentUser =  findUserByEmail(currentUserName).get();
-        AppUser userToBlock = findUserByEmail(userToBlockEmail).get();
+        AppUser currentUser =  userRepository.findByEmail(currentUserName).get();
+        AppUser userToBlock = userRepository.findByEmail(userToBlockEmail).get();
 
         List<AppUser> blockedUsersList = currentUser.getBlockedUsers();
         blockedUsersList.add(userToBlock);

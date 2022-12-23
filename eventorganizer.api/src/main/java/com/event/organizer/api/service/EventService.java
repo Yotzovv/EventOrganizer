@@ -28,13 +28,23 @@ public class EventService {
     private final AppUserService appUserService;
 
     public List<Event> findAll(String currentUserEmail) {
-        Optional<AppUser> currentUserOptional = appUserService.findUserByEmail(currentUserEmail);
-        AppUser currentUser = currentUserOptional.get();
+        AppUser currentUser = appUserService.findUserByEmail(currentUserEmail).get();
 
         List<AppUser> currentUserBlockList = currentUser.getBlockedUsers();
 
-        List<Event> userEventsFeed = eventRepository.findAll().stream().
-                filter(event -> !currentUserBlockList.contains(event.getCreator())).collect(Collectors.toList());
+        List<Event> allEvents = eventRepository.findAll();
+
+        List<Event> userEventsFeed = new ArrayList<>();
+
+        for (Event event : allEvents) {
+            AppUser eventCreator = event.getCreator();
+
+            for (AppUser blockedUser : currentUserBlockList) {
+                if(!eventCreator.getEmail().equals(blockedUser.getEmail())) {
+                    userEventsFeed.add(event);
+                }
+            }
+        }
 
         return userEventsFeed;
     }
