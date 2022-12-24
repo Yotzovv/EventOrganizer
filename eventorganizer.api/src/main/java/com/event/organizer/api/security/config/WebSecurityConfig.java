@@ -1,5 +1,6 @@
 package com.event.organizer.api.security.config;
 
+import com.event.organizer.api.appuser.AppUserRole;
 import com.event.organizer.api.appuser.AppUserService;
 import com.event.organizer.api.filter.CustomAuthenticationFilter;
 import com.event.organizer.api.filter.CustomAuthorizationFilter;
@@ -9,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -18,7 +20,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @AllArgsConstructor
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String[] AUTH_WHITELIST = {
@@ -61,7 +64,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests().antMatchers(PERMIT_ALL).permitAll();
-        //http.authorizeRequests().antMatchers(AUTH_WHITELIST).hasAnyAuthority(AppUserRole.USER.toString());
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(customAuthenticationFilter);
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);

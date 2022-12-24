@@ -1,8 +1,6 @@
 package com.event.organizer.api.controller;
 
-import com.event.organizer.api.appuser.AppUser;
 import com.event.organizer.api.appuser.AppUserRole;
-import com.event.organizer.api.exception.UserNotAdminException;
 import com.event.organizer.api.service.AdminService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -17,15 +15,16 @@ import java.security.Principal;
 @AllArgsConstructor
 @CrossOrigin
 public class AdminController {
-    public final AdminService adminService;
 
-    @PutMapping
+    private final AdminService adminService;
+
+    @PutMapping("/changeRole")
     public void changeAccountRole(Principal principal, String editedUserEmail, AppUserRole role)
             throws Exception {
         adminService.changeAccountRole(principal.getName(), editedUserEmail, role);
     }
 
-    @PutMapping
+    @PutMapping("/changeStatus")
     public void changeAccountStatus(Principal principal, String editedUserEmail, Boolean status)
             throws Exception {
         adminService.changeAccountStatus(principal.getName(), editedUserEmail, status);
