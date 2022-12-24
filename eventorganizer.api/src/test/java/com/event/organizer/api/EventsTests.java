@@ -4,6 +4,7 @@ import com.event.organizer.api.appuser.AppUser;
 import com.event.organizer.api.appuser.AppUserRole;
 import com.event.organizer.api.appuser.AppUserService;
 import com.event.organizer.api.appuser.UserRepository;
+import com.event.organizer.api.model.Image;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -147,20 +148,22 @@ class EventsTests {
 		blockedUser.setBlockedUsers(new ArrayList<AppUser>());
 
 		List<Comment> emptyCommentsList = new ArrayList<Comment>();
+		List<Image> emptyImagesList = new ArrayList<Image>();
+
 
 		List<Event> dummyEventsList = Arrays.asList(
 				new Event(1L, "Tech Conference", LocalDateTime.of(2022, 1, 15, 9, 0),
 						LocalDateTime.of(2022, 1, 17, 17, 0), Event.ACCEPTED_STATUS,
 						"A conference for software developers and IT professionals", "San Francisco, CA", currentUser,
-						emptyCommentsList, null),
+						emptyCommentsList, null, emptyImagesList),
 				new Event(2L, "Art Exhibition", LocalDateTime.of(2022, 3, 5, 10, 0),
 						LocalDateTime.of(2022, 3, 7, 18, 0), Event.NONE_STATUS,
 						"A showcase of contemporary art from local artists", "Los Angeles, CA", currentUser,
-						emptyCommentsList, null),
+						emptyCommentsList, null, emptyImagesList),
 				new Event(3L, "Music Festival", LocalDateTime.of(2022, 7, 20, 12, 0),
 						LocalDateTime.of(2022, 7, 25, 0, 0), Event.REJECTED_STATUS,
 						"A multi-day music festival featuring various genres and artists", "New York, NY", blockedUser,
-						emptyCommentsList, null));
+						emptyCommentsList, null, emptyImagesList));
 		return dummyEventsList;
 	}
 
@@ -169,7 +172,9 @@ class EventsTests {
 		currentUser.setEmail("current@example.com");
 		currentUser.setBlockedUsers(new ArrayList<AppUser>());
 
+		List<Image> emptyImagesList = new ArrayList<Image>();
 		List<Comment> dummyComments = new ArrayList<>();
+
 		dummyComments.add(new Comment(1, "This is a great event!", LocalDateTime.now(), "johnsmith"));
 		dummyComments.add(new Comment(2, "I'm looking forward to attending!", LocalDateTime.now(), "janelee"));
 		dummyComments.add(new Comment(3, "I can't wait to see the speakers!", LocalDateTime.now(), "block@example.com"));
@@ -178,7 +183,7 @@ class EventsTests {
 		Event event = new Event(1L, "Tech Conference", LocalDateTime.of(2022, 1, 15, 9, 0),
 						LocalDateTime.of(2022, 1, 17, 17, 0), Event.ACCEPTED_STATUS,
 						"A conference for software developers and IT professionals", "San Francisco, CA", currentUser,
-						dummyComments, null);
+						dummyComments, null, emptyImagesList);
 
 		return event;		
 	}
