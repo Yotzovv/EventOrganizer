@@ -79,6 +79,52 @@ class EventsTests {
 	}
 
 	@Test
+	void GivenExistingEvent_WhenAddingImage_ImageIsAdded() throws EventOrganizerException {
+		// Create an event and a comment to add to the event
+		Event event = new Event();
+		event.setId(1l);
+		event.setImages(new ArrayList<Image>());
+
+		// Set up a mock event repository that will return the event when findById is called
+		EventRepository eventRepository = mock(EventRepository.class);
+		AppUserService appUserService = mock(AppUserService.class);
+
+		when(eventRepository.existsById(event.getId())).thenReturn(true);
+
+		// Create an EventOrganizer instance and call the addImage method
+		EventService eventService = new EventService(eventRepository, appUserService);
+		when(eventRepository.findById(event.getId())).thenReturn(Optional.of(event));
+
+		eventService.addImage("exampleImageLink", event.getId(), "admin");
+
+		// Verify that the image was added to the event
+		assertTrue(event.getImages().stream().anyMatch(image -> image.getUrl().equals("exampleImageLink")));
+	}
+
+	@Test
+	void GivenNonExistingEvent_WhenAddingImage_ThrowsException() {
+		// Create an image to add to the event
+		Image image = new Image();
+		image.setUrl("This is an image");
+
+		// Set up a mock event repository that will return an empty Optional when
+		// findById is called
+		EventRepository eventRepository = mock(EventRepository.class);
+		AppUserService appUserService = mock(AppUserService.class);
+
+		when(eventRepository.findById(1l)).thenReturn(Optional.empty());
+
+		// Create an EventOrganizer instance and call the addImage method
+		EventService eventService = new EventService(eventRepository, appUserService);
+
+		// Verify that an EventOrganizerException is thrown when the event does not
+		// exist
+		assertThrows(EventOrganizerException.class, () -> {
+			eventService.addImage(image.getUrl(), 0l, "admin");
+		});
+	}
+
+	@Test
 	void GivenBlockedUsers_WhenGettingAllEvents_ThenBlockedEventsAreExcluded() {
 		UserRepository userRepository = mock(UserRepository.class);
 		AppUserService userService = new AppUserService(userRepository, null);
