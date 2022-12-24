@@ -4,6 +4,7 @@ import com.event.organizer.api.appuser.AppUser;
 import com.event.organizer.api.appuser.AppUserRole;
 import com.event.organizer.api.appuser.AppUserService;
 import com.event.organizer.api.appuser.UserRepository;
+import com.event.organizer.api.model.Image;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -78,6 +79,52 @@ class EventsTests {
 	}
 
 	@Test
+	void GivenExistingEvent_WhenAddingImage_ImageIsAdded() throws EventOrganizerException {
+		// Create an event and a comment to add to the event
+		Event event = new Event();
+		event.setId(1l);
+		event.setImages(new ArrayList<Image>());
+
+		// Set up a mock event repository that will return the event when findById is called
+		EventRepository eventRepository = mock(EventRepository.class);
+		AppUserService appUserService = mock(AppUserService.class);
+
+		when(eventRepository.existsById(event.getId())).thenReturn(true);
+
+		// Create an EventOrganizer instance and call the addImage method
+		EventService eventService = new EventService(eventRepository, appUserService);
+		when(eventRepository.findById(event.getId())).thenReturn(Optional.of(event));
+
+		eventService.addImage("exampleImageLink", event.getId(), "admin");
+
+		// Verify that the image was added to the event
+		assertTrue(event.getImages().stream().anyMatch(image -> image.getUrl().equals("exampleImageLink")));
+	}
+
+	@Test
+	void GivenNonExistingEvent_WhenAddingImage_ThrowsException() {
+		// Create an image to add to the event
+		Image image = new Image();
+		image.setUrl("This is an image");
+
+		// Set up a mock event repository that will return an empty Optional when
+		// findById is called
+		EventRepository eventRepository = mock(EventRepository.class);
+		AppUserService appUserService = mock(AppUserService.class);
+
+		when(eventRepository.findById(1l)).thenReturn(Optional.empty());
+
+		// Create an EventOrganizer instance and call the addImage method
+		EventService eventService = new EventService(eventRepository, appUserService);
+
+		// Verify that an EventOrganizerException is thrown when the event does not
+		// exist
+		assertThrows(EventOrganizerException.class, () -> {
+			eventService.addImage(image.getUrl(), 0l, "admin");
+		});
+	}
+
+	@Test
 	void GivenBlockedUsers_WhenGettingAllEvents_ThenBlockedEventsAreExcluded() {
 		UserRepository userRepository = mock(UserRepository.class);
 		AppUserService userService = new AppUserService(userRepository, null);
@@ -147,20 +194,22 @@ class EventsTests {
 		blockedUser.setBlockedUsers(new ArrayList<AppUser>());
 
 		List<Comment> emptyCommentsList = new ArrayList<Comment>();
+		List<Image> emptyImagesList = new ArrayList<Image>();
+
 
 		List<Event> dummyEventsList = Arrays.asList(
 				new Event(1L, "Tech Conference", LocalDateTime.of(2022, 1, 15, 9, 0),
 						LocalDateTime.of(2022, 1, 17, 17, 0), Event.ACCEPTED_STATUS,
 						"A conference for software developers and IT professionals", "San Francisco, CA", currentUser,
-						emptyCommentsList, null),
+						emptyCommentsList, null, emptyImagesList),
 				new Event(2L, "Art Exhibition", LocalDateTime.of(2022, 3, 5, 10, 0),
 						LocalDateTime.of(2022, 3, 7, 18, 0), Event.NONE_STATUS,
 						"A showcase of contemporary art from local artists", "Los Angeles, CA", currentUser,
-						emptyCommentsList, null),
+						emptyCommentsList, null, emptyImagesList),
 				new Event(3L, "Music Festival", LocalDateTime.of(2022, 7, 20, 12, 0),
 						LocalDateTime.of(2022, 7, 25, 0, 0), Event.REJECTED_STATUS,
 						"A multi-day music festival featuring various genres and artists", "New York, NY", blockedUser,
-						emptyCommentsList, null));
+						emptyCommentsList, null, emptyImagesList));
 		return dummyEventsList;
 	}
 
@@ -169,7 +218,9 @@ class EventsTests {
 		currentUser.setEmail("current@example.com");
 		currentUser.setBlockedUsers(new ArrayList<AppUser>());
 
+		List<Image> emptyImagesList = new ArrayList<Image>();
 		List<Comment> dummyComments = new ArrayList<>();
+
 		dummyComments.add(new Comment(1, "This is a great event!", LocalDateTime.now(), "johnsmith"));
 		dummyComments.add(new Comment(2, "I'm looking forward to attending!", LocalDateTime.now(), "janelee"));
 		dummyComments.add(new Comment(3, "I can't wait to see the speakers!", LocalDateTime.now(), "block@example.com"));
@@ -178,7 +229,7 @@ class EventsTests {
 		Event event = new Event(1L, "Tech Conference", LocalDateTime.of(2022, 1, 15, 9, 0),
 						LocalDateTime.of(2022, 1, 17, 17, 0), Event.ACCEPTED_STATUS,
 						"A conference for software developers and IT professionals", "San Francisco, CA", currentUser,
-						dummyComments, null);
+						dummyComments, null, emptyImagesList);
 
 		return event;		
 	}

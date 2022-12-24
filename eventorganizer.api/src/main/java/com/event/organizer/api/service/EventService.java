@@ -5,6 +5,7 @@ import com.event.organizer.api.appuser.AppUserService;
 import com.event.organizer.api.exception.EventOrganizerException;
 import com.event.organizer.api.model.Comment;
 import com.event.organizer.api.model.Event;
+import com.event.organizer.api.model.Image;
 import com.event.organizer.api.repository.EventRepository;
 
 import java.security.Principal;
@@ -116,6 +117,24 @@ public class EventService {
 
         allComments.add(commentModel);
         event.setComments(allComments);
+
+        eventRepository.save(event);
+    }
+
+    public void addImage(String image, Long eventId, String username) throws EventOrganizerException {
+        if (!eventRepository.existsById(eventId)) {
+            throw new EventOrganizerException("Event does not exist");
+        }
+
+        Event event = eventRepository.findById(eventId).get();
+        var allImages = event.getImages();
+
+        Image imageModel = new Image();
+        imageModel.setUrl(image);
+        imageModel.setOwnerUsername(username);
+
+        allImages.add(imageModel);
+        event.setImages(allImages);
 
         eventRepository.save(event);
     }

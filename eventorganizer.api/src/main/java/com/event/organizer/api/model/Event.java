@@ -59,4 +59,10 @@ public class Event {
     @ManyToMany(mappedBy = "events")
     private List<AppUser> appUsers;
 
+    @ElementCollection
+    @CollectionTable(name = "event_images", joinColumns = @JoinColumn(name = "event_id"))
+    @Column(name = "image_url")
+    private List<Image> images;
 }
+
+
