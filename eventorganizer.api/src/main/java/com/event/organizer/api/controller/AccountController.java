@@ -2,13 +2,12 @@ package com.event.organizer.api.controller;
 
 import com.event.organizer.api.appuser.AppUser;
 import com.event.organizer.api.appuser.AppUserService;
-
 import lombok.AllArgsConstructor;
-
 import java.security.Principal;
-import java.util.List;
-
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "api/v1/account")
@@ -18,13 +17,15 @@ public class AccountController {
 
     private final AppUserService userService;
 
-    public void editAccount(AppUser account){
-         userService.editAccount(account);
+    public void editAccount(AppUser account) {
+        userService.editAccount(account);
     }
 
-    @GetMapping("getAllUsers")
+
+    @GetMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public List<AppUser> getAllUsers() {
-       return userService.getAllUsers();
+        return userService.getAllUsers();
     }
 
     @PutMapping("blockUser")

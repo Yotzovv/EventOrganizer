@@ -13,10 +13,11 @@ import org.springframework.stereotype.Component;
 public class CommandLineAppStartupRunner implements CommandLineRunner {
 
     private final AppUserService appUserService;
+    private final AdminConfig adminConfig;
 
     @Override
     public void run(String... args) throws Exception {
-        AppUser admin = AdminConfig.createAdminUser();
+        AppUser admin = adminConfig.createAdminUser();
         if (appUserService.findUserByEmail(admin.getEmail()).isPresent()) {
             log.info("Admin user exists don't do anything");
             return;
