@@ -62,7 +62,7 @@ public class Event {
     @ElementCollection
     @CollectionTable(name = "event_images", joinColumns = @JoinColumn(name = "event_id"))
     @Column(name = "image_url")
-    private List<String> images;
+    private List<Image> images;
 }
 
 
