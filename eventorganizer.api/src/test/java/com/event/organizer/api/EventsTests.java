@@ -1,6 +1,10 @@
 package com.event.organizer.api;
 
+import com.event.organizer.api.appuser.AppUser;
+import com.event.organizer.api.appuser.AppUserRole;
 import com.event.organizer.api.appuser.AppUserService;
+import com.event.organizer.api.appuser.UserRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
@@ -16,14 +20,16 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 @ContextConfiguration(classes = {EventRepository.class, EventService.class, Event.class, Comment.class})
 @SpringBootTest(properties = "spring.main.lazy-initialization=true",
         		classes = {EventRepository.class, EventService.class, Event.class, Comment.class})
-class EventOrganizerApplicationTests {
+class EventsTests {
 
 	@Test
 	void GivenExistingEvent_WhenAddingComment_CommentIsAdded() throws EventOrganizerException {
@@ -31,12 +37,8 @@ class EventOrganizerApplicationTests {
 		Event event = new Event();
 		event.setId(1l);
 		event.setComments(new ArrayList<Comment>());
-		Comment comment = new Comment();
-		comment.setContent("This is a comment");
 
 		// Set up a mock event repository that will return the event when findById is called
-		List<Comment> comments = new ArrayList<Comment>();
-		comments.add(comment);
 		EventRepository eventRepository = mock(EventRepository.class);
 		AppUserService appUserService = mock(AppUserService.class);
 
@@ -45,13 +47,11 @@ class EventOrganizerApplicationTests {
 		// Create an EventOrganizer instance and call the addComment method
 		EventService eventService = new EventService(eventRepository, appUserService);
 		when(eventRepository.findById(event.getId())).thenReturn(Optional.of(event));
-		eventService.addComment(comment.getContent(), event.getId(), "admin");
+
+		eventService.addComment("This is a comment", event.getId(), "admin");
 
 		// Verify that the comment was added to the event
-		assertTrue(event.getComments().contains(comment));
-
-		// Verify that the save method was called on the event repository
-		verify(eventRepository).save(event);
+		assertTrue(event.getComments().stream().anyMatch(comment -> comment.getContent().equals("This is a comment")));
 	}
 
 	@Test
@@ -75,5 +75,111 @@ class EventOrganizerApplicationTests {
 		assertThrows(EventOrganizerException.class, () -> {
 			eventService.addComment(comment.getContent(), 0l, "admin");
 		});
+	}
+
+	@Test
+	void GivenBlockedUsers_WhenGettingAllEvents_ThenBlockedEventsAreExcluded() {
+		UserRepository userRepository = mock(UserRepository.class);
+		AppUserService userService = new AppUserService(userRepository, null);
+
+		// Set up mock user data
+		AppUser currentUser = new AppUser();
+		currentUser.setEmail("current@example.com");
+		currentUser.setBlockedUsers(new ArrayList<AppUser>());
+
+		AppUser blockedUser = new AppUser();
+		blockedUser.setEmail("block@example.com");
+		blockedUser.setBlockedUsers(new ArrayList<AppUser>());
+
+		when(userRepository.findByEmail("current@example.com")).thenReturn(Optional.of(currentUser));
+		when(userRepository.findByEmail("block@example.com")).thenReturn(Optional.of(blockedUser));
+
+		// Invoke the method under test
+		userService.blockUser("current@example.com", "block@example.com");
+
+		EventRepository mockedEventRepository = mock(EventRepository.class);
+		when(mockedEventRepository.findAll()).thenReturn(dummyEventsList());
+
+		EventService eventService = new EventService(mockedEventRepository, userService);
+
+		List<Event> currentUserEventFeed = eventService.findAll(currentUser.getEmail());
+
+		Assertions.assertEquals(2, currentUserEventFeed.size());
+	}
+	
+	@Test
+	void GivenBlockedUsers_WhenGettingAllEvents_ThenBlockedCommentsAreExcluded() {
+		UserRepository userRepository = mock(UserRepository.class);
+		AppUserService userService = new AppUserService(userRepository, null);
+
+		// Set up mock user data
+		AppUser currentUser = new AppUser();
+		currentUser.setEmail("current@example.com");
+		currentUser.setBlockedUsers(new ArrayList<AppUser>());
+
+		AppUser blockedUser = new AppUser();
+		blockedUser.setEmail("block@example.com");
+		blockedUser.setBlockedUsers(new ArrayList<AppUser>());
+
+		when(userRepository.findByEmail("current@example.com")).thenReturn(Optional.of(currentUser));
+		when(userRepository.findByEmail("block@example.com")).thenReturn(Optional.of(blockedUser));
+
+		// Invoke the method under test
+		userService.blockUser("current@example.com", "block@example.com");
+
+		EventRepository mockedEventRepository = mock(EventRepository.class);
+		when(mockedEventRepository.findById(1L)).thenReturn(Optional.of(dummyEventWithComments()));
+
+		EventService eventService = new EventService(mockedEventRepository, userService);
+
+		Event currentUserEventFeed = eventService.getEventById(1, currentUser.getEmail());
+
+		Assertions.assertEquals(3, currentUserEventFeed.getComments().size());
+	}
+
+	private List<Event> dummyEventsList() {
+		AppUser currentUser = new AppUser();
+		currentUser.setEmail("current@example.com");
+		currentUser.setBlockedUsers(new ArrayList<AppUser>());
+
+		AppUser blockedUser = new AppUser();
+		blockedUser.setEmail("block@example.com");
+		blockedUser.setBlockedUsers(new ArrayList<AppUser>());
+
+		List<Comment> emptyCommentsList = new ArrayList<Comment>();
+
+		List<Event> dummyEventsList = Arrays.asList(
+				new Event(1L, "Tech Conference", LocalDateTime.of(2022, 1, 15, 9, 0),
+						LocalDateTime.of(2022, 1, 17, 17, 0), Event.ACCEPTED_STATUS,
+						"A conference for software developers and IT professionals", "San Francisco, CA", currentUser,
+						emptyCommentsList, null),
+				new Event(2L, "Art Exhibition", LocalDateTime.of(2022, 3, 5, 10, 0),
+						LocalDateTime.of(2022, 3, 7, 18, 0), Event.NONE_STATUS,
+						"A showcase of contemporary art from local artists", "Los Angeles, CA", currentUser,
+						emptyCommentsList, null),
+				new Event(3L, "Music Festival", LocalDateTime.of(2022, 7, 20, 12, 0),
+						LocalDateTime.of(2022, 7, 25, 0, 0), Event.REJECTED_STATUS,
+						"A multi-day music festival featuring various genres and artists", "New York, NY", blockedUser,
+						emptyCommentsList, null));
+		return dummyEventsList;
+	}
+
+	private Event dummyEventWithComments() {
+		AppUser currentUser = new AppUser();
+		currentUser.setEmail("current@example.com");
+		currentUser.setBlockedUsers(new ArrayList<AppUser>());
+
+		List<Comment> dummyComments = new ArrayList<>();
+		dummyComments.add(new Comment(1, "This is a great event!", LocalDateTime.now(), "johnsmith"));
+		dummyComments.add(new Comment(2, "I'm looking forward to attending!", LocalDateTime.now(), "janelee"));
+		dummyComments.add(new Comment(3, "I can't wait to see the speakers!", LocalDateTime.now(), "block@example.com"));
+		dummyComments.add(new Comment(4, "This event has such a great lineup!", LocalDateTime.now(), "sarahjohnson"));
+
+		Event event = new Event(1L, "Tech Conference", LocalDateTime.of(2022, 1, 15, 9, 0),
+						LocalDateTime.of(2022, 1, 17, 17, 0), Event.ACCEPTED_STATUS,
+						"A conference for software developers and IT professionals", "San Francisco, CA", currentUser,
+						dummyComments, null);
+
+		return event;		
 	}
 }

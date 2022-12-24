@@ -40,6 +40,7 @@ public class AppUser implements UserDetails {
     private AppUserRole role;
     private boolean locked = false;
     private boolean enabled = false;
+    private List<AppUser> blockedUsers;
 
     @ManyToMany
     @JoinTable(

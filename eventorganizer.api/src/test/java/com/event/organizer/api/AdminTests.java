@@ -68,7 +68,7 @@ public class AdminTests {
                 editedUser.getEmail(),
                 AppUserRole.CLIENT
         ));
-
+        
         Assertions.assertTrue(thrown.getMessage().contentEquals("User is not an admin."));
     }
 

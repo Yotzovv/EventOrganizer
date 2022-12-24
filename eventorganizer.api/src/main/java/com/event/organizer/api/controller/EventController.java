@@ -10,9 +10,6 @@ import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,25 +30,25 @@ public class EventController {
 
     @GetMapping
     public List<Event> findAll(Principal principal) {
-        return eventService.findAll();
+        return eventService.findAll(principal.getName());
     }
 
     @PostMapping
     public Event createEvent(@RequestBody EventRequestDto eventRequestDto, Principal principal)
             throws EventOrganizerException {
-        Event event = getEvent(eventRequestDto);
+        Event event = getEventModel(eventRequestDto);
         return eventService.saveEvent(event, principal.getName());
     }
 
     @PutMapping
     public Event updateEvent(@RequestBody EventRequestDto eventRequestDto) throws EventOrganizerException {
-        Event event = getEvent(eventRequestDto);
+        Event event = getEventModel(eventRequestDto);
         return eventService.updateEvent(event);
     }
 
     @DeleteMapping
     public String deleteEvent(@RequestBody EventRequestDto eventRequestDto) throws EventOrganizerException {
-        Event event = getEvent(eventRequestDto);
+        Event event = getEventModel(eventRequestDto);
         eventService.deleteEvent(event);
         return "deleted";
     }
@@ -61,7 +58,12 @@ public class EventController {
         eventService.addComment(request.getComment(), request.getEventId(), principal.getName());
     }
 
-    private Event getEvent(EventRequestDto eventRequestDto) throws EventOrganizerException {
+    @GetMapping("/getEventById")
+    public Event getEventById(long eventId, Principal principal) {
+        return eventService.getEventById(eventId, principal.getName());
+    }
+
+    private Event getEventModel(EventRequestDto eventRequestDto) throws EventOrganizerException {
         Event event = new Event();
         event.setId(eventRequestDto.getId());
         event.setName(eventRequestDto.getName());

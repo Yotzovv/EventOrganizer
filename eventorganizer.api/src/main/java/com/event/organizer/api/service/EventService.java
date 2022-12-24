@@ -7,8 +7,12 @@ import com.event.organizer.api.model.Comment;
 import com.event.organizer.api.model.Event;
 import com.event.organizer.api.repository.EventRepository;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +27,50 @@ public class EventService {
 
     private final AppUserService appUserService;
 
-    public List<Event> findAll() {
-        return eventRepository.findAll();
+    public List<Event> findAll(String currentUserEmail) {
+        AppUser currentUser = appUserService.findUserByEmail(currentUserEmail).get();
+
+        List<AppUser> currentUserBlockList = currentUser.getBlockedUsers();
+
+        List<Event> allEvents = eventRepository.findAll();
+
+        List<Event> userEventsFeed = new ArrayList<Event>();
+
+        for (Event event : allEvents) {
+            AppUser eventCreator = event.getCreator();
+
+            for (AppUser blockedUser : currentUserBlockList) {
+                if(!eventCreator.getEmail().equals(blockedUser.getEmail())) {
+                    userEventsFeed.add(event);
+                }
+            }
+        }
+
+        return userEventsFeed;
+    }
+
+    public Event getEventById(long eventId, String currentUserEmail) {
+        AppUser currentUser = appUserService.findUserByEmail(currentUserEmail).get();
+
+        Event event = eventRepository.findById(eventId).get();
+
+        List<Comment> eventCommentsList = new ArrayList<Comment>();
+
+        List<AppUser> blockedUsers = currentUser.getBlockedUsers();               
+
+        for(Comment comment : event.getComments()) {
+            String commentCreator = comment.getOwnersUsername();
+
+            for(AppUser blockedUser : blockedUsers) {
+                if(!blockedUser.getEmail().equals(commentCreator)) {
+                    eventCommentsList.add(comment);
+                }
+            }
+        }
+
+        event.setComments(eventCommentsList);
+
+        return event;
     }
 
     public Event saveEvent(Event event, String username) throws EventOrganizerException {
