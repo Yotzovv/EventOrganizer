@@ -1,31 +1,30 @@
 package com.event.organizer.api;
 
 import com.event.organizer.api.appuser.AppUser;
-import com.event.organizer.api.appuser.AppUserRole;
 import com.event.organizer.api.appuser.AppUserService;
 import com.event.organizer.api.appuser.UserRepository;
+import com.event.organizer.api.exception.EventOrganizerException;
+import com.event.organizer.api.model.Comment;
+import com.event.organizer.api.model.Event;
+import com.event.organizer.api.model.Feedback;
 import com.event.organizer.api.model.Image;
+import com.event.organizer.api.repository.EventRepository;
+import com.event.organizer.api.service.EventService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
-
-import com.event.organizer.api.exception.EventOrganizerException;
-import com.event.organizer.api.model.Comment;
-import com.event.organizer.api.model.Event;
-import com.event.organizer.api.repository.EventRepository;
-import com.event.organizer.api.service.EventService;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @ContextConfiguration(classes = {EventRepository.class, EventService.class, Event.class, Comment.class})
 @SpringBootTest(properties = "spring.main.lazy-initialization=true",
@@ -125,6 +124,55 @@ class EventsTests {
 	}
 
 	@Test
+	void GivenExistingEvent_WhenAddingFeedback_FeedbackIsAdded() throws EventOrganizerException {
+		// Create an event and a feedback to add to the event
+		Event event = new Event();
+		event.setId(1l);
+		event.setImages(new ArrayList<Image>());
+
+		// Set up a mock event repository that will return the event when findById is called
+		EventRepository eventRepository = mock(EventRepository.class);
+		AppUserService appUserService = mock(AppUserService.class);
+
+		when(eventRepository.existsById(event.getId())).thenReturn(true);
+
+		// Create an EventOrganizer instance and call the addFeedback method
+		EventService eventService = new EventService(eventRepository, appUserService);
+		when(eventRepository.findById(event.getId())).thenReturn(Optional.of(event));
+
+		eventService.addFeedback(1, "feedbackComment", event.getId(), "admin");
+
+		// Verify that the feedback was added to the event
+		assertTrue(event.getFeedbacks().stream().anyMatch(feedback -> feedback.getComment().equals("feedbackComment")));
+		assertTrue(event.getFeedbacks().stream().anyMatch(feedback -> feedback.getRating().equals(1)));
+	}
+
+	@Test
+	void GivenNonExistingEvent_WhenAddingFeedback_ThrowsException() {
+		// Create a Feedback to add to the event
+
+		Feedback feedback = new Feedback();
+		feedback.setComment("awesome");
+		feedback.setRating(5);
+
+		// Set up a mock event repository that will return an empty Optional when
+		// findById is called
+		EventRepository eventRepository = mock(EventRepository.class);
+		AppUserService appUserService = mock(AppUserService.class);
+
+		when(eventRepository.findById(1l)).thenReturn(Optional.empty());
+
+		// Create an EventOrganizer instance and call the addFeedback method
+		EventService eventService = new EventService(eventRepository, appUserService);
+
+		// Verify that an EventOrganizerException is thrown when the event does not
+		// exist
+		assertThrows(EventOrganizerException.class, () -> {
+			eventService.addFeedback(feedback.getRating(), feedback.getComment(), 1l, "admin");
+		});
+	}
+
+	@Test
 	void GivenBlockedUsers_WhenGettingAllEvents_ThenBlockedEventsAreExcluded() {
 		UserRepository userRepository = mock(UserRepository.class);
 		AppUserService userService = new AppUserService(userRepository, null);
@@ -195,21 +243,23 @@ class EventsTests {
 
 		List<Comment> emptyCommentsList = new ArrayList<Comment>();
 		List<Image> emptyImagesList = new ArrayList<Image>();
+		List<Feedback> emptyFeedbacksList = new ArrayList<Feedback>();
+
 
 
 		List<Event> dummyEventsList = Arrays.asList(
 				new Event(1L, "Tech Conference", LocalDateTime.of(2022, 1, 15, 9, 0),
 						LocalDateTime.of(2022, 1, 17, 17, 0), Event.ACCEPTED_STATUS,
 						"A conference for software developers and IT professionals", "San Francisco, CA", currentUser,
-						emptyCommentsList, null, emptyImagesList),
+						emptyCommentsList, null, emptyImagesList, emptyFeedbacksList),
 				new Event(2L, "Art Exhibition", LocalDateTime.of(2022, 3, 5, 10, 0),
 						LocalDateTime.of(2022, 3, 7, 18, 0), Event.NONE_STATUS,
 						"A showcase of contemporary art from local artists", "Los Angeles, CA", currentUser,
-						emptyCommentsList, null, emptyImagesList),
+						emptyCommentsList, null, emptyImagesList, emptyFeedbacksList),
 				new Event(3L, "Music Festival", LocalDateTime.of(2022, 7, 20, 12, 0),
 						LocalDateTime.of(2022, 7, 25, 0, 0), Event.REJECTED_STATUS,
 						"A multi-day music festival featuring various genres and artists", "New York, NY", blockedUser,
-						emptyCommentsList, null, emptyImagesList));
+						emptyCommentsList, null, emptyImagesList, emptyFeedbacksList));
 		return dummyEventsList;
 	}
 
@@ -220,6 +270,7 @@ class EventsTests {
 
 		List<Image> emptyImagesList = new ArrayList<Image>();
 		List<Comment> dummyComments = new ArrayList<>();
+		List<Feedback> emptyFeedbacksList = new ArrayList<Feedback>();
 
 		dummyComments.add(new Comment(1, "This is a great event!", LocalDateTime.now(), "johnsmith"));
 		dummyComments.add(new Comment(2, "I'm looking forward to attending!", LocalDateTime.now(), "janelee"));
@@ -229,7 +280,7 @@ class EventsTests {
 		Event event = new Event(1L, "Tech Conference", LocalDateTime.of(2022, 1, 15, 9, 0),
 						LocalDateTime.of(2022, 1, 17, 17, 0), Event.ACCEPTED_STATUS,
 						"A conference for software developers and IT professionals", "San Francisco, CA", currentUser,
-						dummyComments, null, emptyImagesList);
+						dummyComments, null, emptyImagesList, emptyFeedbacksList);
 
 		return event;		
 	}

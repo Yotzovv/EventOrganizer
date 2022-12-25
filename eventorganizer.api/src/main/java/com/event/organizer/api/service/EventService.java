@@ -5,6 +5,7 @@ import com.event.organizer.api.appuser.AppUserService;
 import com.event.organizer.api.exception.EventOrganizerException;
 import com.event.organizer.api.model.Comment;
 import com.event.organizer.api.model.Event;
+import com.event.organizer.api.model.Feedback;
 import com.event.organizer.api.model.Image;
 import com.event.organizer.api.repository.EventRepository;
 
@@ -41,7 +42,7 @@ public class EventService {
             AppUser eventCreator = event.getCreator();
 
             for (AppUser blockedUser : currentUserBlockList) {
-                if(!eventCreator.getEmail().equals(blockedUser.getEmail())) {
+                if (!eventCreator.getEmail().equals(blockedUser.getEmail())) {
                     userEventsFeed.add(event);
                 }
             }
@@ -57,13 +58,13 @@ public class EventService {
 
         List<Comment> eventCommentsList = new ArrayList<Comment>();
 
-        List<AppUser> blockedUsers = currentUser.getBlockedUsers();               
+        List<AppUser> blockedUsers = currentUser.getBlockedUsers();
 
-        for(Comment comment : event.getComments()) {
+        for (Comment comment : event.getComments()) {
             String commentCreator = comment.getOwnersUsername();
 
-            for(AppUser blockedUser : blockedUsers) {
-                if(!blockedUser.getEmail().equals(commentCreator)) {
+            for (AppUser blockedUser : blockedUsers) {
+                if (!blockedUser.getEmail().equals(commentCreator)) {
                     eventCommentsList.add(comment);
                 }
             }
@@ -104,7 +105,7 @@ public class EventService {
         eventRepository.delete(event);
     }
 
-    public void addComment(String comment, Long eventId, String username) throws EventOrganizerException  {
+    public void addComment(String comment, Long eventId, String username) throws EventOrganizerException {
         if (!eventRepository.existsById(eventId)) {
             throw new EventOrganizerException("Event does not exist");
         }
@@ -135,6 +136,29 @@ public class EventService {
 
         allImages.add(imageModel);
         event.setImages(allImages);
+
+        eventRepository.save(event);
+    }
+
+    public void addFeedback(Integer rating, String comment, Long eventId, String username) throws EventOrganizerException {
+        if (!eventRepository.existsById(eventId)) {
+            throw new EventOrganizerException("Event does not exist");
+        }
+
+        Event event = eventRepository.findById(eventId).get();
+        var allFeedbacks = event.getFeedbacks();
+
+        if (allFeedbacks == null) {
+            allFeedbacks = new ArrayList<Feedback>();
+        }
+
+        Feedback feedbackModel = new Feedback();
+        feedbackModel.setRating(rating);
+        feedbackModel.setComment(comment);
+        feedbackModel.setOwnerUsername(username);
+
+        allFeedbacks.add(feedbackModel);
+        event.setFeedbacks(allFeedbacks);
 
         eventRepository.save(event);
     }

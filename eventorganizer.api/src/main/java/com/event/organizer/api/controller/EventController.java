@@ -4,6 +4,7 @@ import com.event.organizer.api.exception.EventOrganizerException;
 import com.event.organizer.api.model.Event;
 import com.event.organizer.api.model.dto.EventRequestDto;
 import com.event.organizer.api.model.dto.CommentRequestDto;
+import com.event.organizer.api.model.dto.FeedbackRequestDto;
 import com.event.organizer.api.model.dto.ImageRequestDto;
 import com.event.organizer.api.service.EventService;
 
@@ -62,6 +63,12 @@ public class EventController {
     @PostMapping("/addImage")
     public void addImage(@RequestBody ImageRequestDto request, Principal principal) throws  EventOrganizerException {
         eventService.addImage(request.getUrl(), request.getEventId(), principal.getName());
+    }
+
+    @PostMapping("/addFeedback")
+    public void addFeedback(@RequestBody FeedbackRequestDto request, Principal principal) throws EventOrganizerException {
+        Integer boundedRating = request.setBoundedRating(request.getRating());
+        eventService.addFeedback(boundedRating, request.getComment(), request.getEventId(), principal.getName());
     }
 
     @GetMapping("/getEventById")
