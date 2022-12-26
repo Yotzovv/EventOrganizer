@@ -10,9 +10,11 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -23,23 +25,36 @@ public class AppUser implements UserDetails {
 
     @Id
     @SequenceGenerator(
-        name = "student_sequence",
-        sequenceName = "student_sequence",
-        allocationSize = 1
+            name = "student_sequence",
+            sequenceName = "student_sequence",
+            allocationSize = 1
     )
     @GeneratedValue(
-        strategy = GenerationType.SEQUENCE,
-        generator = "student_sequence"
+            strategy = GenerationType.SEQUENCE,
+            generator = "student_sequence"
     )
     private Long id;
     private String name;
     private String username;
     private String email;
     private String password;
+
     @Enumerated(EnumType.STRING)
-    private AppUserRole role;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private List<AppUserRole> roles;
+
     private boolean locked = false;
     private boolean enabled = false;
+
+    @ManyToMany()
+    @JoinTable(
+            name = "blocked_users",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "blocked_user_id"))
     private List<AppUser> blockedUsers;
 
     @ManyToMany
@@ -49,18 +64,19 @@ public class AppUser implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "event_id"))
     private List<Event> events;
 
-    public AppUser(String name, String username, String email, String password, AppUserRole role) {
+    public AppUser(String name, String username, String email, String password, List<AppUserRole> roles) {
         this.name = name;
         this.username = username;
         this.email = email;
         this.password = password;
-        this.role = role;
+        this.roles = roles;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role.name());
-        return Collections.singletonList(authority);
+        return this.roles.stream()
+                .map(role -> new SimpleGrantedAuthority(role.getRole()))
+                .collect(Collectors.toList());
     }
 
     @Override

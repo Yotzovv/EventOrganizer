@@ -7,6 +7,7 @@ import com.event.organizer.api.exception.UserNotAdminException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.Optional;
 
 @Service
@@ -23,7 +24,7 @@ public class AdminService {
             throw new IllegalStateException(USER_NOT_FOUND_MESSAGE);
         }
 
-        if (currentUser.get().getRole() != AppUserRole.ADMIN) {
+        if (currentUser.get().getRoles().contains(AppUserRole.ADMIN)) {
             throw new UserNotAdminException(USER_NOT_ADMIN_MESSAGE);
         }
     }
@@ -34,7 +35,7 @@ public class AdminService {
         Optional<AppUser> editedUser = userRepository.findByEmail(editedUserEmail);
         checkIfUsersExistAndHavePrivileges(currentUser, editedUser);
 
-        editedUser.get().setRole(role);
+        editedUser.get().setRoles(Collections.singletonList(role));
     }
 
     public void changeAccountStatus(String currentUserEmail, String editedUserEmail, Boolean status)

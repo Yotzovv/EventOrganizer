@@ -2,8 +2,11 @@ package com.event.organizer.api.security.config;
 
 import com.event.organizer.api.appuser.AppUser;
 import com.event.organizer.api.appuser.AppUserRole;
+import com.event.organizer.api.appuser.AppUserRoleRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.util.Collections;
 
 @Component
 @AllArgsConstructor
@@ -14,6 +17,7 @@ class AdminConfig {
     private static final String ADMIN_PASSWORD = "wimgrenade";
 
     private final PasswordEncoder passwordEncoder;
+    private final AppUserRoleRepository appUserRoleRepository;
 
     AppUser createAdminUser() {
         AppUser appUser = new AppUser();
@@ -25,7 +29,7 @@ class AdminConfig {
         appUser.setPassword(encodedPassword);
 
         appUser.setEnabled(true);
-        appUser.setRole(AppUserRole.ADMIN);
+        appUser.setRoles(Collections.singletonList(appUserRoleRepository.getAdminRole()));
         return appUser;
     }
 }

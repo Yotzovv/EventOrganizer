@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 
-import java.security.Principal;
+import java.util.Collections;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
@@ -47,11 +47,11 @@ public class AdminTests {
         AdminService adminService = mock(AdminService.class);
 
         AppUser user = new AppUser("user", "userUsername", "userEmail", "userPassword",
-                AppUserRole.USER);
+                Collections.singletonList(new AppUserRole(AppUserRole.USER)));
 
         AppUser editedUser = new AppUser("editedUser", "editedUserUsername", "editedUserEmail",
                 "editedUserPassword",
-                AppUserRole.USER);
+                Collections.singletonList(new AppUserRole(AppUserRole.USER)));
 
         when(appUserService.findUserByEmail(user.getEmail())).thenReturn(Optional.of(user));
         when(appUserService.findUserByEmail(editedUser.getEmail())).thenReturn(Optional.of(editedUser));
@@ -59,14 +59,14 @@ public class AdminTests {
         UserNotAdminException throwable = new UserNotAdminException("User is not an admin.");
 
         String emailOfEditedUser = editedUser.getEmail();
-        AppUserRole appUserRole = AppUserRole.CLIENT;
+        AppUserRole appUserRole = new AppUserRole(AppUserRole.CLIENT);
 
         doThrow(throwable).when(adminService).changeAccountRole(user.getEmail(), emailOfEditedUser, appUserRole);
 
         UserNotAdminException thrown = Assertions.assertThrows(UserNotAdminException.class, () -> adminService.changeAccountRole(
                 user.getEmail(),
                 editedUser.getEmail(),
-                AppUserRole.CLIENT
+                new AppUserRole(AppUserRole.CLIENT)
         ));
         
         Assertions.assertTrue(thrown.getMessage().contentEquals("User is not an admin."));
@@ -78,11 +78,11 @@ public class AdminTests {
         AdminService adminService = mock(AdminService.class);
 
         AppUser user = new AppUser("user", "userUsername", "userEmail", "userPassword",
-                AppUserRole.USER);
+                Collections.singletonList(new AppUserRole(AppUserRole.USER)));
 
         AppUser editedUser = new AppUser("editedUser", "editedUserUsername", "editedUserEmail",
                 "editedUserPassword",
-                AppUserRole.USER);
+                Collections.singletonList(new AppUserRole(AppUserRole.USER)));
 
         when(appUserService.findUserByEmail(user.getEmail())).thenReturn(Optional.of(user));
         when(appUserService.findUserByEmail(editedUser.getEmail())).thenReturn(Optional.of(editedUser));
