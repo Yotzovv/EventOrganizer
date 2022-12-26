@@ -148,6 +148,64 @@ class EventsTests {
 	}
 
 	@Test
+	void GivenExistingEvent_WhenAddingInterestedUser_InterestedUserIsAdded() throws EventOrganizerException {
+		// Create an event and an interested User to add to the event
+		Event event = new Event();
+		event.setId(1l);
+		event.setUsersInterested(new ArrayList<AppUser>());
+
+		AppUser appUser = new AppUser();
+		appUser.setUsername("username");
+		appUser.setEmail("example@.com");
+
+		// Set up a mock event repository that will return the event when findById is called
+		EventRepository eventRepository = mock(EventRepository.class);
+		AppUserService appUserService = mock(AppUserService.class);
+
+		when(eventRepository.existsById(event.getId())).thenReturn(true);
+
+		// Create an EventOrganizer instance and call the userIsInterestedInEvent method
+		EventService eventService = new EventService(eventRepository, appUserService);
+		when(eventRepository.findById(event.getId())).thenReturn(Optional.of(event));
+		when(appUserService.findUserByEmail(appUser.getUsername())).thenReturn(Optional.of(appUser));
+
+		eventService.userIsInterestedInEvent(appUser.getUsername(), event.getId());
+
+		// Verify that the interestedUser was added to the event
+
+		Assertions.assertEquals(1, event.getUsersInterested().size());
+	}
+
+	@Test
+	void GivenExistingEvent_WhenAddingGoingUser_GoingUserIsAdded() throws EventOrganizerException {
+		// Create an event and a going User to add to the event
+		Event event = new Event();
+		event.setId(1l);
+		event.setUsersGoing(new ArrayList<AppUser>());
+
+		AppUser appUser = new AppUser();
+		appUser.setUsername("username");
+		appUser.setEmail("example@.com");
+
+		// Set up a mock event repository that will return the event when findById is called
+		EventRepository eventRepository = mock(EventRepository.class);
+		AppUserService appUserService = mock(AppUserService.class);
+
+		when(eventRepository.existsById(event.getId())).thenReturn(true);
+
+		// Create an EventOrganizer instance and call the userIsGoingToEvent method
+		EventService eventService = new EventService(eventRepository, appUserService);
+		when(eventRepository.findById(event.getId())).thenReturn(Optional.of(event));
+		when(appUserService.findUserByEmail(appUser.getUsername())).thenReturn(Optional.of(appUser));
+
+		eventService.userIsGoingToEvent(appUser.getUsername(), event.getId());
+
+		// Verify that the goingUser was added to the event
+
+		Assertions.assertEquals(1, event.getUsersInterested().size());
+	}
+
+	@Test
 	void GivenNonExistingEvent_WhenAddingFeedback_ThrowsException() {
 		// Create a Feedback to add to the event
 
@@ -244,22 +302,22 @@ class EventsTests {
 		List<Comment> emptyCommentsList = new ArrayList<Comment>();
 		List<Image> emptyImagesList = new ArrayList<Image>();
 		List<Feedback> emptyFeedbacksList = new ArrayList<Feedback>();
-
-
+		List<AppUser> emptyUsersInterestedList = new ArrayList<AppUser>();
+		List<AppUser> emptyUsersGoingList = new ArrayList<AppUser>();
 
 		List<Event> dummyEventsList = Arrays.asList(
 				new Event(1L, "Tech Conference", LocalDateTime.of(2022, 1, 15, 9, 0),
 						LocalDateTime.of(2022, 1, 17, 17, 0), Event.ACCEPTED_STATUS,
 						"A conference for software developers and IT professionals", "San Francisco, CA", currentUser,
-						emptyCommentsList, null, emptyImagesList, emptyFeedbacksList),
+						emptyCommentsList, null, emptyUsersInterestedList, emptyUsersGoingList, emptyImagesList, emptyFeedbacksList),
 				new Event(2L, "Art Exhibition", LocalDateTime.of(2022, 3, 5, 10, 0),
 						LocalDateTime.of(2022, 3, 7, 18, 0), Event.NONE_STATUS,
 						"A showcase of contemporary art from local artists", "Los Angeles, CA", currentUser,
-						emptyCommentsList, null, emptyImagesList, emptyFeedbacksList),
+						emptyCommentsList, null, emptyUsersInterestedList, emptyUsersGoingList, emptyImagesList, emptyFeedbacksList),
 				new Event(3L, "Music Festival", LocalDateTime.of(2022, 7, 20, 12, 0),
 						LocalDateTime.of(2022, 7, 25, 0, 0), Event.REJECTED_STATUS,
 						"A multi-day music festival featuring various genres and artists", "New York, NY", blockedUser,
-						emptyCommentsList, null, emptyImagesList, emptyFeedbacksList));
+						emptyCommentsList, null, emptyUsersInterestedList, emptyUsersGoingList, emptyImagesList, emptyFeedbacksList));
 		return dummyEventsList;
 	}
 
@@ -271,6 +329,9 @@ class EventsTests {
 		List<Image> emptyImagesList = new ArrayList<Image>();
 		List<Comment> dummyComments = new ArrayList<>();
 		List<Feedback> emptyFeedbacksList = new ArrayList<Feedback>();
+		List<AppUser> emptyUsersInterestedList = new ArrayList<AppUser>();
+		List<AppUser> emptyUsersGoingList = new ArrayList<AppUser>();
+
 
 		dummyComments.add(new Comment(1, "This is a great event!", LocalDateTime.now(), "johnsmith"));
 		dummyComments.add(new Comment(2, "I'm looking forward to attending!", LocalDateTime.now(), "janelee"));
@@ -280,7 +341,7 @@ class EventsTests {
 		Event event = new Event(1L, "Tech Conference", LocalDateTime.of(2022, 1, 15, 9, 0),
 						LocalDateTime.of(2022, 1, 17, 17, 0), Event.ACCEPTED_STATUS,
 						"A conference for software developers and IT professionals", "San Francisco, CA", currentUser,
-						dummyComments, null, emptyImagesList, emptyFeedbacksList);
+						dummyComments, null, emptyUsersInterestedList, emptyUsersGoingList, emptyImagesList, emptyFeedbacksList);
 
 		return event;		
 	}

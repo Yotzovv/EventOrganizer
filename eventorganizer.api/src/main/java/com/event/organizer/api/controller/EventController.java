@@ -71,6 +71,16 @@ public class EventController {
         eventService.addFeedback(request.getRating(), request.getComment(), request.getEventId(), principal.getName());
     }
 
+    @PostMapping("/addInterested")
+    public void userInterestedInEvent(Principal principal, Long eventId) throws EventOrganizerException {
+        eventService.userIsInterestedInEvent(principal.getName(), eventId);
+    }
+
+    @PostMapping("/addGoing")
+    public void userGoingToEvent(Principal principal, Long eventId) throws EventOrganizerException {
+        eventService.userIsGoingToEvent(principal.getName(), eventId);
+    }
+
     @GetMapping("/getEventById")
     public Event getEventById(long eventId, Principal principal) {
         return eventService.getEventById(eventId, principal.getName());

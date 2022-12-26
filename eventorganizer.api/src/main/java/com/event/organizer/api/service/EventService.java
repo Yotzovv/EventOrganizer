@@ -162,4 +162,44 @@ public class EventService {
 
         eventRepository.save(event);
     }
+
+    public void userIsInterestedInEvent(String username, Long eventId) throws EventOrganizerException {
+        if (!eventRepository.existsById(eventId)) {
+            throw new EventOrganizerException("Event does not exist");
+        }
+
+        Event event = eventRepository.findById(eventId).get();
+        List<AppUser> allUsersInterested = event.getUsersInterested();
+
+        if(allUsersInterested == null) {
+            allUsersInterested = new ArrayList<AppUser>();
+        }
+
+        AppUser userModel = appUserService.findUserByEmail(username).get();
+
+        allUsersInterested.add(userModel);
+        event.setUsersInterested(allUsersInterested);
+
+        eventRepository.save(event);
+    }
+
+    public void userIsGoingToEvent(String username, Long eventId) throws EventOrganizerException {
+        if (!eventRepository.existsById(eventId)) {
+            throw new EventOrganizerException("Event does not exist");
+        }
+
+        Event event = eventRepository.findById(eventId).get();
+        List<AppUser> allUsersGoing = event.getUsersGoing();
+
+        if(allUsersGoing == null) {
+            allUsersGoing = new ArrayList<AppUser>();
+        }
+
+        AppUser userModel = appUserService.findUserByEmail(username).get();
+
+        allUsersGoing.add(userModel);
+        event.setUsersInterested(allUsersGoing);
+
+        eventRepository.save(event);
+    }
 }
