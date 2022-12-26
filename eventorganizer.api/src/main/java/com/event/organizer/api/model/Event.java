@@ -61,8 +61,13 @@ public class Event {
 
     @ElementCollection
     @CollectionTable(name = "event_images", joinColumns = @JoinColumn(name = "event_id"))
-    @Column(name = "image_url")
+    @Column(name = "event_images")
     private List<Image> images;
+
+    @ElementCollection
+    @CollectionTable(name = "event_feedbacks", joinColumns = @JoinColumn(name = "event_id"))
+    @Column(name = "event_feedbacks")
+    private List<Feedback> feedbacks;
 }
 
 

@@ -11,20 +11,20 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode
 @Getter
 @Setter
-public class Image {
+public class Feedback {
 
     @Id
     @SequenceGenerator(
-            name = "image_sequence",
-            sequenceName = "image_sequence",
+            name = "feedback_sequence",
+            sequenceName = "feedback",
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "image_sequence"
+            generator = "feedback_sequence"
     )
-    private long id;
-    private String url;
+    private Integer rating;
+    private String comment;
     private LocalDateTime createdDate;
     private String ownerUsername;
 
@@ -32,4 +32,3 @@ public class Image {
     @JoinColumn(name = "event_id")
     private Event event;
 }
-
