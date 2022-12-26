@@ -10,24 +10,20 @@ import lombok.Setter;
 @Getter
 @Setter
 public class FeedbackRequestDto {
-    private final Integer min = 1;
-    private final Integer max = 5;
+    private static final Integer MIN = 1;
+    private static final Integer MAX = 5;
     private Integer rating;
     private String comment;
     private Long eventId;
 
-    public Integer setBoundedRating(Integer rating) {
-        Integer boundedRating = 0;
+    public void setRating(Integer rating) {
+        this.rating = rating;
 
-        if (rating >= max) {
-            boundedRating = max;
+        if (rating >= MAX) {
+            this.rating = MAX;
         }
-        else if (rating <= min) {
-            boundedRating = min;
+        else if (rating <= MIN) {
+            this.rating = MIN;
         }
-        else {
-            boundedRating = rating;
-        }
-        return boundedRating;
     }
 }

@@ -67,8 +67,8 @@ public class EventController {
 
     @PostMapping("/addFeedback")
     public void addFeedback(@RequestBody FeedbackRequestDto request, Principal principal) throws EventOrganizerException {
-        Integer boundedRating = request.setBoundedRating(request.getRating());
-        eventService.addFeedback(boundedRating, request.getComment(), request.getEventId(), principal.getName());
+        request.setRating(request.getRating());
+        eventService.addFeedback(request.getRating(), request.getComment(), request.getEventId(), principal.getName());
     }
 
     @GetMapping("/getEventById")

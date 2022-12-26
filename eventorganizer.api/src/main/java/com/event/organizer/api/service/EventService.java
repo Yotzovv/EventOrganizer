@@ -110,7 +110,7 @@ public class EventService {
             throw new EventOrganizerException("Event does not exist");
         }
         Event event = eventRepository.findById(eventId).get();
-        var allComments = event.getComments();
+        List<Comment> allComments = event.getComments();
 
         Comment commentModel = new Comment();
         commentModel.setContent(comment);
@@ -128,7 +128,7 @@ public class EventService {
         }
 
         Event event = eventRepository.findById(eventId).get();
-        var allImages = event.getImages();
+        List<Image> allImages = event.getImages();
 
         Image imageModel = new Image();
         imageModel.setUrl(image);
@@ -146,7 +146,7 @@ public class EventService {
         }
 
         Event event = eventRepository.findById(eventId).get();
-        var allFeedbacks = event.getFeedbacks();
+        List<Feedback> allFeedbacks = event.getFeedbacks();
 
         if (allFeedbacks == null) {
             allFeedbacks = new ArrayList<Feedback>();
