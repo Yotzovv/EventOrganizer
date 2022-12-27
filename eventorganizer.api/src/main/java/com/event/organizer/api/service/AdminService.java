@@ -35,7 +35,7 @@ public class AdminService {
         Optional<AppUser> editedUser = userRepository.findByEmail(editedUserEmail);
         checkIfUsersExistAndHavePrivileges(currentUser, editedUser);
 
-        editedUser.get().setRoles(Collections.singletonList(role));
+        editedUser.get().setRoles(Collections.singleton(role));
     }
 
     public void changeAccountStatus(String currentUserEmail, String editedUserEmail, Boolean status)

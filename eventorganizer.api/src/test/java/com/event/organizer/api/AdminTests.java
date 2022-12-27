@@ -47,11 +47,11 @@ public class AdminTests {
         AdminService adminService = mock(AdminService.class);
 
         AppUser user = new AppUser("user", "userUsername", "userEmail", "userPassword",
-                Collections.singletonList(new AppUserRole(AppUserRole.USER)));
+                Collections.singleton(new AppUserRole(AppUserRole.USER)));
 
         AppUser editedUser = new AppUser("editedUser", "editedUserUsername", "editedUserEmail",
                 "editedUserPassword",
-                Collections.singletonList(new AppUserRole(AppUserRole.USER)));
+                Collections.singleton(new AppUserRole(AppUserRole.USER)));
 
         when(appUserService.findUserByEmail(user.getEmail())).thenReturn(Optional.of(user));
         when(appUserService.findUserByEmail(editedUser.getEmail())).thenReturn(Optional.of(editedUser));
@@ -78,11 +78,11 @@ public class AdminTests {
         AdminService adminService = mock(AdminService.class);
 
         AppUser user = new AppUser("user", "userUsername", "userEmail", "userPassword",
-                Collections.singletonList(new AppUserRole(AppUserRole.USER)));
+                Collections.singleton(new AppUserRole(AppUserRole.USER)));
 
         AppUser editedUser = new AppUser("editedUser", "editedUserUsername", "editedUserEmail",
                 "editedUserPassword",
-                Collections.singletonList(new AppUserRole(AppUserRole.USER)));
+                Collections.singleton(new AppUserRole(AppUserRole.USER)));
 
         when(appUserService.findUserByEmail(user.getEmail())).thenReturn(Optional.of(user));
         when(appUserService.findUserByEmail(editedUser.getEmail())).thenReturn(Optional.of(editedUser));

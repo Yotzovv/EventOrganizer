@@ -9,6 +9,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import com.event.organizer.api.appuser.AppUserRoleService;
+import com.event.organizer.api.security.config.AdminConfig;
 import org.apache.catalina.User;
 import org.junit.Before;
 import org.junit.jupiter.api.Assertions;
@@ -27,6 +29,9 @@ import com.event.organizer.api.exception.EventOrganizerException;
 @SpringBootTest(properties = "spring.main.lazy-initialization=true",
         		classes = {UserRepository.class, AppUserService.class, AppUser.class})
 class AccountTests {
+
+	@Mock
+	private AppUserRoleService appUserRoleService;
 
 	@Test
 	public void givenValidInput_whenEditAccount_updatesSuccessfully() {
@@ -58,7 +63,7 @@ class AccountTests {
 
 		// Set up class under test
 		UserRepository userRepository = mock(UserRepository.class);
-		AppUserService appUserService = new AppUserService(userRepository, null);
+		AppUserService appUserService = new AppUserService(userRepository, null, appUserRoleService);
 
 		// Act
 		UsernameNotFoundException thrown = Assertions.assertThrows(UsernameNotFoundException.class,
@@ -78,7 +83,7 @@ class AccountTests {
 		when(mockedUserRepository.findByEmail(editedUser.getEmail())).thenReturn(Optional.empty());
 
 		// Set up class under test and inject mocked user repository	
-		AppUserService appUserService = new AppUserService(mockedUserRepository, null);
+		AppUserService appUserService = new AppUserService(mockedUserRepository, null, appUserRoleService);
 
 		// Act
 		UsernameNotFoundException thrown = Assertions.assertThrows(UsernameNotFoundException.class,
@@ -91,7 +96,7 @@ class AccountTests {
 	@Test
 	public void GivenValidData_WhenBlockingUser_ThenSuccess() {
 		UserRepository userRepository = mock(UserRepository.class);
-		AppUserService userService = new AppUserService(userRepository, null);
+		AppUserService userService = new AppUserService(userRepository, null, appUserRoleService);
 
 		// Set up mock user data
 		AppUser currentUser = new AppUser();

@@ -33,7 +33,7 @@ class RegistrationService {
                 registrationRequest.getEmail(),
                 registrationRequest.getEmail(),
                 registrationRequest.getPassword(),
-                Collections.singletonList(appUserRoleRepository.getClientRole())
+                Collections.singleton(appUserRoleRepository.getClientRole())
         ));
     }
 }

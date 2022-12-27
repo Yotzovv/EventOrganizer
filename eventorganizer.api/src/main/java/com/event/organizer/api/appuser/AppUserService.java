@@ -1,14 +1,20 @@
 package com.event.organizer.api.appuser;
 
+import com.event.organizer.api.model.dto.AccountRolesRequestDto;
+import com.event.organizer.api.model.dto.AccountStatusRequestDto;
+import com.event.organizer.api.security.config.AdminConfig;
 import com.event.organizer.api.security.config.PasswordEncoder;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -21,6 +27,8 @@ public class AppUserService implements UserDetailsService {
     private final UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final AppUserRoleService appUserRoleService;
 
     public void editAccount(AppUser editedUser) throws UsernameNotFoundException {
         if (editedUser == null) {
@@ -74,8 +82,8 @@ public class AppUserService implements UserDetailsService {
     }
 
     public void blockUser(String currentUserName, String userToBlockEmail) {
-        AppUser currentUser =  userRepository.findByEmail(currentUserName).get();
-        AppUser userToBlock = userRepository.findByEmail(userToBlockEmail).get();
+        AppUser currentUser = findValidatedUser(currentUserName);
+        AppUser userToBlock = findValidatedUser(userToBlockEmail);
 
         List<AppUser> blockedUsersList = currentUser.getBlockedUsers();
         blockedUsersList.add(userToBlock);
@@ -89,4 +97,70 @@ public class AppUserService implements UserDetailsService {
         userRepository.save(currentUser);
         userRepository.save(userToBlock);
     }
+
+    public AppUser changeAccountRole(String currentUserEmail, AccountRolesRequestDto accountRolesRequestDto) {
+        AppUser currentUser = findValidatedUser(currentUserEmail);
+        AppUser editedUser = findValidatedUser(accountRolesRequestDto.getEmail());
+        editUserRoles(currentUser, editedUser, accountRolesRequestDto.getRoles());
+        return userRepository.save(editedUser);
+    }
+
+    public AppUser changeAccountStatus(String currentUserEmail, AccountStatusRequestDto accountStatusRequestDto) {
+        AppUser currentUser = findValidatedUser(currentUserEmail);
+        AppUser editedUser = findValidatedUser(accountStatusRequestDto.getEmail());
+        editAccountStatus(currentUser, editedUser, accountStatusRequestDto.isEnabled());
+        return userRepository.save(editedUser);
+    }
+
+    private void editAccountStatus(AppUser currentUser, AppUser appUser, boolean enabled) {
+        if (!AdminConfig.isSuperUserAdmin(currentUser.getEmail())) {
+            validateCannotChangeStatusToOtherAdmin(appUser, enabled);
+        }
+        appUser.setEnabled(enabled);
+    }
+
+    private void editUserRoles(AppUser currentUser, AppUser appUser, List<String> roles) {
+        // only superuser admin can downgrade other admins
+        // other admins should not be able to downgrade other admins
+
+        Set<AppUserRole> userRoleSet = roles.stream()
+                .filter(AppUserRole.ROLE_TYPES::contains)
+                .map(appUserRoleService::getRole)
+                .collect(Collectors.toSet());
+
+        if (CollectionUtils.isEmpty(userRoleSet)) {
+            throw new IllegalStateException("Roles cannot be empty");
+        }
+
+
+        if (!AdminConfig.isSuperUserAdmin(currentUser.getEmail())) {
+            validateCannotDowngradeOtherAdmins(appUser, userRoleSet);
+        }
+        appUser.setRoles(userRoleSet);
+    }
+
+    private AppUser findValidatedUser(String email) {
+        Optional<AppUser> editedUser = userRepository.findByEmail(email);
+        validateUserExists(editedUser);
+        return editedUser.get();
+    }
+
+    private void validateUserExists(Optional<AppUser> user) {
+        if (!user.isPresent()) {
+            throw new IllegalStateException(USER_NOT_FOUND_MESSAGE);
+        }
+    }
+
+    private void validateCannotDowngradeOtherAdmins(AppUser appUser, Set<AppUserRole> appUserRoles) {
+        if (appUser.getRoles().contains(AppUserRole.ADMIN) && !appUserRoles.contains(AppUserRole.ADMIN)) {
+            throw new IllegalStateException("Admin user cannot be downgraded");
+        }
+    }
+
+    private void validateCannotChangeStatusToOtherAdmin(AppUser appUser, boolean enabled){
+        if (appUser.getRoles().contains(AppUserRole.ADMIN) && !enabled ) {
+            throw new IllegalStateException("Admin user cannot be disabled");
+        }
+    }
+
 }

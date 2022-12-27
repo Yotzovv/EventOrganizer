@@ -1,6 +1,7 @@
 package com.event.organizer.api;
 
 import com.event.organizer.api.appuser.AppUser;
+import com.event.organizer.api.appuser.AppUserRoleService;
 import com.event.organizer.api.appuser.AppUserService;
 import com.event.organizer.api.appuser.UserRepository;
 import com.event.organizer.api.exception.EventOrganizerException;
@@ -12,6 +13,7 @@ import com.event.organizer.api.repository.EventRepository;
 import com.event.organizer.api.service.EventService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -30,6 +32,12 @@ import static org.mockito.Mockito.when;
 @SpringBootTest(properties = "spring.main.lazy-initialization=true",
         		classes = {EventRepository.class, EventService.class, Event.class, Comment.class})
 class EventsTests {
+
+	@Mock
+	private UserRepository userRepository;
+
+	@Mock
+	private AppUserRoleService appUserRoleService;
 
 	@Test
 	void GivenExistingEvent_WhenAddingComment_CommentIsAdded() throws EventOrganizerException {
@@ -175,7 +183,7 @@ class EventsTests {
 	@Test
 	void GivenBlockedUsers_WhenGettingAllEvents_ThenBlockedEventsAreExcluded() {
 		UserRepository userRepository = mock(UserRepository.class);
-		AppUserService userService = new AppUserService(userRepository, null);
+		AppUserService userService = new AppUserService(userRepository, null, appUserRoleService);
 
 		// Set up mock user data
 		AppUser currentUser = new AppUser();
@@ -205,7 +213,7 @@ class EventsTests {
 	@Test
 	void GivenBlockedUsers_WhenGettingAllEvents_ThenBlockedCommentsAreExcluded() {
 		UserRepository userRepository = mock(UserRepository.class);
-		AppUserService userService = new AppUserService(userRepository, null);
+		AppUserService userService = new AppUserService(userRepository, null, appUserRoleService);
 
 		// Set up mock user data
 		AppUser currentUser = new AppUser();

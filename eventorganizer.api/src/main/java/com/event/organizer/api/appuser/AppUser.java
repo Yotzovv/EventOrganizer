@@ -1,6 +1,7 @@
 package com.event.organizer.api.appuser;
 
 import com.event.organizer.api.model.Event;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,10 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Getter
@@ -37,6 +35,8 @@ public class AppUser implements UserDetails {
     private String name;
     private String username;
     private String email;
+
+    @JsonIgnore
     private String password;
 
     @Enumerated(EnumType.STRING)
@@ -45,7 +45,7 @@ public class AppUser implements UserDetails {
             name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private List<AppUserRole> roles;
+    private Set<AppUserRole> roles;
 
     private boolean locked = false;
     private boolean enabled = false;
@@ -64,7 +64,7 @@ public class AppUser implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "event_id"))
     private List<Event> events;
 
-    public AppUser(String name, String username, String email, String password, List<AppUserRole> roles) {
+    public AppUser(String name, String username, String email, String password, Set<AppUserRole> roles) {
         this.name = name;
         this.username = username;
         this.email = email;

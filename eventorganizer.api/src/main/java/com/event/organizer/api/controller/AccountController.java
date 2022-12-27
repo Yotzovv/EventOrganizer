@@ -1,9 +1,14 @@
 package com.event.organizer.api.controller;
 
 import com.event.organizer.api.appuser.AppUser;
+import com.event.organizer.api.appuser.AppUserRole;
 import com.event.organizer.api.appuser.AppUserService;
+import com.event.organizer.api.model.dto.AccountRolesRequestDto;
+import com.event.organizer.api.model.dto.AccountStatusRequestDto;
 import lombok.AllArgsConstructor;
+
 import java.security.Principal;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,15 +26,28 @@ public class AccountController {
         userService.editAccount(account);
     }
 
-
     @GetMapping
     @PreAuthorize("hasAuthority('ADMIN')")
     public List<AppUser> getAllUsers() {
         return userService.getAllUsers();
     }
 
-    @PutMapping("blockUser")
+    @PutMapping("/blockUser")
     public void blockUser(Principal user, String emailOfUserToBlock) {
         userService.blockUser(user.getName(), emailOfUserToBlock);
+    }
+
+    @PutMapping("/changeRole")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public AppUser changeAccountRole(Principal user,
+                                     @RequestBody AccountRolesRequestDto accountRolesRequestDto) {
+        return userService.changeAccountRole(user.getName(), accountRolesRequestDto);
+    }
+
+    @PutMapping("/changeStatus")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public AppUser changeAccountStatus(Principal user,
+                                       @RequestBody AccountStatusRequestDto accountStatusRequestDto) {
+        return userService.changeAccountStatus(user.getName(), accountStatusRequestDto);
     }
 }
