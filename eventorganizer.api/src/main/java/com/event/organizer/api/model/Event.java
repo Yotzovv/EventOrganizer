@@ -59,6 +59,12 @@ public class Event {
     @ManyToMany(mappedBy = "events")
     private List<AppUser> appUsers;
 
+    @ManyToMany(mappedBy = "events")
+    private List<AppUser> usersInterested;
+
+    @ManyToMany(mappedBy = "events")
+    private List<AppUser> usersGoing;
+
     @ElementCollection
     @CollectionTable(name = "event_images", joinColumns = @JoinColumn(name = "event_id"))
     @Column(name = "event_images")
