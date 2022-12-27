@@ -198,7 +198,7 @@ public class EventService {
         AppUser userModel = appUserService.findUserByEmail(username).get();
 
         allUsersGoing.add(userModel);
-        event.setUsersInterested(allUsersGoing);
+        event.setUsersGoing(allUsersGoing);
 
         eventRepository.save(event);
     }

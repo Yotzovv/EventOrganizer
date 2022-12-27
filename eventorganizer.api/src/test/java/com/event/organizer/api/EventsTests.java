@@ -202,7 +202,7 @@ class EventsTests {
 
 		// Verify that the goingUser was added to the event
 
-		Assertions.assertEquals(1, event.getUsersInterested().size());
+		Assertions.assertEquals(1, event.getUsersGoing().size());
 	}
 
 	@Test
