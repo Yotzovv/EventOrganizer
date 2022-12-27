@@ -11,7 +11,7 @@ export class EventDto {
     endDate: Date;
     status?: string;
     interestedPeple?: number;
-    publisher: string;
+    creator: string;
     isCurrentUserInterested?: boolean;
     cantBeEdited?: boolean;
     type?: string;  // TODO: map in the database

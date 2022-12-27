@@ -41,6 +41,10 @@ public class EventService {
         for (Event event : allEvents) {
             AppUser eventCreator = event.getCreator();
 
+            if(eventCreator.getEmail().equals(currentUserEmail)) {
+                userEventsFeed.add(event);
+            }
+
             for (AppUser blockedUser : currentUserBlockList) {
                 if (!eventCreator.getEmail().equals(blockedUser.getEmail())) {
                     userEventsFeed.add(event);
@@ -91,10 +95,14 @@ public class EventService {
         return eventRepository.save(event);
     }
 
-    public Event updateEvent(Event event) throws EventOrganizerException {
+    public Event updateEvent(Event event, String username) throws EventOrganizerException {
         if (!eventRepository.existsById(event.getId())) {
             throw new EventOrganizerException("Event does not exist");
         }
+        AppUser creator = (AppUser) appUserService.loadUserByUsername(username);
+
+        event.setCreator(creator);
+        
         return eventRepository.save(event);
     }
 

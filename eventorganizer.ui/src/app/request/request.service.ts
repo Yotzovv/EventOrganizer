@@ -20,7 +20,7 @@ export class RequestService {
     }
 
     getAllUsers(): Observable<any> {
-        return this.http.get(`${this.API_URL}/api/v1/account/getAllUsers`);
+        return this.http.get(`${this.API_URL}/api/v1/account`);
     }
 
     getEvent(id: number): Observable<any> {
@@ -89,19 +89,23 @@ export class RequestService {
     }
 
     activateUser(email: string): Observable<any> {
-        return this.http.post(`${this.API_URL}/api/v1/activateUser`, {
-            email
+        return this.http.put(`${this.API_URL}/api/v1/account/changeStatus`, { email: email, enabled: true }, {
+            headers: {
+                'Content-Type': 'application/json',
+              },
         })
     }
 
     deactivateUser(email: string): Observable<any> {
-        return this.http.post(`${this.API_URL}/api/v1/deactivateUser`, {
-            email
+        return this.http.put(`${this.API_URL}/api/v1/account/changeStatus`, { email: email, enabled: false }, {
+            headers: {
+                'Content-Type': 'application/json',
+              },
         })
     }
 
     changeUserRole(email: string, newRole: string): Observable<any> {
-        return this.http.post(`${this.API_URL}/api/v1/changeRole`, {
+        return this.http.put(`${this.API_URL}/api/v1/account/changeRole`, {
             email,
             newRole
         })

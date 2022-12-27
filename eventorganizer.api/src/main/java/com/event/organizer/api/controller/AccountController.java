@@ -39,15 +39,13 @@ public class AccountController {
 
     @PutMapping("/changeRole")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public AppUser changeAccountRole(Principal user,
-                                     @RequestBody AccountRolesRequestDto accountRolesRequestDto) {
+    public AppUser changeAccountRole(@RequestBody AccountRolesRequestDto accountRolesRequestDto, Principal user) {
         return userService.changeAccountRole(user.getName(), accountRolesRequestDto);
     }
 
     @PutMapping("/changeStatus")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public AppUser changeAccountStatus(Principal user,
-                                       @RequestBody AccountStatusRequestDto accountStatusRequestDto) {
+    public AppUser changeAccountStatus(@RequestBody AccountStatusRequestDto accountStatusRequestDto, Principal user) {
         return userService.changeAccountStatus(user.getName(), accountStatusRequestDto);
     }
 }

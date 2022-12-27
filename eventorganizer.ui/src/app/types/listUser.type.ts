@@ -1,13 +1,13 @@
 export class ListUser {
     username: string;
     email: string;
-    role: string;
+    roles: string[];
     isActive: boolean;
 
-    constructor(username: string, email: string, role: string, isActive: boolean) {
+    constructor(username: string, email: string, roles: string[], isActive: boolean) {
         this.username = username;
         this.email = email;
-        this.role = role;
+        this.roles = roles;
         this.isActive = isActive;
     }
 }

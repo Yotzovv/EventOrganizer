@@ -43,9 +43,9 @@ public class EventController {
     }
 
     @PutMapping
-    public Event updateEvent(@RequestBody EventRequestDto eventRequestDto) throws EventOrganizerException {
+    public Event updateEvent(@RequestBody EventRequestDto eventRequestDto, Principal princpal) throws EventOrganizerException {
         Event event = getEventModel(eventRequestDto);
-        return eventService.updateEvent(event);
+        return eventService.updateEvent(event, princpal.getName());
     }
 
     @DeleteMapping
