@@ -1,6 +1,7 @@
 package com.event.organizer.api.appuser;
 
 import com.event.organizer.api.model.Event;
+import com.event.organizer.api.model.ProfilePicture;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -11,7 +12,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Getter
@@ -35,6 +38,10 @@ public class AppUser implements UserDetails {
     private String name;
     private String username;
     private String email;
+
+    @ManyToOne
+    @JoinColumn(name = "profile_picture_id")
+    private ProfilePicture profilePicture;
 
     @JsonIgnore
     private String password;

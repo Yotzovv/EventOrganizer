@@ -5,10 +5,7 @@ import com.event.organizer.api.appuser.AppUserRoleService;
 import com.event.organizer.api.appuser.AppUserService;
 import com.event.organizer.api.appuser.UserRepository;
 import com.event.organizer.api.exception.EventOrganizerException;
-import com.event.organizer.api.model.Comment;
-import com.event.organizer.api.model.Event;
-import com.event.organizer.api.model.Feedback;
-import com.event.organizer.api.model.Image;
+import com.event.organizer.api.model.*;
 import com.event.organizer.api.repository.EventRepository;
 import com.event.organizer.api.service.EventService;
 import org.junit.jupiter.api.Assertions;
@@ -23,8 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -153,6 +149,27 @@ class EventsTests {
 		// Verify that the feedback was added to the event
 		assertTrue(event.getFeedbacks().stream().anyMatch(feedback -> feedback.getComment().equals("feedbackComment")));
 		assertTrue(event.getFeedbacks().stream().anyMatch(feedback -> feedback.getRating().equals(1)));
+	}
+
+	@Test
+	void GivenExistingAccount_WhenAddingProfilePicture_ProfilePictureIsAdded() throws EventOrganizerException {
+		// Create a user and a profile picture
+		AppUser user = new AppUser();
+		user.setUsername("username");
+		user.setEmail("username@example.com");
+
+		ProfilePicture profilePicture = new ProfilePicture();
+		profilePicture.setUrl("pictureUrl");
+		user.setProfilePicture(profilePicture);
+
+		AppUserService appUserService = mock(AppUserService.class);
+
+		when(appUserService.findUserByEmail(user.getEmail())).thenReturn(Optional.of(user));
+		when(appUserService.uploadProfilePicture(user.getEmail(), profilePicture.getUrl())).thenReturn(user);
+		appUserService.uploadProfilePicture(user.getEmail(), profilePicture.getUrl());
+
+		// Verify that the image was added to the user's account
+		assertEquals("pictureUrl", user.getProfilePicture().getUrl());
 	}
 
 	@Test

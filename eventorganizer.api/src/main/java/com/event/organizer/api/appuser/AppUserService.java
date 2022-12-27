@@ -1,7 +1,9 @@
 package com.event.organizer.api.appuser;
 
+import com.event.organizer.api.model.ProfilePicture;
 import com.event.organizer.api.model.dto.AccountRolesRequestDto;
 import com.event.organizer.api.model.dto.AccountStatusRequestDto;
+import com.event.organizer.api.model.dto.ProfilePictureRequestDto;
 import com.event.organizer.api.security.config.AdminConfig;
 import com.event.organizer.api.security.config.PasswordEncoder;
 import lombok.AllArgsConstructor;
@@ -11,9 +13,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -112,6 +116,20 @@ public class AppUserService implements UserDetailsService {
         AppUser editedUser = findValidatedUser(accountStatusRequestDto.getEmail());
         editAccountStatus(currentUser, editedUser, accountStatusRequestDto.isEnabled());
         return userRepository.save(editedUser);
+    }
+
+    public AppUser uploadProfilePicture(String currentUserEmail, String imageUrl) {
+        AppUser user = findValidatedUser(currentUserEmail);
+
+        ProfilePicture profilePicture = new ProfilePicture();
+        long uniqueLong = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
+
+        profilePicture.setUrl(imageUrl);
+        profilePicture.setCreatedDate(LocalDateTime.now());
+        profilePicture.setId(uniqueLong);
+
+        user.setProfilePicture(profilePicture);
+        return userRepository.save(user);
     }
 
     private void editAccountStatus(AppUser currentUser, AppUser appUser, boolean enabled) {

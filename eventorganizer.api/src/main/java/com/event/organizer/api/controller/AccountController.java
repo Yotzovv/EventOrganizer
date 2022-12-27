@@ -1,17 +1,15 @@
 package com.event.organizer.api.controller;
 
 import com.event.organizer.api.appuser.AppUser;
-import com.event.organizer.api.appuser.AppUserRole;
 import com.event.organizer.api.appuser.AppUserService;
 import com.event.organizer.api.model.dto.AccountRolesRequestDto;
 import com.event.organizer.api.model.dto.AccountStatusRequestDto;
+import com.event.organizer.api.model.dto.ProfilePictureRequestDto;
 import lombok.AllArgsConstructor;
-
-import java.security.Principal;
-
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -47,5 +45,10 @@ public class AccountController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public AppUser changeAccountStatus(@RequestBody AccountStatusRequestDto accountStatusRequestDto, Principal user) {
         return userService.changeAccountStatus(user.getName(), accountStatusRequestDto);
+    }
+
+    @PutMapping("/addProfilePicture")
+    public AppUser uploadProfilePicture(@RequestBody ProfilePictureRequestDto profilePictureRequestDto, Principal user) {
+        return userService.uploadProfilePicture(user.getName(), profilePictureRequestDto.getUrl());
     }
 }
