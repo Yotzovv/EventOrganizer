@@ -40,16 +40,14 @@ public class EventService {
 
         for (Event event : allEvents) {
             AppUser eventCreator = event.getCreator();
-
-            if(eventCreator.getEmail().equals(currentUserEmail)) {
-                userEventsFeed.add(event);
-            }
-
+            
             for (AppUser blockedUser : currentUserBlockList) {
                 if (!eventCreator.getEmail().equals(blockedUser.getEmail())) {
-                    userEventsFeed.add(event);
+                    continue;
                 }
             }
+            
+            userEventsFeed.add(event);
         }
 
         return userEventsFeed;

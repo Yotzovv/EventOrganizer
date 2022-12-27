@@ -1,3 +1,4 @@
+import { ListUser } from './listUser.type';
 import { RequestService } from './../request/request.service';
 import { Comment } from './comment.type'
 
@@ -11,7 +12,7 @@ export class EventDto {
     endDate: Date;
     status?: string;
     interestedPeple?: number;
-    creator: string;
+    creator: ListUser;
     isCurrentUserInterested?: boolean;
     cantBeEdited?: boolean;
     type?: string;  // TODO: map in the database
