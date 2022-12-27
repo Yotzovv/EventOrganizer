@@ -104,11 +104,12 @@ export class RequestService {
         })
     }
 
-    changeUserRole(email: string, newRole: string): Observable<any> {
-        return this.http.put(`${this.API_URL}/api/v1/account/changeRole`, {
-            email,
-            newRole
-        })
+    changeUserRole(email: string, newRole: string[]): Observable<any> {
+        return this.http.put(`${this.API_URL}/api/v1/account/changeRole`, { email, roles: newRole }, {
+            headers: {
+                'Content-Type': 'application/json',
+              },
+        });
     }
 
     userIsInterested(userToken: string, eventId: number) {

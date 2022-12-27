@@ -25,9 +25,9 @@ export class AdminPageComponent {
   displayedColumns = ['name', 'email', 'roles', 'buttons'];
 
   onChangeRole(user: ListUser, event: MouseEvent) {
-    const newRole = (event.target as HTMLElement).innerText;
+    const newRoles = (event.target as HTMLElement).innerText.toUpperCase();
 
-    this.requestService.changeUserRole(user.email, newRole).subscribe();
+    this.requestService.changeUserRole(user.email, [newRoles]).subscribe();
   }
 
   deactivateUser(user: any) {

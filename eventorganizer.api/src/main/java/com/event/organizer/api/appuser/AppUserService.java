@@ -98,10 +98,12 @@ public class AppUserService implements UserDetailsService {
         userRepository.save(userToBlock);
     }
 
-    public AppUser changeAccountRole(String currentUserEmail, AccountRolesRequestDto accountRolesRequestDto) {
+    public AppUser changeAccountRole(AccountRolesRequestDto accountRolesRequestDto, String currentUserEmail) {
         AppUser currentUser = findValidatedUser(currentUserEmail);
         AppUser editedUser = findValidatedUser(accountRolesRequestDto.getEmail());
+
         editUserRoles(currentUser, editedUser, accountRolesRequestDto.getRoles());
+
         return userRepository.save(editedUser);
     }
 

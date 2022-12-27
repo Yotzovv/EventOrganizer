@@ -40,7 +40,7 @@ public class AccountController {
     @PutMapping("/changeRole")
     @PreAuthorize("hasAuthority('ADMIN')")
     public AppUser changeAccountRole(@RequestBody AccountRolesRequestDto accountRolesRequestDto, Principal user) {
-        return userService.changeAccountRole(user.getName(), accountRolesRequestDto);
+        return userService.changeAccountRole(accountRolesRequestDto, user.getName());
     }
 
     @PutMapping("/changeStatus")
