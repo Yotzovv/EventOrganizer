@@ -1,6 +1,8 @@
 
 <div class="container" style="width: 100%; margin-left: 5%;">
     
+    <search-bar (searchInput)="onFilter($event)"></search-bar>
+
     <mat-card *ngFor="let event of allEvents">
         <mat-card-header>
             <button [hidden]="!event.isCurrentUserInterested" (click)="userIsNotInterested(event.id)" color="warn" mat-icon-button>

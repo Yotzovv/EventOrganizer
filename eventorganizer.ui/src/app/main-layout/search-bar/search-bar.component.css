@@ -1,0 +1,17 @@
+.search-bar {
+    min-width: 350px;
+    max-width: 500px;
+    width: 100%;
+    display: flex;
+}
+
+.search-bar-full {
+    width: 100%;
+}   
+
+.search-bar-btn {
+    margin-left: 3%;
+    height: fit-content;
+}
+
+

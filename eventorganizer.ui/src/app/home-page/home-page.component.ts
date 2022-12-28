@@ -1,8 +1,9 @@
 import { RequestService } from './../request/request.service';
-import { Component } from '@angular/core';
+import { Component, Output } from '@angular/core';
 import { EventDto } from '../types/event.type';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DialogAnimationsExampleDialog } from '../create-edit-event-dialog/create-event-dialog.component'
+import { MainLayoutComponent } from '../main-layout/main-layout.component';
 
 @Component({
   selector: 'home-page',
@@ -29,6 +30,22 @@ export class HomePageComponent {
         event: event
       }
     });
+  }
+
+  onFilter(filter: string) {
+    if(filter === null || filter === '') {
+      this.requestService.getAllEvents$().subscribe((res) => {
+        this.allEvents = res;
+      });
+    } else {
+      this.allEvents = this.allEvents.filter(event => event.name.toLowerCase().includes(filter));
+
+      if(this.allEvents.length == 0) {
+        this.requestService.getAllEvents$().subscribe((res) => {
+          this.allEvents = res.filter(event => event.name.toLowerCase().includes(filter));;
+        });
+      }
+    }
   }
 
   userIsInterested(eventId: number): void {

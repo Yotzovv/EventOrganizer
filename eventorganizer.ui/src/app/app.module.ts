@@ -1,3 +1,4 @@
+import { SearchBar } from './main-layout/search-bar/search-bar.component';
 import { AdminPageComponent } from './admin-page/admin-page.component';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -37,6 +38,7 @@ import { AuthInterceptor } from './auth/auth.interceptor';
   declarations: [ 
   AppComponent, 
   ProfilePageComponent, AdminPageComponent,
+  SearchBar,
   HomePageComponent,
   EventDetailsComponent ],
   bootstrap:    [ AppComponent ],
