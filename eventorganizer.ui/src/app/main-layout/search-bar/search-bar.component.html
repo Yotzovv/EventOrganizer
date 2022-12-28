@@ -6,3 +6,13 @@
       <mat-icon>search</mat-icon>
   </button>
 </form>
+  <mat-chip-listbox class="search-bar-chip" aria-label="Fish selection">
+    <mat-chip-option>This week</mat-chip-option>
+    <mat-chip-option>This month</mat-chip-option>
+    <mat-chip-option color="accent" selected>Local</mat-chip-option>
+    <mat-chip-option color="warn">Interested In</mat-chip-option>
+    <mat-chip-option color="warn">Going to</mat-chip-option>
+    <mat-chip-option color="warn">Hosting</mat-chip-option>
+    <button class="search-advanced-btn" mat-raised-button (click)="openDialog()">Advanced Search</button>
+  </mat-chip-listbox>
+<mat-divider class="search-divider"></mat-divider>

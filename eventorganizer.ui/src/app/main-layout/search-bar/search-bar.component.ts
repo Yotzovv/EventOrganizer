@@ -21,4 +21,15 @@ export class SearchBar {
     onSearch() {
         this.searchInput.emit(this.input.value);
     }
+
+  openDialog(): void {
+    // const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
+    //   data: {name: this.name, animal: this.animal},
+    // });
+
+    // dialogRef.afterClosed().subscribe(result => {
+    //   console.log('The dialog was closed');
+    //   this.animal = result;
+    // });
+  }
 }

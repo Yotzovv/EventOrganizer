@@ -14,4 +14,15 @@
     height: fit-content;
 }
 
+.search-bar-chip {
+    margin-bottom: 1%;
+}
+
+.search-divider {
+    margin-bottom: 3%;
+}
+
+.search-advanced-btn {
+    margin-left: 3%;
+}
 

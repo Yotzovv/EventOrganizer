@@ -19,6 +19,7 @@ import {MatTabsModule} from '@angular/material/tabs';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { AuthInterceptor } from './auth/auth.interceptor';
+import {MatChipsModule} from '@angular/material/chips';
 
 @NgModule({
   imports:      [ 
@@ -33,11 +34,13 @@ import { AuthInterceptor } from './auth/auth.interceptor';
     HttpClientModule, 
     MatTabsModule,
     MatButtonToggleModule,
+    MatChipsModule,
     MatFormFieldModule,
   ],
   declarations: [ 
   AppComponent, 
-  ProfilePageComponent, AdminPageComponent,
+  ProfilePageComponent, 
+  AdminPageComponent,
   SearchBar,
   HomePageComponent,
   EventDetailsComponent ],
