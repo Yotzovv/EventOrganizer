@@ -39,7 +39,7 @@ public class AppUser implements UserDetails {
     private String username;
     private String email;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "profile_picture_id")
     private Image profilePicture;
 
