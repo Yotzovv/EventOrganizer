@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -158,14 +159,13 @@ class EventsTests {
 		user.setUsername("username");
 		user.setEmail("username@example.com");
 
-		ProfilePicture profilePicture = new ProfilePicture();
+		Image profilePicture = new Image();
 		profilePicture.setUrl("pictureUrl");
 		user.setProfilePicture(profilePicture);
 
 		AppUserService appUserService = mock(AppUserService.class);
 
 		when(appUserService.findUserByEmail(user.getEmail())).thenReturn(Optional.of(user));
-		when(appUserService.uploadProfilePicture(user.getEmail(), profilePicture.getUrl())).thenReturn(user);
 		appUserService.uploadProfilePicture(user.getEmail(), profilePicture.getUrl());
 
 		// Verify that the image was added to the user's account

@@ -1,7 +1,7 @@
 package com.event.organizer.api.appuser;
 
 import com.event.organizer.api.model.Event;
-import com.event.organizer.api.model.ProfilePicture;
+import com.event.organizer.api.model.Image;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -41,7 +41,7 @@ public class AppUser implements UserDetails {
 
     @ManyToOne
     @JoinColumn(name = "profile_picture_id")
-    private ProfilePicture profilePicture;
+    private Image profilePicture;
 
     @JsonIgnore
     private String password;

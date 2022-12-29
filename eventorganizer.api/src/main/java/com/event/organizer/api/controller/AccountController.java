@@ -4,7 +4,6 @@ import com.event.organizer.api.appuser.AppUser;
 import com.event.organizer.api.appuser.AppUserService;
 import com.event.organizer.api.model.dto.AccountRolesRequestDto;
 import com.event.organizer.api.model.dto.AccountStatusRequestDto;
-import com.event.organizer.api.model.dto.ProfilePictureRequestDto;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -48,7 +47,7 @@ public class AccountController {
     }
 
     @PutMapping("/addProfilePicture")
-    public AppUser uploadProfilePicture(@RequestBody ProfilePictureRequestDto profilePictureRequestDto, Principal user) {
-        return userService.uploadProfilePicture(user.getName(), profilePictureRequestDto.getUrl());
+    public void uploadProfilePicture(@RequestBody String profilePictureUrl, Principal user) {
+        userService.uploadProfilePicture(profilePictureUrl, user.getName());
     }
 }

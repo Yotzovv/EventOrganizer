@@ -1,9 +1,8 @@
 package com.event.organizer.api.appuser;
 
-import com.event.organizer.api.model.ProfilePicture;
+import com.event.organizer.api.model.Image;
 import com.event.organizer.api.model.dto.AccountRolesRequestDto;
 import com.event.organizer.api.model.dto.AccountStatusRequestDto;
-import com.event.organizer.api.model.dto.ProfilePictureRequestDto;
 import com.event.organizer.api.security.config.AdminConfig;
 import com.event.organizer.api.security.config.PasswordEncoder;
 import lombok.AllArgsConstructor;
@@ -118,10 +117,10 @@ public class AppUserService implements UserDetailsService {
         return userRepository.save(editedUser);
     }
 
-    public AppUser uploadProfilePicture(String currentUserEmail, String imageUrl) {
+    public void uploadProfilePicture(String imageUrl, String currentUserEmail) {
         AppUser user = findValidatedUser(currentUserEmail);
 
-        ProfilePicture profilePicture = new ProfilePicture();
+        Image profilePicture = new Image();
         long uniqueLong = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
 
         profilePicture.setUrl(imageUrl);
@@ -129,7 +128,7 @@ public class AppUserService implements UserDetailsService {
         profilePicture.setId(uniqueLong);
 
         user.setProfilePicture(profilePicture);
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 
     private void editAccountStatus(AppUser currentUser, AppUser appUser, boolean enabled) {
