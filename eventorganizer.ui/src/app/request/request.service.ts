@@ -19,6 +19,30 @@ export class RequestService {
         return this.http.get(`${this.API_URL}/api/v1/events`);
     }
 
+    getWeeklyEvents$(): Observable<any> {
+        return this.http.get(`${this.API_URL}/api/v1/events/getWeeklyEvents`)
+    }
+
+    getMonthlyEvents$(): Observable<any> {
+        return this.http.get(`${this.API_URL}/api/v1/events/getMonthlyEvents`)
+    }
+
+    getLocalEvents$(): Observable<any> {
+        return this.http.get(`${this.API_URL}/api/v1/events/getLocalEvents`)
+    }
+
+    getInterestedInEvents$(): Observable<any> {
+        return this.http.get(`${this.API_URL}/api/v1/events/getInterestedInEvents`)
+    }
+
+    getGoingEvents$(): Observable<any> {
+        return this.http.get(`${this.API_URL}/api/v1/events/getGoingEvents`)
+    }
+
+    getHostingEvents$(): Observable<any> {
+        return this.http.get(`${this.API_URL}/api/v1/events/getHostingEvents`)
+    }
+
     getAllUsers(): Observable<any> {
         return this.http.get(`${this.API_URL}/api/v1/account`);
     }

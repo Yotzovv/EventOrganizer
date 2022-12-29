@@ -38,12 +38,38 @@ export class HomePageComponent {
         this.allEvents = res;
       });
     } else {
-      this.allEvents = this.allEvents.filter(event => event.name.toLowerCase().includes(filter));
-
-      if(this.allEvents.length == 0) {
-        this.requestService.getAllEvents$().subscribe((res) => {
+      if(filter == 'week') {
+        this.requestService.getWeeklyEvents$().subscribe((res) => {
           this.allEvents = res.filter(event => event.name.toLowerCase().includes(filter));;
         });
+      } else if (filter == 'monthly') {
+        this.requestService.getMonthlyEvents$().subscribe((res) => {
+          this.allEvents = res.filter(event => event.name.toLowerCase().includes(filter));;
+        });
+      } else if (filter == 'local') {
+        this.requestService.getLocalEvents$().subscribe((res) => {
+          this.allEvents = res.filter(event => event.name.toLowerCase().includes(filter));;
+        });
+      } else if (filter == "interested") {
+        this.requestService.getInterestedInEvents$().subscribe((res) => {
+          this.allEvents = res.filter(event => event.name.toLowerCase().includes(filter));;
+        });
+      } else if (filter == "going") {
+        this.requestService.getGoingEvents$().subscribe((res) => {
+          this.allEvents = res.filter(event => event.name.toLowerCase().includes(filter));;
+        });
+      } else if (filter == "hosting") {
+        this.requestService.getHostingEvents$().subscribe((res) => {
+          this.allEvents = res.filter(event => event.name.toLowerCase().includes(filter));;
+        });
+      } else {
+        this.allEvents = this.allEvents.filter(event => event.name.toLowerCase().includes(filter));
+        
+        if(this.allEvents.length == 0) {
+          this.requestService.getAllEvents$().subscribe((res) => {
+            this.allEvents = res.filter(event => event.name.toLowerCase().includes(filter));;
+          });
+        }
       }
     }
   }
