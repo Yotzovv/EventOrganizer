@@ -10,26 +10,23 @@ import { FormControl, FormGroup } from '@angular/forms';
   templateUrl: 'search-bar.component.html',
 })
 export class SearchBar {
-    input = new FormControl('');
+  input = new FormControl('');
 
-    search: FormGroup = new FormGroup({
-        input: this.input
-    })
+  search: FormGroup = new FormGroup({
+    input: this.input,
+  });
 
-    @Output() searchInput = new EventEmitter<any>(); 
+  @Output() searchInput = new EventEmitter<any>();
 
-    onSearch() {
-        this.searchInput.emit(this.input.value);
-    }
+  onSearch() {
+    this.searchInput.emit(this.input.value);
+  }
+
+  onChipSelected(chipSelected: string) {
+    this.searchInput.emit(chipSelected);
+  }
 
   openDialog(): void {
-    // const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
-    //   data: {name: this.name, animal: this.animal},
-    // });
-
-    // dialogRef.afterClosed().subscribe(result => {
-    //   console.log('The dialog was closed');
-    //   this.animal = result;
-    // });
+    // TODO: Add Advanced Search Dialog
   }
 }
