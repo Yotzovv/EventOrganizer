@@ -75,14 +75,10 @@ export class HomePageComponent {
   }
 
   userIsInterested(eventId: number): void {
-    // TODO: fetch user jwt token
-    var userToken: string = 'todo: take this fucking token';
-    this.requestService.userIsInterested(userToken, eventId).subscribe((res) => { })
+    this.requestService.userIsInterested(eventId).subscribe((res) => { })
   }
 
   userIsNotInterested(eventId: number): void {
-    // TODO: fetch user jwt token
-    var userToken: string = 'todo: take this fucking token';
-    this.requestService.userIsNotInterested(userToken, eventId).subscribe((res) => { })
+    this.requestService.userIsNotInterested(eventId).subscribe((res) => { })
   }
 }

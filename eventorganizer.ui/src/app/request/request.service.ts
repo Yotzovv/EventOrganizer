@@ -136,17 +136,19 @@ export class RequestService {
         });
     }
 
-    userIsInterested(userToken: string, eventId: number) {
-        return this.http.post(`${this.API_URL}/api/v1/userIsInterested`, {
-            userToken,
-            eventId
-        })
+    userIsInterested(eventId: number) {
+        return this.http.put(`${this.API_URL}/api/v1/events/addInterested`, JSON.stringify(eventId), {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+        });
     }
 
-    userIsNotInterested(userToken: string, eventId: number) {
-        return this.http.post(`${this.API_URL}/api/v1/userIsNotInterested`, {
-            userToken,
-            eventId
-        })
+    userIsNotInterested(eventId: number) {
+        return this.http.put(`${this.API_URL}/api/v1/events/removeInterested`, JSON.stringify(eventId), {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+        });
     }
 }
