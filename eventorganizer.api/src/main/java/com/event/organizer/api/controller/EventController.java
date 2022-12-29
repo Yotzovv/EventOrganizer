@@ -76,7 +76,7 @@ public class EventController {
         eventService.userIsInterestedInEvent(principal.getName(), eventId);
     }
 
-    @PostMapping("/addGoing")
+    @PutMapping("/addGoing")
     public void userGoingToEvent(@RequestBody Long eventId, Principal principal) throws EventOrganizerException {
         eventService.userIsGoingToEvent(principal.getName(), eventId);
     }

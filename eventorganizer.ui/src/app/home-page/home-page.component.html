@@ -33,7 +33,7 @@
         <p></p>
         <mat-divider></mat-divider>
         <mat-card-actions align="end">
-            <button mat-button style="font-weight: 500; font-size: large;">I'm going</button>
+            <button mat-button (click)="userIsGoing(event.id)" style="font-weight: 500; font-size: large;">I'm going</button>
             <button mat-button>SHARE</button>
         </mat-card-actions>        
     </mat-card>

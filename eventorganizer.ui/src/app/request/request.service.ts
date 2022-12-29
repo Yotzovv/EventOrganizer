@@ -151,4 +151,12 @@ export class RequestService {
             },
         });
     }
+
+    userIsGoing(eventId: number) {
+        return this.http.put(`${this.API_URL}/api/v1/events/addGoing`, JSON.stringify(eventId), {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+        });
+    }
 }

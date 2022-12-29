@@ -75,10 +75,14 @@ export class HomePageComponent {
   }
 
   userIsInterested(eventId: number): void {
-    this.requestService.userIsInterested(eventId).subscribe((res) => { })
+    this.requestService.userIsInterested(eventId).subscribe((res) => { });
   }
 
   userIsNotInterested(eventId: number): void {
-    this.requestService.userIsNotInterested(eventId).subscribe((res) => { })
+    this.requestService.userIsNotInterested(eventId).subscribe((res) => { });
+  }
+
+  userIsGoing(eventId: number): void {
+    this.requestService.userIsGoing(eventId).subscribe((res) => { });
   }
 }
