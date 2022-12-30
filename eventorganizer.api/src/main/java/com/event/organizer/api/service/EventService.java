@@ -260,4 +260,13 @@ public class EventService {
             return localEvents;
         }
 
+        public List<AppUser> getUsersInterestedInEvent(long eventId) throws EventOrganizerException {
+            if (!eventRepository.existsById(eventId)) {
+                throw new EventOrganizerException("Event does not exist");
+            }
+            Event event = eventRepository.findById(eventId).get();
+            List<AppUser> interestedUsersList = event.getUsersInterested();
+            return interestedUsersList;
+        }
+
 }

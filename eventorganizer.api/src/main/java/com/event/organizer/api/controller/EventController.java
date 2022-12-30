@@ -1,5 +1,6 @@
 package com.event.organizer.api.controller;
 
+import com.event.organizer.api.appuser.AppUser;
 import com.event.organizer.api.exception.EventOrganizerException;
 import com.event.organizer.api.model.Event;
 import com.event.organizer.api.model.dto.EventRequestDto;
@@ -99,6 +100,11 @@ public class EventController {
     @GetMapping("getLocalEvents")
     public List<Event> getLocalEvents(String userLocation) throws EventOrganizerException {
         return eventService.getLocalEvents(userLocation);
+    }
+
+    @GetMapping("/getInterestedUsers")
+    public List<AppUser> getUsersInterestedInEvent(long eventId) throws EventOrganizerException {
+        return eventService.getUsersInterestedInEvent(eventId);
     }
 
     private Event getEventModel(EventRequestDto eventRequestDto) throws EventOrganizerException {
