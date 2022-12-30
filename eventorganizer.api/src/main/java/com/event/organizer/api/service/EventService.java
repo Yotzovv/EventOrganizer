@@ -226,4 +226,19 @@ public class EventService {
 
         return eventsThisWeek;
     }
+
+    public List<Event> getThisMonthsEvents() throws EventOrganizerException {
+        List<Event> allEvents = eventRepository.findAll();
+
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime startOfTheMonth= now.with(TemporalAdjusters.firstDayOfMonth());
+        LocalDateTime endOfTheMonth = now.with(TemporalAdjusters.lastDayOfMonth());
+
+        List<Event> eventsThisWeek = allEvents.stream()
+                .filter(event -> event.getStartDate().isAfter(startOfTheMonth) && event.getEndDate().isBefore(endOfTheMonth))
+                .collect(Collectors.toList());
+
+        return eventsThisWeek;
+    }
+
 }
