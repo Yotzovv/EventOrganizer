@@ -23,6 +23,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import javax.xml.stream.Location;
 
 @Service
 @AllArgsConstructor
@@ -32,6 +33,15 @@ public class EventService {
     private final EventRepository eventRepository;
 
     private final AppUserService appUserService;
+
+    public static boolean findSubstring(String str, String substring) {
+        for (int i = 0; i < str.length() - substring.length() + 1; i++) {
+            if (str.substring(i, i + substring.length()).equals(substring)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public List<Event> findAll(String currentUserEmail) {
         AppUser currentUser = appUserService.findUserByEmail(currentUserEmail).get();
@@ -240,5 +250,14 @@ public class EventService {
 
         return eventsThisWeek;
     }
+
+        public List<Event> getLocalEvents(String userLocation) throws EventOrganizerException {
+            List<Event> allEvents = eventRepository.findAll();
+
+            List<Event> localEvents = allEvents.stream().filter(event -> findSubstring(userLocation, event.getLocation()))
+                    .collect(Collectors.toList());
+
+            return localEvents;
+        }
 
 }
