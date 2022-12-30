@@ -54,13 +54,13 @@ public class EventService {
 
         for (Event event : allEvents) {
             AppUser eventCreator = event.getCreator();
-            
+
             for (AppUser blockedUser : currentUserBlockList) {
                 if (!eventCreator.getEmail().equals(blockedUser.getEmail())) {
                     continue;
                 }
             }
-            
+
             userEventsFeed.add(event);
         }
 
@@ -114,7 +114,7 @@ public class EventService {
         AppUser creator = (AppUser) appUserService.loadUserByUsername(username);
 
         event.setCreator(creator);
-        
+
         return eventRepository.save(event);
     }
 
@@ -191,7 +191,7 @@ public class EventService {
         Event event = eventRepository.findById(eventId).get();
         List<AppUser> allUsersInterested = event.getUsersInterested();
 
-        if(allUsersInterested == null) {
+        if (allUsersInterested == null) {
             allUsersInterested = new ArrayList<AppUser>();
         }
 
@@ -211,7 +211,7 @@ public class EventService {
         Event event = eventRepository.findById(eventId).get();
         List<AppUser> allUsersGoing = event.getUsersGoing();
 
-        if(allUsersGoing == null) {
+        if (allUsersGoing == null) {
             allUsersGoing = new ArrayList<AppUser>();
         }
 
@@ -241,7 +241,7 @@ public class EventService {
         List<Event> allEvents = eventRepository.findAll();
 
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime startOfTheMonth= now.with(TemporalAdjusters.firstDayOfMonth());
+        LocalDateTime startOfTheMonth = now.with(TemporalAdjusters.firstDayOfMonth());
         LocalDateTime endOfTheMonth = now.with(TemporalAdjusters.lastDayOfMonth());
 
         List<Event> eventsThisWeek = allEvents.stream()
@@ -251,22 +251,28 @@ public class EventService {
         return eventsThisWeek;
     }
 
-        public List<Event> getLocalEvents(String userLocation) throws EventOrganizerException {
-            List<Event> allEvents = eventRepository.findAll();
+    public List<Event> getLocalEvents(String userLocation) throws EventOrganizerException {
+        List<Event> allEvents = eventRepository.findAll();
 
-            List<Event> localEvents = allEvents.stream().filter(event -> findSubstring(userLocation, event.getLocation()))
-                    .collect(Collectors.toList());
+        List<Event> localEvents = allEvents.stream().filter(event -> findSubstring(userLocation, event.getLocation()))
+                .collect(Collectors.toList());
 
-            return localEvents;
+        return localEvents;
+    }
+
+    public List<AppUser> getUsersInterestedInEvent(long eventId) throws EventOrganizerException {
+        if (!eventRepository.existsById(eventId)) {
+            throw new EventOrganizerException("Event does not exist");
         }
+        Event event = eventRepository.findById(eventId).get();
+        List<AppUser> interestedUsersList = event.getUsersInterested();
+        return interestedUsersList;
+    }
 
-        public List<AppUser> getUsersInterestedInEvent(long eventId) throws EventOrganizerException {
-            if (!eventRepository.existsById(eventId)) {
-                throw new EventOrganizerException("Event does not exist");
-            }
-            Event event = eventRepository.findById(eventId).get();
-            List<AppUser> interestedUsersList = event.getUsersInterested();
-            return interestedUsersList;
-        }
-
+    public List<Event> getEventsByType(String type) throws EventOrganizerException {
+        List<Event> allEvents = eventRepository.findAll();
+        List<Event> eventsByTypeList = allEvents.stream().filter(event -> event.getEventType().equals(type))
+                .collect(Collectors.toList());
+        return eventsByTypeList;
+    }
 }

@@ -107,6 +107,11 @@ public class EventController {
         return eventService.getUsersInterestedInEvent(eventId);
     }
 
+    @GetMapping("getEventsByType")
+    public List<Event> getEventsByType (String type) throws EventOrganizerException {
+        return eventService.getEventsByType(type);
+    }
+
     private Event getEventModel(EventRequestDto eventRequestDto) throws EventOrganizerException {
         Event event = new Event();
         event.setId(eventRequestDto.getId());
