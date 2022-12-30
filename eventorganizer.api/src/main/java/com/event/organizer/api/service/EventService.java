@@ -267,4 +267,11 @@ public class EventService {
 
         return eventsByTypeList;
     }
+
+    public List<Event> getEventsByUser(String username) throws EventOrganizerException {
+        AppUser userModel = appUserService.findUserByEmail(username).get();
+        List<Event> userEvents = userModel.getEvents();
+
+        return userEvents;
+    }
 }

@@ -112,7 +112,13 @@ public class EventController {
         return eventService.getEventsByType(type);
     }
 
-    private Event getEventModel(EventRequestDto eventRequestDto) throws EventOrganizerException {
+    @GetMapping("getUserEvents")
+    public List<Event> getEventsByUser(Principal principal) throws EventOrganizerException {
+        return eventService.getEventsByUser(principal.getName());
+    }
+
+
+        private Event getEventModel(EventRequestDto eventRequestDto) throws EventOrganizerException {
         Event event = new Event();
         event.setId(eventRequestDto.getId());
         event.setName(eventRequestDto.getName());
