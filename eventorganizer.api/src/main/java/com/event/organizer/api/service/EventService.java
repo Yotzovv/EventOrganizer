@@ -278,4 +278,14 @@ public class EventService {
 
         return userEvents;
     }
+
+    public List<Event> getEventsByDateRange(LocalDateTime startRange, LocalDateTime endRange) {
+        List<Event> allEvents = eventRepository.findAll();
+
+        List<Event> eventsInRangeList = allEvents.stream()
+                .filter(event -> event.getStartDate().isAfter(startRange) && event.getEndDate().isBefore(endRange))
+                .collect(Collectors.toList());
+
+        return eventsInRangeList;
+    }
 }

@@ -122,6 +122,12 @@ public class EventController {
         return eventService.getEventsByUser(principal.getName());
     }
 
+    @GetMapping("getEventsByRange")
+    public List<Event> getEventsByDateRange(LocalDateTime startRange, LocalDateTime endRange) throws EventOrganizerException {
+        validateEndDateAfterStartDate(startRange, endRange);
+        return eventService.getEventsByDateRange(startRange, endRange);
+    }
+
 
         private Event getEventModel(EventRequestDto eventRequestDto) throws EventOrganizerException {
         Event event = new Event();
