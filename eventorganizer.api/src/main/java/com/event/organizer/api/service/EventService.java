@@ -10,6 +10,10 @@ import com.event.organizer.api.model.Image;
 import com.event.organizer.api.repository.EventRepository;
 
 import java.security.Principal;
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjuster;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -207,5 +211,19 @@ public class EventService {
         event.setUsersGoing(allUsersGoing);
 
         eventRepository.save(event);
+    }
+
+    public List<Event> getThisWeeksEvents() throws EventOrganizerException {
+        List<Event> allEvents = eventRepository.findAll();
+
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime startOfTheWeek = now.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        LocalDateTime endOfTheWeek = startOfTheWeek.plusWeeks(1);
+
+        List<Event> eventsThisWeek = allEvents.stream()
+                .filter(event -> event.getStartDate().isAfter(startOfTheWeek) && event.getEndDate().isBefore(endOfTheWeek))
+                .collect(Collectors.toList());
+
+        return eventsThisWeek;
     }
 }
