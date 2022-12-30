@@ -97,9 +97,14 @@ public class EventController {
         return eventService.getThisMonthsEvents();
     }
 
-    @GetMapping("getLocalEvents")
-    public List<Event> getLocalEvents(String userLocation) throws EventOrganizerException {
-        return eventService.getLocalEvents(userLocation);
+    @GetMapping("getEventsByUserLocation")
+    public List<Event> getEventsByUserLocation(String userLocation) throws EventOrganizerException {
+        return eventService.getEventsByUserLocation(userLocation);
+    }
+
+    @GetMapping("getEventsByLocation")
+    public List<Event> getEventsByLocation(String location) throws EventOrganizerException {
+        return eventService.getEventsByLocation(location);
     }
 
     @GetMapping("/getInterestedUsers")

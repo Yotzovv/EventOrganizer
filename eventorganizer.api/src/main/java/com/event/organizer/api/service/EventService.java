@@ -9,21 +9,17 @@ import com.event.organizer.api.model.Feedback;
 import com.event.organizer.api.model.Image;
 import com.event.organizer.api.repository.EventRepository;
 
-import java.security.Principal;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
-import java.time.temporal.TemporalAdjuster;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import javax.xml.stream.Location;
 
 @Service
 @AllArgsConstructor
@@ -242,9 +238,17 @@ public class EventService {
         return eventsThisWeek;
     }
 
-    public List<Event> getLocalEvents(String userLocation) throws EventOrganizerException {
+    public List<Event> getEventsByUserLocation(String userLocation) throws EventOrganizerException {
         List<Event> allEvents = eventRepository.findAll();
         List<Event> localEvents = allEvents.stream().filter(event -> event.getLocation().contains(userLocation))
+                .collect(Collectors.toList());
+
+        return localEvents;
+    }
+
+    public List<Event> getEventsByLocation(String location) throws EventOrganizerException {
+        List<Event> allEvents = eventRepository.findAll();
+        List<Event> localEvents = allEvents.stream().filter(event -> event.getLocation().contains(location))
                 .collect(Collectors.toList());
 
         return localEvents;
