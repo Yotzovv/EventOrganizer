@@ -34,15 +34,6 @@ public class EventService {
 
     private final AppUserService appUserService;
 
-    public static boolean findSubstring(String str, String substring) {
-        for (int i = 0; i < str.length() - substring.length() + 1; i++) {
-            if (str.substring(i, i + substring.length()).equals(substring)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public List<Event> findAll(String currentUserEmail) {
         AppUser currentUser = appUserService.findUserByEmail(currentUserEmail).get();
 
@@ -253,8 +244,7 @@ public class EventService {
 
     public List<Event> getLocalEvents(String userLocation) throws EventOrganizerException {
         List<Event> allEvents = eventRepository.findAll();
-
-        List<Event> localEvents = allEvents.stream().filter(event -> findSubstring(userLocation, event.getLocation()))
+        List<Event> localEvents = allEvents.stream().filter(event -> event.getLocation().contains(userLocation))
                 .collect(Collectors.toList());
 
         return localEvents;
@@ -266,6 +256,7 @@ public class EventService {
         }
         Event event = eventRepository.findById(eventId).get();
         List<AppUser> interestedUsersList = event.getUsersInterested();
+
         return interestedUsersList;
     }
 
@@ -273,6 +264,7 @@ public class EventService {
         List<Event> allEvents = eventRepository.findAll();
         List<Event> eventsByTypeList = allEvents.stream().filter(event -> event.getEventType().equals(type))
                 .collect(Collectors.toList());
+
         return eventsByTypeList;
     }
 }
