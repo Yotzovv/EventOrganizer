@@ -333,15 +333,15 @@ class EventsTests {
 		List<Event> dummyEventsList = Arrays.asList(
 				new Event(1L, "Tech Conference", LocalDateTime.of(2022, 1, 15, 9, 0),
 						LocalDateTime.of(2022, 1, 17, 17, 0), Event.ACCEPTED_STATUS,
-						"A conference for software developers and IT professionals", "San Francisco, CA", currentUser,
-						emptyCommentsList, null, emptyUsersInterestedList, emptyUsersGoingList, emptyImagesList, emptyFeedbacksList),
+						"A conference for software developers and IT professionals", "San Francisco, CA", "", currentUser,
+						emptyCommentsList, null,emptyUsersInterestedList, emptyUsersGoingList, emptyImagesList, emptyFeedbacksList),
 				new Event(2L, "Art Exhibition", LocalDateTime.of(2022, 3, 5, 10, 0),
 						LocalDateTime.of(2022, 3, 7, 18, 0), Event.NONE_STATUS,
-						"A showcase of contemporary art from local artists", "Los Angeles, CA", currentUser,
+						"A showcase of contemporary art from local artists", "Los Angeles, CA", "", currentUser,
 						emptyCommentsList, null, emptyUsersInterestedList, emptyUsersGoingList, emptyImagesList, emptyFeedbacksList),
 				new Event(3L, "Music Festival", LocalDateTime.of(2022, 7, 20, 12, 0),
 						LocalDateTime.of(2022, 7, 25, 0, 0), Event.REJECTED_STATUS,
-						"A multi-day music festival featuring various genres and artists", "New York, NY", blockedUser,
+						"A multi-day music festival featuring various genres and artists", "New York, NY", "", blockedUser,
 						emptyCommentsList, null, emptyUsersInterestedList, emptyUsersGoingList, emptyImagesList, emptyFeedbacksList));
 		return dummyEventsList;
 	}
@@ -365,7 +365,7 @@ class EventsTests {
 
 		Event event = new Event(1L, "Tech Conference", LocalDateTime.of(2022, 1, 15, 9, 0),
 						LocalDateTime.of(2022, 1, 17, 17, 0), Event.ACCEPTED_STATUS,
-						"A conference for software developers and IT professionals", "San Francisco, CA", currentUser,
+						"A conference for software developers and IT professionals", "San Francisco, CA", "", currentUser,
 						dummyComments, null, emptyUsersInterestedList, emptyUsersGoingList, emptyImagesList, emptyFeedbacksList);
 
 		return event;		
