@@ -4,9 +4,17 @@
             <span class="card-title">Profile</span>
         </mat-card-title>
         <mat-card-content>
-        <form [formGroup]="profileForm"
+            <form [formGroup]="profileForm"
             #formDirective="ngForm" 
             (ngSubmit)="onSubmit()">
+            
+            <div style="width: 300px;">
+               <!-- File input element to select the image to be uploaded -->
+                <input type="file" (change)="onFileChange($event)" />
+
+                <!-- Button to trigger the image upload -->
+                <button (click)="uploadImage()">Upload Image</button>
+            </div>
 
             <p>
                 <mat-form-field>

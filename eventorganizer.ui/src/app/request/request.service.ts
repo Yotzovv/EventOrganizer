@@ -159,4 +159,12 @@ export class RequestService {
             },
         });
     }
+
+    addProfilePicture(imageBase64: string) {
+        return this.http.put(`${this.API_URL}/api/v1/account/addProfilePicture`, JSON.stringify(imageBase64), {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+        });
+    }
 }
