@@ -238,14 +238,6 @@ public class EventService {
         return eventsThisWeek;
     }
 
-    public List<Event> getEventsByUserLocation(String userLocation) {
-        List<Event> allEvents = eventRepository.findAll();
-        List<Event> localEvents = allEvents.stream().filter(event -> event.getLocation().contains(userLocation))
-                .collect(Collectors.toList());
-
-        return localEvents;
-    }
-
     public List<Event> getEventsByLocation(String location) {
         List<Event> allEvents = eventRepository.findAll();
         List<Event> localEvents = allEvents.stream().filter(event -> event.getLocation().contains(location))
@@ -264,6 +256,16 @@ public class EventService {
         return interestedUsersList;
     }
 
+    public List<AppUser> getUsersGoingToEvent(long eventId) throws EventOrganizerException {
+        if (!eventRepository.existsById(eventId)) {
+            throw new EventOrganizerException("Event does not exist");
+        }
+        Event event = eventRepository.findById(eventId).get();
+        List<AppUser> goingUsersList = event.getUsersGoing();
+
+        return goingUsersList;
+    }
+
     public List<Event> getEventsByType(String type) {
         List<Event> allEvents = eventRepository.findAll();
         List<Event> eventsByTypeList = allEvents.stream().filter(event -> event.getEventType().equals(type))
@@ -272,7 +274,7 @@ public class EventService {
         return eventsByTypeList;
     }
 
-    public List<Event> getEventsByUser(String username) {
+    public List<Event> getHostingEvents(String username) {
         AppUser userModel = appUserService.findUserByEmail(username).get();
         List<Event> userEvents = userModel.getEvents();
 
