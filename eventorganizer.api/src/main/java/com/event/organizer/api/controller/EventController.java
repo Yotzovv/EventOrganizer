@@ -96,6 +96,11 @@ public class EventController {
         return eventService.getThisMonthsEvents();
     }
 
+    @GetMapping("getLocalEvents")
+    public List<Event> getLocalEvents(String userLocation) throws EventOrganizerException {
+        return eventService.getLocalEvents(userLocation);
+    }
+
     private Event getEventModel(EventRequestDto eventRequestDto) throws EventOrganizerException {
         Event event = new Event();
         event.setId(eventRequestDto.getId());
