@@ -210,7 +210,7 @@ public class EventService {
         eventRepository.save(event);
     }
 
-    public List<Event> getThisWeeksEvents() throws EventOrganizerException {
+    public List<Event> getThisWeeksEvents() {
         List<Event> allEvents = eventRepository.findAll();
 
         LocalDateTime now = LocalDateTime.now();
@@ -224,7 +224,7 @@ public class EventService {
         return eventsThisWeek;
     }
 
-    public List<Event> getThisMonthsEvents() throws EventOrganizerException {
+    public List<Event> getThisMonthsEvents() {
         List<Event> allEvents = eventRepository.findAll();
 
         LocalDateTime now = LocalDateTime.now();
@@ -238,7 +238,7 @@ public class EventService {
         return eventsThisWeek;
     }
 
-    public List<Event> getEventsByUserLocation(String userLocation) throws EventOrganizerException {
+    public List<Event> getEventsByUserLocation(String userLocation) {
         List<Event> allEvents = eventRepository.findAll();
         List<Event> localEvents = allEvents.stream().filter(event -> event.getLocation().contains(userLocation))
                 .collect(Collectors.toList());
@@ -246,7 +246,7 @@ public class EventService {
         return localEvents;
     }
 
-    public List<Event> getEventsByLocation(String location) throws EventOrganizerException {
+    public List<Event> getEventsByLocation(String location) {
         List<Event> allEvents = eventRepository.findAll();
         List<Event> localEvents = allEvents.stream().filter(event -> event.getLocation().contains(location))
                 .collect(Collectors.toList());
@@ -264,7 +264,7 @@ public class EventService {
         return interestedUsersList;
     }
 
-    public List<Event> getEventsByType(String type) throws EventOrganizerException {
+    public List<Event> getEventsByType(String type) {
         List<Event> allEvents = eventRepository.findAll();
         List<Event> eventsByTypeList = allEvents.stream().filter(event -> event.getEventType().equals(type))
                 .collect(Collectors.toList());
@@ -272,7 +272,7 @@ public class EventService {
         return eventsByTypeList;
     }
 
-    public List<Event> getEventsByUser(String username) throws EventOrganizerException {
+    public List<Event> getEventsByUser(String username) {
         AppUser userModel = appUserService.findUserByEmail(username).get();
         List<Event> userEvents = userModel.getEvents();
 

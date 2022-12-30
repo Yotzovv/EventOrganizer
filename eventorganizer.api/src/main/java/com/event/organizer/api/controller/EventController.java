@@ -88,22 +88,22 @@ public class EventController {
     }
 
     @GetMapping("/getThisWeeksEvents")
-    public List<Event> getThisWeeksEvents() throws EventOrganizerException {
+    public List<Event> getThisWeeksEvents() {
         return eventService.getThisWeeksEvents();
     }
 
     @GetMapping("/getThisMonthsEvents")
-    public List<Event> getThisMonthsEvents() throws EventOrganizerException {
+    public List<Event> getThisMonthsEvents() {
         return eventService.getThisMonthsEvents();
     }
 
     @GetMapping("getEventsByUserLocation")
-    public List<Event> getEventsByUserLocation(String userLocation) throws EventOrganizerException {
+    public List<Event> getEventsByUserLocation(String userLocation) {
         return eventService.getEventsByUserLocation(userLocation);
     }
 
     @GetMapping("getEventsByLocation")
-    public List<Event> getEventsByLocation(String location) throws EventOrganizerException {
+    public List<Event> getEventsByLocation(String location) {
         return eventService.getEventsByLocation(location);
     }
 
@@ -113,12 +113,12 @@ public class EventController {
     }
 
     @GetMapping("getEventsByType")
-    public List<Event> getEventsByType (String type) throws EventOrganizerException {
+    public List<Event> getEventsByType (String type) {
         return eventService.getEventsByType(type);
     }
 
     @GetMapping("getUserEvents")
-    public List<Event> getEventsByUser(Principal principal) throws EventOrganizerException {
+    public List<Event> getEventsByUser(Principal principal) {
         return eventService.getEventsByUser(principal.getName());
     }
 
