@@ -8,14 +8,20 @@ import com.event.organizer.api.exception.EventOrganizerException;
 import com.event.organizer.api.model.*;
 import com.event.organizer.api.repository.EventRepository;
 import com.event.organizer.api.service.EventService;
+import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 
+import javax.validation.constraints.AssertTrue;
 import java.security.Principal;
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.Year;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -314,6 +320,272 @@ class EventsTests {
 
 		Assertions.assertEquals(3, currentUserEventFeed.getComments().size());
 	}
+
+	@Test
+	void givenAllEvents_WhenCallingGetEventsThisWeek_ThenReturnOnlyThisWeeksEvents() {
+
+		List<Comment> emptyCommentsList = new ArrayList<Comment>();
+		List<Image> emptyImagesList = new ArrayList<Image>();
+		List<Feedback> emptyFeedbacksList = new ArrayList<Feedback>();
+		List<AppUser> emptyUsersInterestedList = new ArrayList<AppUser>();
+		List<AppUser> emptyUsersGoingList = new ArrayList<AppUser>();
+
+		AppUser currentUser = new AppUser();
+		currentUser.setEmail("current@example.com");
+		currentUser.setBlockedUsers(new ArrayList<AppUser>());
+
+		AppUser blockedUser = new AppUser();
+		blockedUser.setEmail("block@example.com");
+		blockedUser.setBlockedUsers(new ArrayList<AppUser>());
+
+		List<Event> dummyEventsList = Arrays.asList(
+				new Event(1L, "Tech Conference", LocalDateTime.now(),
+						LocalDateTime.now(), Event.ACCEPTED_STATUS,
+						"A conference for software developers and IT professionals", "San Francisco, CA", "", currentUser,
+						emptyCommentsList, null,emptyUsersInterestedList, emptyUsersGoingList, emptyImagesList, emptyFeedbacksList),
+				new Event(2L, "Art Exhibition", LocalDateTime.now().plusDays(1),
+						LocalDateTime.now().plusDays(1), Event.NONE_STATUS,
+						"A showcase of contemporary art from local artists", "Los Angeles, CA", "", currentUser,
+						emptyCommentsList, null, emptyUsersInterestedList, emptyUsersGoingList, emptyImagesList, emptyFeedbacksList),
+				new Event(3L, "Music Festival", LocalDateTime.of(2022, 7, 20, 12, 0),
+						LocalDateTime.now().plusMonths(1), Event.REJECTED_STATUS,
+						"A multi-day music festival featuring various genres and artists", "New York, NY", "", blockedUser,
+						emptyCommentsList, null, emptyUsersInterestedList, emptyUsersGoingList, emptyImagesList, emptyFeedbacksList));
+
+		EventService eventService = mock(EventService.class);
+		when(eventService.getThisWeeksEvents()).thenReturn(List.of(dummyEventsList.get(0), dummyEventsList.get(1)));
+
+		Event event1 = eventService.getThisWeeksEvents().get(0);
+		Event event2 = eventService.getThisWeeksEvents().get(1);
+
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime startOfTheWeek = now.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+		LocalDateTime endOfTheWeek = startOfTheWeek.plusWeeks(1);
+
+		Assertions.assertTrue(event1.getStartDate().isAfter(startOfTheWeek) && event1.getEndDate().isBefore(endOfTheWeek));
+		Assertions.assertTrue(event2.getStartDate().isAfter(startOfTheWeek) && event2.getEndDate().isBefore(endOfTheWeek));
+	}
+
+	@Test
+	void givenAllEvents_WhenCallingGetEventsThisMonth_ThenReturnOnlyThisMonthsEvents() {
+
+		List<Comment> emptyCommentsList = new ArrayList<Comment>();
+		List<Image> emptyImagesList = new ArrayList<Image>();
+		List<Feedback> emptyFeedbacksList = new ArrayList<Feedback>();
+		List<AppUser> emptyUsersInterestedList = new ArrayList<AppUser>();
+		List<AppUser> emptyUsersGoingList = new ArrayList<AppUser>();
+
+		AppUser currentUser = new AppUser();
+		currentUser.setEmail("current@example.com");
+		currentUser.setBlockedUsers(new ArrayList<AppUser>());
+
+		AppUser blockedUser = new AppUser();
+		blockedUser.setEmail("block@example.com");
+		blockedUser.setBlockedUsers(new ArrayList<AppUser>());
+
+		List<Event> dummyEventsList = Arrays.asList(
+				new Event(1L, "Tech Conference", LocalDateTime.now(),
+						LocalDateTime.now(), Event.ACCEPTED_STATUS,
+						"A conference for software developers and IT professionals", "San Francisco, CA", "", currentUser,
+						emptyCommentsList, null,emptyUsersInterestedList, emptyUsersGoingList, emptyImagesList, emptyFeedbacksList),
+				new Event(2L, "Art Exhibition", LocalDateTime.now(),
+						LocalDateTime.now(), Event.NONE_STATUS,
+						"A showcase of contemporary art from local artists", "Los Angeles, CA", "", currentUser,
+						emptyCommentsList, null, emptyUsersInterestedList, emptyUsersGoingList, emptyImagesList, emptyFeedbacksList),
+				new Event(3L, "Music Festival", LocalDateTime.of(2022, 7, 20, 12, 0),
+						LocalDateTime.now().plusMonths(1), Event.REJECTED_STATUS,
+						"A multi-day music festival featuring various genres and artists", "New York, NY", "", blockedUser,
+						emptyCommentsList, null, emptyUsersInterestedList, emptyUsersGoingList, emptyImagesList, emptyFeedbacksList));
+
+		EventService eventService = mock(EventService.class);
+		when(eventService.getThisMonthsEvents()).thenReturn(List.of(dummyEventsList.get(0), dummyEventsList.get(1)));
+
+		Event event1 = eventService.getThisMonthsEvents().get(0);
+		Event event2 = eventService.getThisMonthsEvents().get(1);
+
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime startOfTheMonth = now.with(TemporalAdjusters.firstDayOfMonth());
+		LocalDateTime endOfTheMonth = now.with(TemporalAdjusters.lastDayOfMonth());
+
+		Assertions.assertTrue(event1.getStartDate().isAfter(startOfTheMonth) && event1.getEndDate().isBefore(endOfTheMonth));
+		Assertions.assertTrue(event2.getStartDate().isAfter(startOfTheMonth) && event2.getEndDate().isBefore(endOfTheMonth));
+	}
+
+	@Test
+	void givenAllEvents_WhenCallingGetEventsByLocation_ThenReturnOnlyLocalEvents() {
+
+		List<Comment> emptyCommentsList = new ArrayList<Comment>();
+		List<Image> emptyImagesList = new ArrayList<Image>();
+		List<Feedback> emptyFeedbacksList = new ArrayList<Feedback>();
+		List<AppUser> emptyUsersInterestedList = new ArrayList<AppUser>();
+		List<AppUser> emptyUsersGoingList = new ArrayList<AppUser>();
+
+		AppUser currentUser = new AppUser();
+		currentUser.setEmail("current@example.com");
+		currentUser.setBlockedUsers(new ArrayList<AppUser>());
+
+		AppUser blockedUser = new AppUser();
+		blockedUser.setEmail("block@example.com");
+		blockedUser.setBlockedUsers(new ArrayList<AppUser>());
+
+		List<Event> dummyEventsList = Arrays.asList(
+				new Event(1L, "Tech Conference", LocalDateTime.now(),
+						LocalDateTime.now(), Event.ACCEPTED_STATUS,
+						"A conference for software developers and IT professionals", "Pazardzhik", "", currentUser,
+						emptyCommentsList, null,emptyUsersInterestedList, emptyUsersGoingList, emptyImagesList, emptyFeedbacksList),
+				new Event(2L, "Art Exhibition", LocalDateTime.now(),
+						LocalDateTime.now(), Event.NONE_STATUS,
+						"A showcase of contemporary art from local artists", "Pazardzhik", "", currentUser,
+						emptyCommentsList, null, emptyUsersInterestedList, emptyUsersGoingList, emptyImagesList, emptyFeedbacksList),
+				new Event(3L, "Music Festival", LocalDateTime.of(2022, 7, 20, 12, 0),
+						LocalDateTime.now().plusMonths(1), Event.REJECTED_STATUS,
+						"A multi-day music festival featuring various genres and artists", "New York, NY", "", blockedUser,
+						emptyCommentsList, null, emptyUsersInterestedList, emptyUsersGoingList, emptyImagesList, emptyFeedbacksList));
+
+		EventService eventService = mock(EventService.class);
+		when(eventService.getEventsByLocation("Pazardzhik")).thenReturn(List.of(dummyEventsList.get(0), dummyEventsList.get(1)));
+
+		assertTrue(eventService.getEventsByLocation("Pazardzhik").stream().anyMatch(event -> event.getLocation() == "Pazardzhik"));
+	}
+
+	@Test
+	void givenAnEvent_WhenGettingUsersInterestedInAnEvent_ThenReturnInterestedUsers() throws EventOrganizerException {
+		AppUser user1 = new AppUser();
+		user1.setUsername("username1");
+		user1.setEmail("example1.com");
+		user1.setUsername("username1");
+
+		AppUser user2 = new AppUser();
+		user2.setUsername("username2");
+		user2.setEmail("example2.com");
+		user2.setUsername("username2");
+
+		EventService eventService = mock(EventService.class);
+
+		Event event = new Event();
+		event.setId(1L);
+
+		eventService.userIsInterestedInEvent(user1.getUsername(), event.getId());
+		eventService.userIsInterestedInEvent(user2.getUsername(), event.getId());
+
+		when(eventService.getUsersInterestedInEvent(event.getId())).thenReturn(List.of(user1, user2));
+
+		assertEquals(2, eventService.getUsersInterestedInEvent(event.getId()).size());
+	}
+
+	@Test
+	void givenAnEvent_WhenGettingUsersGoingToAnEvent_ThenReturnGoingUsers() throws EventOrganizerException {
+		AppUser user1 = new AppUser();
+		user1.setUsername("username1");
+		user1.setEmail("example1.com");
+		user1.setUsername("username1");
+
+		AppUser user2 = new AppUser();
+		user2.setUsername("username2");
+		user2.setEmail("example2.com");
+		user2.setUsername("username2");
+
+		EventService eventService = mock(EventService.class);
+
+		Event event = new Event();
+		event.setId(1L);
+
+		eventService.userIsGoingToEvent(user1.getUsername(), event.getId());
+		eventService.userIsGoingToEvent(user2.getUsername(), event.getId());
+
+		when(eventService.getUsersGoingToEvent(event.getId())).thenReturn(List.of(user1, user2));
+
+		assertEquals(2, eventService.getUsersGoingToEvent(event.getId()).size());
+	}
+
+	@Test
+	void givenAllEvents_WhenGettingEventsByTYpe_ThenReturnEventsOfSaidType() {
+		Event event1 = new Event();
+		event1.setEventType("Party");
+		event1.setName("Party1");
+		event1.setId(1L);
+
+		Event event2 = new Event();
+		event2.setEventType("Party");
+		event2.setName("Party2");
+		event2.setId(2L);
+
+		Event event3 = new Event();
+		event3.setEventType("Party");
+		event3.setName("Party3");
+		event3.setId(3L);
+
+		EventService eventService = mock(EventService.class);
+
+		when(eventService.getEventsByType("Party")).thenReturn(List.of(event1, event2, event3));
+
+		Assertions.assertTrue(eventService.getEventsByType("Party").stream().anyMatch(event -> event.getEventType().equals("Party")));
+	}
+
+	@Test
+	void givenAllEvents_WhenGettingEventsHostedByUser_ThenReturnOnlyEventsBySaidUser() {
+		AppUser appUser = new AppUser();
+		appUser.setUsername("user");
+		appUser.setId(1L);
+		appUser.setEmail("user@example.com");
+
+		Event event1 = new Event();
+		event1.setId(1L);
+		event1.setCreator(appUser);
+		event1.setEventType("Party");
+
+		Event event2 = new Event();
+		event2.setId(2L);
+		event2.setCreator(appUser);
+		event2.setEventType("Party");
+
+		Event event3 = new Event();
+		event3.setId(3L);
+		event3.setCreator(appUser);
+		event3.setEventType("Party");
+
+		EventService eventService = mock(EventService.class);
+
+		when(eventService.getHostingEvents(appUser.getUsername())).thenReturn(List.of(event1, event2, event3));
+
+		Assertions.assertTrue(eventService.getHostingEvents(appUser.getUsername()).stream().anyMatch(event ->
+				event.getCreator().equals(appUser)));
+	}
+
+	@Test
+	void givenAllEvents_WhenGettingEventsByDateRange_ThenReturnsEventsWithinSaidRange() {
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime startRange = LocalDateTime.of(2023, Month.JANUARY, 1, 12, 15);
+		LocalDateTime endRange = LocalDateTime.of(2023, Month.FEBRUARY, 1, 12, 15);
+
+		Event event1 = new Event();
+		event1.setStartDate(LocalDateTime.of(2023, Month.JANUARY, 10, 12, 15));
+		event1.setEndDate(LocalDateTime.of(2023, Month.JANUARY, 18, 12, 15));
+		event1.setId(1L);
+		event1.setName("business discussion");
+
+		Event event2 = new Event();
+		event2.setStartDate(LocalDateTime.of(2023, Month.JANUARY, 25, 12, 15));
+		event2.setEndDate(LocalDateTime.of(2023, Month.JANUARY, 30, 12, 15));
+		event2.setId(2L);
+		event2.setName("business trip");
+
+		Event event3 = new Event();
+		event3.setStartDate(LocalDateTime.of(2023, Month.JANUARY, 2, 12, 15));
+		event3.setEndDate(LocalDateTime.of(2023, Month.JANUARY, 7, 12, 15));
+		event3.setId(3L);
+		event3.setName("business gathering");
+
+		EventService eventService = mock(EventService.class);
+
+		when(eventService.getEventsByDateRange(startRange, endRange)).thenReturn(List.of(event1, event2, event3));
+
+		Assertions.assertTrue(eventService.getEventsByDateRange(startRange, endRange).stream().anyMatch(event ->
+				event.getStartDate().isAfter(startRange) && event.getEndDate().isBefore(endRange)));
+	}
+
+
+
 
 	private List<Event> dummyEventsList() {
 		AppUser currentUser = new AppUser();
