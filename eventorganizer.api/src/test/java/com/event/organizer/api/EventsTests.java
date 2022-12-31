@@ -288,7 +288,7 @@ class EventsTests {
 
 		List<Event> currentUserEventFeed = eventService.findAll(currentUser.getEmail());
 
-		Assertions.assertEquals(2, currentUserEventFeed.size());
+		Assertions.assertEquals(3, currentUserEventFeed.size());
 	}
 	
 	@Test
