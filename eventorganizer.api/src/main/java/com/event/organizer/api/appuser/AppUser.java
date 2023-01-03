@@ -38,6 +38,7 @@ public class AppUser implements UserDetails {
     private String name;
     private String username;
     private String email;
+    private String location;
 
     @OneToOne
     @JoinColumn(name = "profile_picture_id")

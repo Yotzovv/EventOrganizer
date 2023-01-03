@@ -9,10 +9,11 @@ import com.event.organizer.api.model.Feedback;
 import com.event.organizer.api.model.Image;
 import com.event.organizer.api.repository.EventRepository;
 
-import java.security.Principal;
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import lombok.AllArgsConstructor;
@@ -40,13 +41,13 @@ public class EventService {
 
         for (Event event : allEvents) {
             AppUser eventCreator = event.getCreator();
-            
+
             for (AppUser blockedUser : currentUserBlockList) {
                 if (!eventCreator.getEmail().equals(blockedUser.getEmail())) {
                     continue;
                 }
             }
-            
+
             userEventsFeed.add(event);
         }
 
@@ -100,7 +101,7 @@ public class EventService {
         AppUser creator = (AppUser) appUserService.loadUserByUsername(username);
 
         event.setCreator(creator);
-        
+
         return eventRepository.save(event);
     }
 
@@ -177,7 +178,7 @@ public class EventService {
         Event event = eventRepository.findById(eventId).get();
         List<AppUser> allUsersInterested = event.getUsersInterested();
 
-        if(allUsersInterested == null) {
+        if (allUsersInterested == null) {
             allUsersInterested = new ArrayList<AppUser>();
         }
 
@@ -197,7 +198,7 @@ public class EventService {
         Event event = eventRepository.findById(eventId).get();
         List<AppUser> allUsersGoing = event.getUsersGoing();
 
-        if(allUsersGoing == null) {
+        if (allUsersGoing == null) {
             allUsersGoing = new ArrayList<AppUser>();
         }
 
@@ -207,5 +208,86 @@ public class EventService {
         event.setUsersGoing(allUsersGoing);
 
         eventRepository.save(event);
+    }
+
+    public List<Event> getThisWeeksEvents() {
+        List<Event> allEvents = eventRepository.findAll();
+
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime startOfTheWeek = now.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        LocalDateTime endOfTheWeek = startOfTheWeek.plusWeeks(1);
+
+        List<Event> eventsThisWeek = allEvents.stream()
+                .filter(event -> event.getStartDate().isAfter(startOfTheWeek) && event.getEndDate().isBefore(endOfTheWeek))
+                .collect(Collectors.toList());
+
+        return eventsThisWeek;
+    }
+
+    public List<Event> getThisMonthsEvents() {
+        List<Event> allEvents = eventRepository.findAll();
+
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime startOfTheMonth = now.with(TemporalAdjusters.firstDayOfMonth());
+        LocalDateTime endOfTheMonth = now.with(TemporalAdjusters.lastDayOfMonth());
+
+        List<Event> eventsThisWeek = allEvents.stream()
+                .filter(event -> event.getStartDate().isAfter(startOfTheMonth) && event.getEndDate().isBefore(endOfTheMonth))
+                .collect(Collectors.toList());
+
+        return eventsThisWeek;
+    }
+
+    public List<Event> getEventsByLocation(String location) {
+        List<Event> allEvents = eventRepository.findAll();
+        List<Event> localEvents = allEvents.stream().filter(event -> event.getLocation().contains(location))
+                .collect(Collectors.toList());
+
+        return localEvents;
+    }
+
+    public List<AppUser> getUsersInterestedInEvent(long eventId) throws EventOrganizerException {
+        if (!eventRepository.existsById(eventId)) {
+            throw new EventOrganizerException("Event does not exist");
+        }
+        Event event = eventRepository.findById(eventId).get();
+        List<AppUser> interestedUsersList = event.getUsersInterested();
+
+        return interestedUsersList;
+    }
+
+    public List<AppUser> getUsersGoingToEvent(long eventId) throws EventOrganizerException {
+        if (!eventRepository.existsById(eventId)) {
+            throw new EventOrganizerException("Event does not exist");
+        }
+        Event event = eventRepository.findById(eventId).get();
+        List<AppUser> goingUsersList = event.getUsersGoing();
+
+        return goingUsersList;
+    }
+
+    public List<Event> getEventsByType(String type) {
+        List<Event> allEvents = eventRepository.findAll();
+        List<Event> eventsByTypeList = allEvents.stream().filter(event -> event.getEventType().equals(type))
+                .collect(Collectors.toList());
+
+        return eventsByTypeList;
+    }
+
+    public List<Event> getHostingEvents(String username) {
+        AppUser userModel = appUserService.findUserByEmail(username).get();
+        List<Event> userEvents = userModel.getEvents();
+
+        return userEvents;
+    }
+
+    public List<Event> getEventsByDateRange(LocalDateTime startRange, LocalDateTime endRange) {
+        List<Event> allEvents = eventRepository.findAll();
+
+        List<Event> eventsInRangeList = allEvents.stream()
+                .filter(event -> event.getStartDate().isAfter(startRange) && event.getEndDate().isBefore(endRange))
+                .collect(Collectors.toList());
+
+        return eventsInRangeList;
     }
 }

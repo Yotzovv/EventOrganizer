@@ -1,5 +1,7 @@
 package com.event.organizer.api.controller;
 
+import com.event.organizer.api.appuser.AppUser;
+import com.event.organizer.api.appuser.AppUserService;
 import com.event.organizer.api.exception.EventOrganizerException;
 import com.event.organizer.api.model.Event;
 import com.event.organizer.api.model.dto.EventRequestDto;
@@ -29,6 +31,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class EventController {
 
     private final EventService eventService;
+
+    private final AppUserService appUserService;
 
     @GetMapping
     public List<Event> findAll(Principal principal) {
@@ -86,7 +90,59 @@ public class EventController {
         return eventService.getEventById(eventId, principal.getName());
     }
 
-    private Event getEventModel(EventRequestDto eventRequestDto) throws EventOrganizerException {
+    @GetMapping("/getThisWeeksEvents")
+    public List<Event> getThisWeeksEvents() {
+        return eventService.getThisWeeksEvents();
+    }
+
+    @GetMapping("/getThisMonthsEvents")
+    public List<Event> getThisMonthsEvents() {
+        return eventService.getThisMonthsEvents();
+    }
+
+    @GetMapping("getEventsByUserLocation")
+    public List<Event> getEventsByUserLocation(Principal principal) {
+        AppUser user = appUserService.findUserByEmail(principal.getName()).get();
+        return eventService.getEventsByLocation(user.getLocation());
+    }
+
+    @GetMapping("getEventsByLocation")
+    public List<Event> getEventsByLocation(String location) {
+        return eventService.getEventsByLocation(location);
+    }
+
+    @GetMapping("/getInterestedUsers")
+    public List<AppUser> getUsersInterestedInEvent(long eventId) throws EventOrganizerException {
+        return eventService.getUsersInterestedInEvent(eventId);
+    }
+
+    @GetMapping("getGoingUsers")
+    public List<AppUser> getUsersGoingToEvent(long eventId) throws EventOrganizerException {
+        return eventService.getUsersGoingToEvent(eventId);
+    }
+
+    @GetMapping("getEventsByType")
+    public List<Event> getEventsByType (String type) {
+        return eventService.getEventsByType(type);
+    }
+
+    @GetMapping("getUserEvents")
+    public List<Event> getHostingEvents(Principal principal) {
+        return eventService.getHostingEvents(principal.getName());
+    }
+
+    @GetMapping("getEventsByRange")
+    public List<Event> getEventsByDateRange(LocalDateTime startRange, LocalDateTime endRange) throws EventOrganizerException {
+        validateEndDateAfterStartDate(startRange, endRange);
+        return eventService.getEventsByDateRange(startRange, endRange);
+    }
+
+    @GetMapping("getEventsOfUser")
+    public List<Event> getEventsOfUser(String username) {
+        return eventService.getHostingEvents(username);
+    }
+
+        private Event getEventModel(EventRequestDto eventRequestDto) throws EventOrganizerException {
         Event event = new Event();
         event.setId(eventRequestDto.getId());
         event.setName(eventRequestDto.getName());

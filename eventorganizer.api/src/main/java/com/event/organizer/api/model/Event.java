@@ -48,6 +48,8 @@ public class Event {
     private String description;
     private String location;
 
+    private String eventType;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private AppUser creator;
