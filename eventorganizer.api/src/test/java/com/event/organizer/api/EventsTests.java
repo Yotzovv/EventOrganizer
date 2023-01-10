@@ -642,4 +642,106 @@ class EventsTests {
 
 		return event;		
 	}
+
+	//--Tests for removeUserInterestedInEvent method--
+	@Test
+	public void testRemoveUserInterestedInEvent_eventDoesNotExist_throwsEventOrganizerException() {
+		Long nonExistentEventId = 12345L;
+
+		EventService eventService = mock(EventService.class);
+
+		try {
+			eventService.removeUserInterestedInEvent("testuser@example.com", nonExistentEventId);
+		} catch (EventOrganizerException e) {
+			assertEquals("Event does not exist", e.getMessage());
+		}
+	}
+
+	@Test
+	public void testRemoveUserInterestedInEvent_usersInterestedListIsNull_throwsEventOrganizerException()
+			throws EventOrganizerException{
+
+		Event event = mock(Event.class);
+		event.setUsersInterested(null);
+
+		EventService eventService = mock(EventService.class);
+		EventRepository eventRepository = mock(EventRepository.class);
+
+		eventRepository.save(event);
+		try {
+			eventService.removeUserInterestedInEvent("testuser@example.com", event.getId());
+		} catch (EventOrganizerException e) {
+			assertEquals("Invalid operation (list is null).", e.getMessage());
+		}
+	}
+
+	@Test
+	public void testRemoveUserInterestedInEvent_validInput_userRemovedAndEventSaved() throws EventOrganizerException{
+		Event event = mock(Event.class);
+		AppUser appUser = mock(AppUser.class);
+		EventRepository eventRepository = mock(EventRepository.class);
+		EventService eventService = mock(EventService.class);
+
+		appUser.setEmail("testuser@example.com");
+		event.setUsersInterested(Arrays.asList(appUser)); //user isn't added to the list -> the test fails
+		eventRepository.save(event);
+
+		List<AppUser> allUsersInterested = event.getUsersInterested();
+		assertEquals(1, allUsersInterested.size());
+
+		eventService.removeUserInterestedInEvent("testuser@example.com", event.getId());
+		event = eventRepository.findById(event.getId()).get();
+		allUsersInterested = event.getUsersInterested();
+		assertEquals(0, allUsersInterested.size());
+	}
+
+	//--Tests for removeUserGoingToEvent method--
+	@Test
+	public void testRemoveUserGoingToEvent_eventDoesNotExist_throwsEventOrganizerException() {
+		Long nonExistentEventId = 12345L;
+		EventService eventService = mock(EventService.class);
+
+		try {
+			eventService.removeUserGoingToEvent("testuser@example.com", nonExistentEventId);
+		} catch (EventOrganizerException e) {
+			assertEquals("Event does not exist", e.getMessage());
+		}
+	}
+
+	@Test
+	public void testRemoveUserGoingToEvent_usersGoingListIsNull_throwsEventOrganizerException() throws EventOrganizerException{
+		Event event = mock(Event.class);
+		event.setUsersGoing(null);
+
+		EventService eventService = mock(EventService.class);
+		EventRepository eventRepository = mock(EventRepository.class);
+
+		eventRepository.save(event);
+		try {
+			eventService.removeUserGoingToEvent("testuser@example.com", event.getId());
+		} catch (EventOrganizerException e) {
+			assertEquals("Invalid operation (list is null).", e.getMessage());
+		}
+	}
+
+	@Test
+	public void testRemoveUserGoingToEvent_validInput_userRemovedAndEventSaved() throws EventOrganizerException{
+		Event event = mock(Event.class);
+		AppUser appUser = mock(AppUser.class);
+		EventRepository eventRepository = mock(EventRepository.class);
+		EventService eventService = mock(EventService.class);
+
+		appUser.setEmail("testuser@example.com");
+		event.setUsersGoing(Arrays.asList(appUser));
+		eventRepository.save(event);
+
+		List<AppUser> allUsersGoing = event.getUsersGoing();
+		assertEquals(1, allUsersGoing.size()); //user isn't added to the list -> the test fails
+
+		eventService.removeUserGoingToEvent("testuser@example.com", event.getId());
+		event = eventRepository.findById(event.getId()).get();
+		allUsersGoing = event.getUsersGoing();
+		assertEquals(0, allUsersGoing.size());
+	}
+
 }
