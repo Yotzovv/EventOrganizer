@@ -34,10 +34,26 @@
 
   <mat-card style="margin-top: -12%; margin-left: 1%; width: 38%; height: 40%">
     <mat-card-content>
-      <p><mat-icon>people</mat-icon> {{ event.interestedPeple }} people responded</p>
-      <p><mat-icon>person</mat-icon>Event by {{ event.creator.email }}</p>
-      <p><mat-icon>location_on</mat-icon>{{ event.location }}</p>
-      <p>{{event.description}}</p>
+      <p class="flex-padding"><mat-icon>people</mat-icon> {{ event.interestedPeple }} people responded</p>
+      <div class="flex-padding">
+        <mat-icon>person</mat-icon>
+        <span>Event by: {{ event.creator.email }}</span>
+        <button
+          type="button"
+          mat-icon-button
+          class="block-user-btn"
+          (click)="blacklistUser(event.creator.email)"
+        >
+          <mat-icon
+            matTooltip="Block user"
+            matTooltipPosition="above"
+            >not_interested
+          </mat-icon>
+        </button>
+      </div>
+      
+      <p class="flex-padding"><mat-icon>location_on</mat-icon>{{ event.location }}</p>
+      <p class="flex-padding">{{event.description}}</p>
     </mat-card-content>
   </mat-card>
 </div>

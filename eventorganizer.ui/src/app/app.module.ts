@@ -20,6 +20,7 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { AuthInterceptor } from './auth/auth.interceptor';
 import {MatChipsModule} from '@angular/material/chips';
+import { BlockedUsersListComponent } from './blocked-users-list/blocked-users-list.component';
 
 @NgModule({
   imports:      [ 
@@ -41,6 +42,7 @@ import {MatChipsModule} from '@angular/material/chips';
   AppComponent, 
   ProfilePageComponent, 
   AdminPageComponent,
+  BlockedUsersListComponent,
   SearchBar,
   HomePageComponent,
   EventDetailsComponent ],

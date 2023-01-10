@@ -29,9 +29,19 @@ public class AccountController {
         return userService.getAllUsers();
     }
 
+    @GetMapping("/me")
+    public AppUser getLoggedInUser(Principal user) {
+        return userService.findValidatedUser(user.getName());
+    }
+
     @PutMapping("/blockUser")
-    public void blockUser(Principal user, String emailOfUserToBlock) {
+    public void blockUser(Principal user, @RequestBody String emailOfUserToBlock) {
         userService.blockUser(user.getName(), emailOfUserToBlock);
+    }
+
+    @PutMapping("/unblockUser")
+    public void unblockUser(Principal user, @RequestBody String emailOfUserToBlock) {
+        userService.unblockUser(user.getName(), emailOfUserToBlock);
     }
 
     @PutMapping("/changeRole")
