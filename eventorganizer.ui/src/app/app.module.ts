@@ -20,6 +20,7 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { AuthInterceptor } from './auth/auth.interceptor';
 import {MatChipsModule} from '@angular/material/chips';
+import { EventGalleryComponent } from './event-gallery/event-gallery.component';
 
 @NgModule({
   imports:      [ 
@@ -43,7 +44,9 @@ import {MatChipsModule} from '@angular/material/chips';
   AdminPageComponent,
   SearchBar,
   HomePageComponent,
-  EventDetailsComponent ],
+  EventDetailsComponent,
+  EventGalleryComponent,
+ ],
   bootstrap:    [ AppComponent ],
   providers:    [ 
     RequestService,

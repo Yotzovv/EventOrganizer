@@ -51,6 +51,18 @@ export class RequestService {
         return this.http.get(`${this.API_URL}/api/v1/events/${id}`)
     }
 
+    addEventImage(imageBase64: string | ArrayBuffer, eventId: number) {
+        return this.http.post(`${this.API_URL}/api/v1/events/addImage`, {
+            url: 'imageBase64',
+            eventId,
+        },
+        {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+        });
+    }
+
     registerUser$(body: CreateUserDto) {
         return this.http.request('POST', `${this.API_URL}/api/v1/registration`, {
             body,
@@ -167,4 +179,6 @@ export class RequestService {
             },
         });
     }
+
+
 }

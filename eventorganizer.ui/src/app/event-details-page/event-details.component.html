@@ -5,6 +5,20 @@
     <mat-card-subtitle>{{ event.location }}</mat-card-subtitle>
     <div style="padding: 4%"></div>
   </mat-card-header>
+  <mat-card-content>
+    <event-gallery [images]="event.images"></event-gallery>
+    
+    <input type="file" class="file-input"
+          (change)="onFileSelected($event)" #fileUpload>
+    <div class="file-upload">
+        {{fileName || "No file uploaded yet."}}
+        <button mat-mini-fab color="primary" class="upload-btn"
+          (click)="fileUpload.click()">
+            <mat-icon>attach_file</mat-icon>
+        </button>
+    </div>
+
+  </mat-card-content>
 </mat-card>
 
 <mat-card style="width: 45%; margin-top: 1%; margin-left: 10%">

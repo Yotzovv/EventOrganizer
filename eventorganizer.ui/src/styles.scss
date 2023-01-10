@@ -1,5 +1,4 @@
 @use '@angular/material' as mat;
-
 @include mat.core();
 
 $my-primary: mat.define-palette(mat.$indigo-palette, 500);
@@ -33,3 +32,4 @@ mat-card-title span.card-title {
   font-size: 1.4em;
   margin: 15px;
 }
+

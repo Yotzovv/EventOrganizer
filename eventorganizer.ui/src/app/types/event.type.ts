@@ -1,6 +1,7 @@
 import { ListUser } from './listUser.type';
 import { RequestService } from './../request/request.service';
 import { Comment } from './comment.type'
+import { Image } from './image.type';
 
 export class EventDto {
     id?: number;
@@ -16,6 +17,7 @@ export class EventDto {
     isCurrentUserInterested?: boolean;
     cantBeEdited?: boolean;
     type?: string;  // TODO: map in the database
+    images: Array<Image>;
 
     constructor(_id: number, _name: string, _time: Date, _endDate: Date, _status: string, _location: string, _description: string, isCurrentUserInterested: boolean, cantBeEdited: boolean, type: string) {
         this.id = _id;
