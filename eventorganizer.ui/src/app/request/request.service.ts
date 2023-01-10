@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../environment/environment';
 import { EventDto } from '../types/event.type';
+import { ListUser } from '../types/listUser.type';
 import { CreateUserDto, LoginUserDto } from '../types/user.type';
 
 @Injectable()
@@ -58,6 +59,10 @@ export class RequestService {
         })
     }
 
+    getCurrentLoggedInUser(): any {
+        return this.http.get(`${this.API_URL}/api/v1/account/me`);
+    }
+
     loginUser$(body: LoginUserDto) {
         const serializedForm = this.serializeLoginForm(body);
         // const serializedForm = `username=${body.username}&password=${body.password}`;
@@ -68,6 +73,22 @@ export class RequestService {
             body: serializedForm,
             // responseType: 'arraybuffer',
             // withCredentials: true,
+        });
+    }
+
+    blockUser(userEmail: string) {
+        return this.http.put(`${this.API_URL}/api/v1/account/blockUser`, userEmail, {
+            headers: {
+                'Content-Type': 'text/plain',
+            }
+        });
+    }
+
+    unblockUser(userEmail: string) {
+        return this.http.put(`${this.API_URL}/api/v1/account/unblockUser`, userEmail, {
+            headers: {
+                'Content-Type': 'text/plain',
+            }
         });
     }
 

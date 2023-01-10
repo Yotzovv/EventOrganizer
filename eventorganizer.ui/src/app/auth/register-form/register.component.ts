@@ -89,7 +89,7 @@ export class RegisterComponent implements OnInit {
       .subscribe((res: any) => {
           const { access_token } = res;
           window.localStorage.setItem('user-token', access_token);
-          this._snackBar.open('Registration completed!', 'close');
+          this._snackBar.open('Registration completed!', 'close', {duration: 3000});
           this.router.navigate(['home']);
         });
     });

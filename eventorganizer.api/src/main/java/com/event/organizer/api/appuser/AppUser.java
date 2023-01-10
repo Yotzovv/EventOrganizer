@@ -3,6 +3,8 @@ package com.event.organizer.api.appuser;
 import com.event.organizer.api.model.Event;
 import com.event.organizer.api.model.Image;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -59,6 +61,7 @@ public class AppUser implements UserDetails {
     private boolean enabled = false;
 
     @ManyToMany()
+    @JsonIgnoreProperties("blockedUsers")
     @JoinTable(
             name = "blocked_users",
             joinColumns = @JoinColumn(name = "user_id"),

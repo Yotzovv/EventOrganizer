@@ -4,6 +4,7 @@ export class ListUser {
     roles: string[];
     isActive: boolean;
     profilePictureBase64: string;
+    blockedUsers: Array<ListUser>
 
     constructor(username: string, email: string, roles: string[], isActive: boolean) {
         this.username = username;
