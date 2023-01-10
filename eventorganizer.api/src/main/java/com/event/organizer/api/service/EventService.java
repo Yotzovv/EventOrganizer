@@ -190,6 +190,24 @@ public class EventService {
         eventRepository.save(event);
     }
 
+    public void removeUserInterestedInEvent (String username, Long eventId) throws EventOrganizerException{
+        if (!eventRepository.existsById(eventId)) {
+            throw new EventOrganizerException("Event does not exist");
+        }
+
+        Event event = eventRepository.findById(eventId).get();
+        AppUser userModel = appUserService.findUserByEmail(username).get();
+        List<AppUser> allUsersInterested = event.getUsersInterested();
+
+        if (allUsersInterested == null) {
+            throw new EventOrganizerException("Invalid operation (list is null).");
+        } else {
+            allUsersInterested.remove(userModel);
+        }
+
+        eventRepository.save(event);
+    }
+
     public void userIsGoingToEvent(String username, Long eventId) throws EventOrganizerException {
         if (!eventRepository.existsById(eventId)) {
             throw new EventOrganizerException("Event does not exist");
@@ -206,6 +224,24 @@ public class EventService {
 
         allUsersGoing.add(userModel);
         event.setUsersGoing(allUsersGoing);
+
+        eventRepository.save(event);
+    }
+
+    public void removeUserGoingToEvent (String username, Long eventId) throws EventOrganizerException{
+        if (!eventRepository.existsById(eventId)) {
+            throw new EventOrganizerException("Event does not exist");
+        }
+
+        Event event = eventRepository.findById(eventId).get();
+        AppUser userModel = appUserService.findUserByEmail(username).get();
+        List<AppUser> allUsersGoing = event.getUsersGoing();
+
+        if (allUsersGoing == null) {
+            throw new EventOrganizerException("Invalid operation (list is null).");
+        } else {
+            allUsersGoing.remove(userModel);
+        }
 
         eventRepository.save(event);
     }
