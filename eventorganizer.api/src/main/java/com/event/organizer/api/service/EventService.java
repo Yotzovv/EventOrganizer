@@ -242,7 +242,7 @@ public class EventService {
         }
 
         allUsersGoing.remove(userModel);
-        event.setUsersInterested(allUsersGoing);
+        event.setUsersGoing(allUsersGoing);
         eventRepository.save(event);
     }
 
