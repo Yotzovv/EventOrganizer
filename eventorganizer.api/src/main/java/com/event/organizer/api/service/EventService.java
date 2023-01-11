@@ -201,10 +201,10 @@ public class EventService {
 
         if (allUsersInterested == null) {
             throw new EventOrganizerException("Invalid operation (list is null).");
-        } else {
-            allUsersInterested.remove(userModel);
         }
 
+        allUsersInterested.remove(userModel);
+        event.setUsersInterested(allUsersInterested);
         eventRepository.save(event);
     }
 
@@ -239,10 +239,10 @@ public class EventService {
 
         if (allUsersGoing == null) {
             throw new EventOrganizerException("Invalid operation (list is null).");
-        } else {
-            allUsersGoing.remove(userModel);
         }
 
+        allUsersGoing.remove(userModel);
+        event.setUsersInterested(allUsersGoing);
         eventRepository.save(event);
     }
 
