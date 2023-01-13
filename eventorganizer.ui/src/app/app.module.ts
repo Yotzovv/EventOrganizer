@@ -38,14 +38,15 @@ import { BlockedUsersListComponent } from './blocked-users-list/blocked-users-li
     MatChipsModule,
     MatFormFieldModule,
   ],
-  declarations: [ 
-  AppComponent, 
-  ProfilePageComponent, 
-  AdminPageComponent,
-  BlockedUsersListComponent,
-  SearchBar,
-  HomePageComponent,
-  EventDetailsComponent ],
+  declarations: [
+    AppComponent, 
+    ProfilePageComponent, 
+    AdminPageComponent,
+    BlockedUsersListComponent,
+    SearchBar,
+    HomePageComponent,
+    EventDetailsComponent,
+  ],
   bootstrap:    [ AppComponent ],
   providers:    [ 
     RequestService,
