@@ -36,6 +36,10 @@ public class EventService {
 
     private final AppUserService appUserService;
 
+    public List<Event> findAll(String currentUserEmail) {
+        return eventRepository.findAll();
+    }
+
     public Page<Event> findAll(String currentUserEmail, Pageable page) {
         AppUser currentUser = appUserService.findUserByEmail(currentUserEmail).get();
         List<AppUser> currentUserBlockList = currentUser.getBlockedUsers();
@@ -47,7 +51,6 @@ public class EventService {
             return allEvents;
         }
         return eventRepository.findAll(page);
-
     }
 
     public Event getEventById(long eventId, String currentUserEmail) {
