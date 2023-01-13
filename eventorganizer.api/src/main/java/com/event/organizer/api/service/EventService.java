@@ -1,6 +1,7 @@
 package com.event.organizer.api.service;
 
 import com.event.organizer.api.appuser.AppUser;
+import com.event.organizer.api.appuser.AppUserRole;
 import com.event.organizer.api.appuser.AppUserService;
 import com.event.organizer.api.exception.EventOrganizerException;
 import com.event.organizer.api.model.Comment;
@@ -43,14 +44,20 @@ public class EventService {
     public Page<Event> findAll(String currentUserEmail, Pageable page) {
         AppUser currentUser = appUserService.findUserByEmail(currentUserEmail).get();
         List<AppUser> currentUserBlockList = currentUser.getBlockedUsers();
+        EventSpecification noBlockedCreatorSpec = new EventSpecification(
+            new SearchCriteria("creator", "!:", currentUserBlockList)
+        );
+        EventSpecification statusAcceptedSpec = new EventSpecification(
+            new SearchCriteria("status", "=", Event.ACCEPTED_STATUS)
+        );
         if (!currentUserBlockList.isEmpty()) {
-            EventSpecification noBlockedCreatorSpec = new EventSpecification(
-                new SearchCriteria("creator", "!:", currentUserBlockList)
+            Page<Event> allEvents = eventRepository.findAll(
+                Specification.where(noBlockedCreatorSpec).and(statusAcceptedSpec),
+                page
             );
-            Page<Event> allEvents = eventRepository.findAll(Specification.where(noBlockedCreatorSpec), page);
             return allEvents;
         }
-        return eventRepository.findAll(page);
+        return eventRepository.findAll(Specification.where(statusAcceptedSpec), page);
     }
 
     public Event getEventById(long eventId, String currentUserEmail) {
@@ -84,6 +91,12 @@ public class EventService {
 
         AppUser creator = (AppUser) appUserService.loadUserByUsername(username);
         event.setCreator(creator);
+        boolean isOrganizer = creator.getRoles().contains(AppUserRole.ORGANIZER);
+        if (isOrganizer) {
+            event.setStatus(Event.ACCEPTED_STATUS);
+        } else {
+            event.setStatus(Event.PENDING_STATUS);
+        }
         List<AppUser> appUsers = new ArrayList<>();
         appUsers.add(creator);
         event.setAppUsers(appUsers);
