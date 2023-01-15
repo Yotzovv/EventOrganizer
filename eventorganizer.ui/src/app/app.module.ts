@@ -21,6 +21,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { AuthInterceptor } from './auth/auth.interceptor';
 import {MatChipsModule} from '@angular/material/chips';
 import { BlockedUsersListComponent } from './blocked-users-list/blocked-users-list.component';
+import { OrganizerDashboardComponent } from './organizer-dashboard/blocked-users-list/organizer-dashboard.component';
 
 @NgModule({
   imports:      [ 
@@ -42,6 +43,7 @@ import { BlockedUsersListComponent } from './blocked-users-list/blocked-users-li
     AppComponent, 
     ProfilePageComponent, 
     AdminPageComponent,
+    OrganizerDashboardComponent,
     BlockedUsersListComponent,
     SearchBar,
     HomePageComponent,
