@@ -1,12 +1,13 @@
 import { Component, Inject } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { filter, mergeMap } from "rxjs";
 import { ConfirmationDialogComponent } from "../confirmation-dialog/confirmation-dialog.component";
 import { RequestService } from "../request/request.service";
 import {Comment} from '../types/comment.type';
 import { EventDto } from "../types/event.type";
+import { Page } from "../types/page.type";
 
 @Component({
     selector: 'event-details',
@@ -20,13 +21,14 @@ export class EventDetailsComponent {
     requestService: RequestService;
     comment: string;
 
-    constructor(_requestService: RequestService, private route: ActivatedRoute, public dialog: MatDialog, private _snackBar: MatSnackBar) {
+    constructor(_requestService: RequestService, private route: ActivatedRoute, public dialog: MatDialog, private _snackBar: MatSnackBar,
+        private router: Router) {
         const eventId: number = Number(this.route.snapshot.paramMap.get('id'));
         this.requestService = _requestService;
 
         // TODO: Change to getEventById when API supports it.
-        _requestService.getAllEvents$().subscribe((res: EventDto[]) => {
-            this.event = res.find(e => e.id === eventId);
+        _requestService.getEventById$(eventId).subscribe((event: EventDto) => {
+            this.event = event;
         });
     }
     
@@ -55,6 +57,7 @@ export class EventDetailsComponent {
             this._snackBar.open('User successfully blocked!', 'close', {
                 duration: 3000,
             });
+            this.router.navigate(['home']);
         })
     }
 }

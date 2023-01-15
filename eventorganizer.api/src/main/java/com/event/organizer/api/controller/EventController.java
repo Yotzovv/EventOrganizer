@@ -15,13 +15,18 @@ import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -31,12 +36,21 @@ import org.springframework.web.bind.annotation.RestController;
 public class EventController {
 
     private final EventService eventService;
-
     private final AppUserService appUserService;
 
     @GetMapping
-    public List<Event> findAll(Principal principal) {
-        return eventService.findAll(principal.getName());
+    public Page<Event> findAll(
+        @RequestParam(required = false, defaultValue = "6") int pageSize,
+        @RequestParam(required = false, defaultValue = "0") int page,
+        Principal principal
+    ) {
+        Pageable pageable = PageRequest.of(page, pageSize);
+        return eventService.findAll(principal.getName(), pageable);
+    }
+
+    @GetMapping("/{eventId}")
+    public Event getEventById(@PathVariable long eventId, Principal principal) {
+        return eventService.getEventById(eventId, principal.getName());
     }
 
     @PostMapping
@@ -83,11 +97,6 @@ public class EventController {
     @PutMapping("/addGoing")
     public void userGoingToEvent(@RequestBody Long eventId, Principal principal) throws EventOrganizerException {
         eventService.userIsGoingToEvent(principal.getName(), eventId);
-    }
-
-    @GetMapping("/getEventById")
-    public Event getEventById(long eventId, Principal principal) {
-        return eventService.getEventById(eventId, principal.getName());
     }
 
     @GetMapping("/getThisWeeksEvents")

@@ -8,6 +8,8 @@ import com.event.organizer.api.model.Event;
 import com.event.organizer.api.model.Feedback;
 import com.event.organizer.api.model.Image;
 import com.event.organizer.api.repository.EventRepository;
+import com.event.organizer.api.search.EventSpecification;
+import com.event.organizer.api.search.SearchCriteria;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
@@ -17,6 +19,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import lombok.AllArgsConstructor;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -31,24 +37,20 @@ public class EventService {
     private final AppUserService appUserService;
 
     public List<Event> findAll(String currentUserEmail) {
+        return eventRepository.findAll();
+    }
+
+    public Page<Event> findAll(String currentUserEmail, Pageable page) {
         AppUser currentUser = appUserService.findUserByEmail(currentUserEmail).get();
-
         List<AppUser> currentUserBlockList = currentUser.getBlockedUsers();
-
-        List<Event> allEvents = eventRepository.findAll();
-
-        List<Event> userEventsFeed = new ArrayList<Event>();
-
-        for (Event event : allEvents) {
-            AppUser eventCreator = event.getCreator();
-
-            if (!currentUserBlockList.contains(eventCreator)) {
-                userEventsFeed.add(event);
-            }
-
+        if (!currentUserBlockList.isEmpty()) {
+            EventSpecification noBlockedCreatorSpec = new EventSpecification(
+                new SearchCriteria("creator", "!:", currentUserBlockList)
+            );
+            Page<Event> allEvents = eventRepository.findAll(Specification.where(noBlockedCreatorSpec), page);
+            return allEvents;
         }
-
-        return userEventsFeed;
+        return eventRepository.findAll(page);
     }
 
     public Event getEventById(long eventId, String currentUserEmail) {
