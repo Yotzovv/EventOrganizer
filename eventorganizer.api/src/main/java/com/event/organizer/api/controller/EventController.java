@@ -8,16 +8,19 @@ import com.event.organizer.api.model.dto.EventRequestDto;
 import com.event.organizer.api.model.dto.CommentRequestDto;
 import com.event.organizer.api.model.dto.FeedbackRequestDto;
 import com.event.organizer.api.model.dto.ImageRequestDto;
+import com.event.organizer.api.search.SearchCriteria;
 import com.event.organizer.api.service.EventService;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import java.util.ArrayList;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,6 +41,21 @@ public class EventController {
     private final EventService eventService;
     private final AppUserService appUserService;
 
+    @GetMapping("/{eventId}")
+    public Event getEventById(@PathVariable long eventId, Principal principal) {
+        return eventService.getEventById(eventId, principal.getName());
+    }
+
+    @PostMapping("/{eventId}/accept")
+    public Event acceptEvent(@PathVariable long eventId, Principal principal) {
+        return eventService.acceptEvent(eventId, principal.getName());
+    }
+
+    @PostMapping("/{eventId}/reject")
+    public Event rejectEvent(@PathVariable long eventId, Principal principal) {
+        return eventService.rejectEvent(eventId, principal.getName());
+    }
+
     @GetMapping
     public Page<Event> findAll(
         @RequestParam(required = false, defaultValue = "6") int pageSize,
@@ -45,12 +63,15 @@ public class EventController {
         Principal principal
     ) {
         Pageable pageable = PageRequest.of(page, pageSize);
-        return eventService.findAll(principal.getName(), pageable);
+        List<SearchCriteria> criterias = new ArrayList<>();
+
+        return eventService.findAll(principal.getName(), pageable, criterias);
     }
 
-    @GetMapping("/{eventId}")
-    public Event getEventById(@PathVariable long eventId, Principal principal) {
-        return eventService.getEventById(eventId, principal.getName());
+    @GetMapping("/pending")
+    @PreAuthorize("hasAuthority('ORGANIZER')")
+    public List<Event> findAllPending() {
+        return eventService.findAllPending();
     }
 
     @PostMapping

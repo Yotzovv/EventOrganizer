@@ -25,8 +25,20 @@ export class RequestService {
         });
     }
 
+    getAllPendingEvents$(): Observable<any> {
+        return this.http.get(`${this.API_URL}/api/v1/events/pending`);
+    }
+
     getEventById$(id: number | string): Observable<any> {
         return this.http.get(`${this.API_URL}/api/v1/events/${id}`);
+    }
+
+    acceptEvent$(eventId: string | number): Observable<any> {
+        return this.http.post(`${this.API_URL}/api/v1/events/${eventId}/accept`, {});
+    }
+
+    rejectEvent$(eventId: string | number): Observable<any> {
+        return this.http.post(`${this.API_URL}/api/v1/events/${eventId}/reject`, {});
     }
 
     getWeeklyEvents$(): Observable<any> {

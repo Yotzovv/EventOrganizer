@@ -10,14 +10,14 @@ export class EventDto {
     comments?: Comment[];
     startDate: Date;
     endDate: Date;
-    status?: string;
+    status?: EventStatus;
     interestedPeple?: number;
     creator: ListUser;
     isCurrentUserInterested?: boolean;
     cantBeEdited?: boolean;
     type?: string;  // TODO: map in the database
 
-    constructor(_id: number, _name: string, _time: Date, _endDate: Date, _status: string, _location: string, _description: string, isCurrentUserInterested: boolean, cantBeEdited: boolean, type: string) {
+    constructor(_id: number, _name: string, _time: Date, _endDate: Date, _status: EventStatus, _location: string, _description: string, isCurrentUserInterested: boolean, cantBeEdited: boolean, type: string) {
         this.id = _id;
         this.name = _name;
         this.startDate = _time;
@@ -29,4 +29,10 @@ export class EventDto {
         this.cantBeEdited = cantBeEdited;
         this.type = type;
     }
+}
+
+export enum EventStatus {
+    APPROVED = 'APPROVED',
+    PENDING = 'PENDING',
+    REJECTED = 'REJECTED'
 }
