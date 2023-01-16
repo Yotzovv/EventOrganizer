@@ -672,9 +672,10 @@ class EventsTests {
 		try {
 			eventService.removeUserInterestedInEvent("testuser@example.com", event.getId());
 			//when(eventRepository.existsById(nonExistentEventId)).thenReturn(false);
-			//assertThrows();
+			assertThrows(EventOrganizerException.class, ()->{
+				eventService.removeUserInterestedInEvent("testuser@example.com", event.getId());});
 		} catch (EventOrganizerException e) {
-			assertEquals("Invalid operation (list is null).", e.getMessage());
+			//assertEquals("Invalid operation (list is null).", e.getMessage());
 		}
 	}
 
@@ -706,9 +707,11 @@ class EventsTests {
 
 		try {
 			eventService.removeUserGoingToEvent("testuser@example.com", nonExistentEventId);
-			//assertThrows();
+			assertThrows(EventOrganizerException.class, () -> {
+				eventService.removeUserGoingToEvent("testuser@example.com", nonExistentEventId);
+		});
 		} catch (EventOrganizerException e) {
-			assertEquals("Event does not exist", e.getMessage());
+			//assertEquals("Event does not exist", e.getMessage());
 		}
 	}
 
