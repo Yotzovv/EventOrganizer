@@ -202,6 +202,7 @@ public class EventService {
         eventRepository.save(event);
     }
 
+    // TODO: RENAME
     public void userIsInterestedInEvent(String username, Long eventId) throws EventOrganizerException {
         if (!eventRepository.existsById(eventId)) {
             throw new EventOrganizerException("Event does not exist");
@@ -222,6 +223,7 @@ public class EventService {
         eventRepository.save(event);
     }
 
+    // TODO: RENAME
     public void userIsGoingToEvent(String username, Long eventId) throws EventOrganizerException {
         if (!eventRepository.existsById(eventId)) {
             throw new EventOrganizerException("Event does not exist");
@@ -321,5 +323,25 @@ public class EventService {
                 .collect(Collectors.toList());
 
         return eventsInRangeList;
+    }
+
+    public List<Event> getMyInterestedEvents(String username) {
+        AppUser userModel = appUserService.findUserByEmail(username).get();
+        
+        List<Event> allEvents = eventRepository.findAll().stream()
+            .filter(event -> event.getUsersInterested().stream().anyMatch(user->user.getUsername().equals(username)))
+            .collect(Collectors.toList());
+
+        return allEvents;
+    }
+
+    public List<Event> getMyGoingToEvents(String username) {
+        AppUser userModel = appUserService.findUserByEmail(username).get();
+        
+        List<Event> allEvents = eventRepository.findAll().stream()
+            .filter(event -> event.getUsersGoing().stream().anyMatch(user->user.getUsername().equals(username)))
+            .collect(Collectors.toList());
+
+        return allEvents;
     }
 }
