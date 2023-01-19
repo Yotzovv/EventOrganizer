@@ -584,8 +584,144 @@ class EventsTests {
 				event.getStartDate().isAfter(startRange) && event.getEndDate().isBefore(endRange)));
 	}
 
+	//--Tests for removeUserInterestedInEvent method--
+	@Test
+	public void GivenNonExistentEvent_WhenRemoveInterestedUser_ThenThrowsException() {
+		EventRepository eventRepository = mock(EventRepository.class);
+		AppUserService appUserService = mock(AppUserService.class);
+		EventService eventService = new EventService(eventRepository, appUserService);
+		
+		Long nonExistentEventId = 12345L;
+
+		when(eventRepository.existsById(nonExistentEventId)).thenReturn(false);
+
+		assertThrows(EventOrganizerException.class, () -> {
+			eventService.removeUserInterestedInEvent("testuser@example.com", nonExistentEventId);
+		});
+	}
+
+	@Test
+	public void GivenInterestedUsersListIsNull_WhenRemoveUser_ThenThrowsException() throws EventOrganizerException {		
+		EventRepository eventRepository = mock(EventRepository.class);
+		AppUserService appUserService = mock(AppUserService.class);
+		EventService eventService = new EventService(eventRepository, appUserService);
+
+		Event event = new Event();
+		event.setUsersInterested(null);
+		
+		when(eventRepository.findById(event.getId())).thenReturn(Optional.of(event));
+
+		assertThrows(EventOrganizerException.class, ()->{
+			eventService.removeUserInterestedInEvent("testuser@example.com", event.getId());
+		});
+	}
+
+	@Test
+	public void GivenValidInput_WhenRemoveInterestedUser_ThenUserIsRemovedCorrectly() throws EventOrganizerException{		
+		EventRepository eventRepository = mock(EventRepository.class);
+		AppUserService appUserService = mock(AppUserService.class);
+		EventService eventService = new EventService(eventRepository, appUserService);
+		
+		Event event = new Event();
+		event.setId(1l);
+
+		AppUser appUser = new AppUser();
+		appUser.setEmail("testuser@example.com");
+		event.setUsersInterested(Arrays.asList(appUser));
+		
+		List<AppUser> allUsersInterested = event.getUsersInterested();
+		assertEquals(1, allUsersInterested.size());
+
+		when(eventRepository.existsById(event.getId())).thenReturn(true);
+		when(eventRepository.findById(event.getId())).thenReturn(Optional.of(event));
+		when(appUserService.findUserByEmail("testuser@example.com")).thenReturn(Optional.of(appUser));
+
+		eventService.removeUserInterestedInEvent("testuser@example.com", event.getId());
+
+		event = eventRepository.findById(event.getId()).get();
+		allUsersInterested = event.getUsersInterested();
+		
+		assertEquals(0, allUsersInterested.size());
+	}
+
+	//--Tests for removeUserGoingToEvent method--
+	@Test
+	public void GiventNonExistentEvent_WhenRemoveGoingTo_ThenThrowsException() {
+		EventRepository eventRepository = mock(EventRepository.class);
+		AppUserService appUserService = mock(AppUserService.class);
+		EventService eventService = new EventService(eventRepository, appUserService);
+	
+		Long nonExistentEventId = 12345L;
+
+		assertThrows(EventOrganizerException.class, () -> {
+			eventService.removeUserGoingToEvent("testuser@example.com", nonExistentEventId);
+		});
+	}
+
+	@Test
+	public void GivenGoingToListIsNull_WhenRemoveGoingToUser_ThenThrowsException() throws EventOrganizerException{
+		Event event = new Event();
+		event.setUsersGoing(null);
+
+		EventRepository eventRepository = mock(EventRepository.class);
+		AppUserService appUserService = mock(AppUserService.class);
+		EventService eventService = new EventService(eventRepository, appUserService);
+
+		eventRepository.save(event);
+		
+		assertThrows(EventOrganizerException.class, () -> {
+			eventService.removeUserGoingToEvent("testuser@example.com", event.getId());
+		});
+	}
+
+	@Test
+	public void GivenValidInput_WhenRemoveGoingToEvent_ThenRemovedCorrectly() throws EventOrganizerException{
+		EventRepository eventRepository = mock(EventRepository.class);
+		AppUserService appUserService = mock(AppUserService.class);
+
+		EventService eventService = new EventService(eventRepository, appUserService);
+
+		AppUser appUser = new AppUser();
+		appUser.setEmail("testuser@example.com");
+
+		Event event = new Event();
+		event.setUsersGoing(Arrays.asList(appUser));
+
+		when(eventRepository.findById(event.getId())).thenReturn(Optional.of(event));
+		when(eventRepository.existsById(event.getId())).thenReturn(true);
+		when(eventRepository.save(event)).thenReturn(event);
+
+		when(appUserService.findUserByEmail(appUser.getEmail())).thenReturn(Optional.of(appUser));
+
+		eventService.removeUserGoingToEvent("testuser@example.com", event.getId());
+
+		assertEquals(0, event.getUsersGoing().size());
+	}
+
+	private Event dummyEventWithComments() {
+		AppUser currentUser = new AppUser();
+		currentUser.setEmail("current@example.com");
+		currentUser.setBlockedUsers(new ArrayList<AppUser>());
+
+		List<Image> emptyImagesList = new ArrayList<Image>();
+		List<Comment> dummyComments = new ArrayList<>();
+		List<Feedback> emptyFeedbacksList = new ArrayList<Feedback>();
+		List<AppUser> emptyUsersInterestedList = new ArrayList<AppUser>();
+		List<AppUser> emptyUsersGoingList = new ArrayList<AppUser>();
 
 
+		dummyComments.add(new Comment(1, "This is a great event!", LocalDateTime.now(), "johnsmith"));
+		dummyComments.add(new Comment(2, "I'm looking forward to attending!", LocalDateTime.now(), "janelee"));
+		dummyComments.add(new Comment(3, "I can't wait to see the speakers!", LocalDateTime.now(), "block@example.com"));
+		dummyComments.add(new Comment(4, "This event has such a great lineup!", LocalDateTime.now(), "sarahjohnson"));
+
+		Event event = new Event(1L, "Tech Conference", LocalDateTime.of(2022, 1, 15, 9, 0),
+						LocalDateTime.of(2022, 1, 17, 17, 0), Event.ACCEPTED_STATUS,
+						"A conference for software developers and IT professionals", "San Francisco, CA", "", currentUser,
+						dummyComments, null, emptyUsersInterestedList, emptyUsersGoingList, emptyImagesList, emptyFeedbacksList);
+
+		return event;		
+	}
 
 	private List<Event> dummyEventsList() {
 		AppUser currentUser = new AppUser();
@@ -617,140 +753,4 @@ class EventsTests {
 						emptyCommentsList, null, emptyUsersInterestedList, emptyUsersGoingList, emptyImagesList, emptyFeedbacksList));
 		return dummyEventsList;
 	}
-
-	private Event dummyEventWithComments() {
-		AppUser currentUser = new AppUser();
-		currentUser.setEmail("current@example.com");
-		currentUser.setBlockedUsers(new ArrayList<AppUser>());
-
-		List<Image> emptyImagesList = new ArrayList<Image>();
-		List<Comment> dummyComments = new ArrayList<>();
-		List<Feedback> emptyFeedbacksList = new ArrayList<Feedback>();
-		List<AppUser> emptyUsersInterestedList = new ArrayList<AppUser>();
-		List<AppUser> emptyUsersGoingList = new ArrayList<AppUser>();
-
-
-		dummyComments.add(new Comment(1, "This is a great event!", LocalDateTime.now(), "johnsmith"));
-		dummyComments.add(new Comment(2, "I'm looking forward to attending!", LocalDateTime.now(), "janelee"));
-		dummyComments.add(new Comment(3, "I can't wait to see the speakers!", LocalDateTime.now(), "block@example.com"));
-		dummyComments.add(new Comment(4, "This event has such a great lineup!", LocalDateTime.now(), "sarahjohnson"));
-
-		Event event = new Event(1L, "Tech Conference", LocalDateTime.of(2022, 1, 15, 9, 0),
-						LocalDateTime.of(2022, 1, 17, 17, 0), Event.ACCEPTED_STATUS,
-						"A conference for software developers and IT professionals", "San Francisco, CA", "", currentUser,
-						dummyComments, null, emptyUsersInterestedList, emptyUsersGoingList, emptyImagesList, emptyFeedbacksList);
-
-		return event;		
-	}
-
-	//--Tests for removeUserInterestedInEvent method--
-	@Test
-	public void GivenNonExistentEvent_WhenRemoveInterestedUser_ThenThrowsException() {
-		Long nonExistentEventId = 12345L;
-
-		EventService eventService = mock(EventService.class);
-		EventRepository eventRepository = mock(EventRepository.class);
-
-		//eventService.removeUserInterestedInEvent("testuser@example.com", nonExistentEventId);
-		when(eventRepository.existsById(nonExistentEventId)).thenReturn(false);
-		assertThrows(EventOrganizerException.class, () -> {
-			eventService.removeUserInterestedInEvent("testuser@example.com", nonExistentEventId);
-		});
-	}
-
-	@Test
-	public void GivenInterestedUsersListIsNull_WhenRemoveUser_ThenThrowsException()
-			throws EventOrganizerException{
-
-		Event event = mock(Event.class);
-		event.setUsersInterested(null);
-
-		EventService eventService = mock(EventService.class);
-		EventRepository eventRepository = mock(EventRepository.class);
-
-		eventRepository.save(event);
-		try {
-			eventService.removeUserInterestedInEvent("testuser@example.com", event.getId());
-			//when(eventRepository.existsById(nonExistentEventId)).thenReturn(false);
-			assertThrows(EventOrganizerException.class, ()->{
-				eventService.removeUserInterestedInEvent("testuser@example.com", event.getId());});
-		} catch (EventOrganizerException e) {
-			//assertEquals("Invalid operation (list is null).", e.getMessage());
-		}
-	}
-
-	@Test
-	public void GivenValidInput_WhenRemoveInterestedUser_ThenUserIsRemovedCorrectly() throws EventOrganizerException{
-		Event event = mock(Event.class);
-		AppUser appUser = new AppUser();
-		EventRepository eventRepository = mock(EventRepository.class);
-		EventService eventService = mock(EventService.class);
-
-		appUser.setEmail("testuser@example.com");
-		event.setUsersInterested(Arrays.asList(appUser)); //user isn't added to the list -> the test fails
-		eventRepository.save(event);
-
-		List<AppUser> allUsersInterested = event.getUsersInterested();
-		assertEquals(1, allUsersInterested.size());
-
-		eventService.removeUserInterestedInEvent("testuser@example.com", event.getId());
-		event = eventRepository.findById(event.getId()).get();
-		allUsersInterested = event.getUsersInterested();
-		assertEquals(0, allUsersInterested.size());
-	}
-
-	//--Tests for removeUserGoingToEvent method--
-	@Test
-	public void GiventNonExistentEvent_WhenRemoveGoingTo_ThenThrowsException() {
-		Long nonExistentEventId = 12345L;
-		EventService eventService = mock(EventService.class);
-
-		try {
-			eventService.removeUserGoingToEvent("testuser@example.com", nonExistentEventId);
-			assertThrows(EventOrganizerException.class, () -> {
-				eventService.removeUserGoingToEvent("testuser@example.com", nonExistentEventId);
-		});
-		} catch (EventOrganizerException e) {
-			//assertEquals("Event does not exist", e.getMessage());
-		}
-	}
-
-	@Test
-	public void GivenGoingToListIsNull_WhenRemoveGoingToUser_ThenThrowsException() throws EventOrganizerException{
-		Event event = mock(Event.class);
-		event.setUsersGoing(null);
-
-		EventService eventService = mock(EventService.class);
-		EventRepository eventRepository = mock(EventRepository.class);
-
-		eventRepository.save(event);
-		try {
-			eventService.removeUserGoingToEvent("testuser@example.com", event.getId());
-			//when(eventRepository.findById(eventId).get().getUsersGoing()).thenReturn(null)
-			//assertThrows
-		} catch (EventOrganizerException e) {
-			assertEquals("Invalid operation (list is null).", e.getMessage());
-		}
-	}
-
-	@Test
-	public void GivenValidInput_WhenRemoveGoingToEvent_ThenRemovedCorrectly() throws EventOrganizerException{
-		Event event = new Event();
-		AppUser appUser = new AppUser();
-		EventRepository eventRepository = mock(EventRepository.class);
-		EventService eventService = mock(EventService.class);
-
-		appUser.setEmail("testuser@example.com");
-		event.setUsersGoing(Arrays.asList(appUser));
-		eventRepository.save(event);
-
-		List<AppUser> allUsersGoing = event.getUsersGoing();
-		assertEquals(1, allUsersGoing.size()); //user isn't added to the list -> the test fails
-
-		eventService.removeUserGoingToEvent("testuser@example.com", event.getId());
-		event = eventRepository.findById(event.getId()).get();
-		allUsersGoing = event.getUsersGoing();
-		assertEquals(0, allUsersGoing.size());
-	}
-
 }

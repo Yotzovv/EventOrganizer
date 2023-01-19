@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import lombok.AllArgsConstructor;
@@ -197,11 +198,7 @@ public class EventService {
 
         Event event = eventRepository.findById(eventId).get();
         AppUser userModel = appUserService.findUserByEmail(username).get();
-        List<AppUser> allUsersInterested = event.getUsersInterested();
-
-        if (allUsersInterested == null) {
-            throw new EventOrganizerException("Invalid operation (list is null).");
-        }
+        List<AppUser> allUsersInterested = new ArrayList<>(event.getUsersInterested());
 
         allUsersInterested.remove(userModel);
         event.setUsersInterested(allUsersInterested);
@@ -229,21 +226,24 @@ public class EventService {
     }
 
     public void removeUserGoingToEvent (String username, Long eventId) throws EventOrganizerException{
-        if (!eventRepository.existsById(eventId)) {
+        Optional<Event> eventOptional = eventRepository.findById(eventId);
+
+        if(!eventOptional.isPresent()){
             throw new EventOrganizerException("Event does not exist");
         }
 
-        Event event = eventRepository.findById(eventId).get();
-        AppUser userModel = appUserService.findUserByEmail(username).get();
-        List<AppUser> allUsersGoing = event.getUsersGoing();
+        Event event = eventOptional.get();
+        List<AppUser> usersGoing = new ArrayList<>(event.getUsersGoing());
+        AppUser userToRemove = usersGoing.stream()
+                .filter(user -> user.getEmail().equals(username))
+                .findFirst()
+                .orElse(null);
 
-        if (allUsersGoing == null) {
-            throw new EventOrganizerException("Invalid operation (list is null).");
+        if (userToRemove != null) {
+            usersGoing.remove(userToRemove);
+            event.setUsersGoing(usersGoing);
+            eventRepository.save(event);
         }
-
-        allUsersGoing.remove(userModel);
-        event.setUsersGoing(allUsersGoing);
-        eventRepository.save(event);
     }
 
     public List<Event> getThisWeeksEvents() {
