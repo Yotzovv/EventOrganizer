@@ -90,7 +90,7 @@ public class EventController {
         eventService.userIsGoingToEvent(principal.getName(), eventId);
     }
 
-    @PutMapping("removeGoing")
+    @PutMapping("/removeGoing")
     public void removeUserGoingToEvent(@RequestBody Long eventId, Principal principal) throws EventOrganizerException {
         eventService.removeUserGoingToEvent(principal.getName(), eventId);
     }
