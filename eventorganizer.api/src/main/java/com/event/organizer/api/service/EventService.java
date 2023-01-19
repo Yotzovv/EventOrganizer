@@ -1,6 +1,7 @@
 package com.event.organizer.api.service;
 
 import com.event.organizer.api.appuser.AppUser;
+import com.event.organizer.api.appuser.AppUserRole;
 import com.event.organizer.api.appuser.AppUserService;
 import com.event.organizer.api.exception.EventOrganizerException;
 import com.event.organizer.api.model.Comment;
@@ -8,9 +9,13 @@ import com.event.organizer.api.model.Event;
 import com.event.organizer.api.model.Feedback;
 import com.event.organizer.api.model.Image;
 import com.event.organizer.api.repository.EventRepository;
+import com.event.organizer.api.search.BaseSpecification;
+import com.event.organizer.api.search.Search;
+import com.event.organizer.api.search.SearchCriteria;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +23,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import lombok.AllArgsConstructor;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -32,27 +41,32 @@ public class EventService {
     private final AppUserService appUserService;
 
     public List<Event> findAll(String currentUserEmail) {
-        AppUser currentUser = appUserService.findUserByEmail(currentUserEmail).get();
+        return eventRepository.findAll();
+    }
 
+    public Page<Event> findAll(String currentUserEmail, Pageable page, List<SearchCriteria> criterias) {
+        AppUser currentUser = appUserService.findUserByEmail(currentUserEmail).get();
         List<AppUser> currentUserBlockList = currentUser.getBlockedUsers();
 
-        List<Event> allEvents = eventRepository.findAll();
+        SearchCriteria notPending = new SearchCriteria("status", "=", Event.ACCEPTED_STATUS);
+        SearchCriteria notBlockedCreator = new SearchCriteria("creator", "!:", currentUserBlockList);
+        criterias.add(notPending);
+        criterias.add(notBlockedCreator);
 
-        List<Event> userEventsFeed = new ArrayList<Event>();
+        Search<Event> search = new Search<Event>(criterias);
+        
+        Page<Event> allEvents = eventRepository.findAll(search.getSpecificationList(), page);
+        return allEvents;
+    }
 
-        for (Event event : allEvents) {
-            AppUser eventCreator = event.getCreator();
-
-            for (AppUser blockedUser : currentUserBlockList) {
-                if (!eventCreator.getEmail().equals(blockedUser.getEmail())) {
-                    continue;
-                }
-            }
-
-            userEventsFeed.add(event);
-        }
-
-        return userEventsFeed;
+    
+    public List<Event> findAllPending() {
+        List<SearchCriteria> criterias = new ArrayList<>();
+        SearchCriteria notPending = new SearchCriteria("status", "=", Event.PENDING_STATUS);
+        criterias.add(notPending);
+        Search<Event> search = new Search<Event>(criterias);
+        List<Event> allEvents = eventRepository.findAll(search.getSpecificationList());
+        return allEvents;
     }
 
     public Event getEventById(long eventId, String currentUserEmail) {
@@ -86,6 +100,12 @@ public class EventService {
 
         AppUser creator = (AppUser) appUserService.loadUserByUsername(username);
         event.setCreator(creator);
+        boolean isOrganizer = creator.getRoles().contains(AppUserRole.ORGANIZER);
+        if (isOrganizer) {
+            event.setStatus(Event.ACCEPTED_STATUS);
+        } else {
+            event.setStatus(Event.PENDING_STATUS);
+        }
         List<AppUser> appUsers = new ArrayList<>();
         appUsers.add(creator);
         event.setAppUsers(appUsers);
@@ -104,6 +124,18 @@ public class EventService {
         event.setCreator(creator);
 
         return eventRepository.save(event);
+    }
+
+    public Event acceptEvent(long eventId, String currentUserEmail) {
+        Event eventToUpdate = this.getEventById(eventId, currentUserEmail);
+        eventToUpdate.setStatus(Event.ACCEPTED_STATUS);
+        return eventRepository.save(eventToUpdate);
+    }
+
+    public Event rejectEvent(long eventId, String currentUserEmail) {
+        Event eventToUpdate = this.getEventById(eventId, currentUserEmail);
+        eventToUpdate.setStatus(Event.REJECTED_STATUS);
+        return eventRepository.save(eventToUpdate);
     }
 
     public void deleteEvent(Event event) throws EventOrganizerException {

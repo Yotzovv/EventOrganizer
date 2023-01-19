@@ -1,0 +1,19 @@
+<div mat-dialog-title
+     *ngIf="data.title">
+  {{ data.title }}
+</div>
+
+<div mat-dialog-content>
+  <p class="dialog-message" >
+    <span [innerHtml]="data.message"></span>
+  </p>
+</div>
+
+<div mat-dialog-actions>
+  <button mat-button
+          [mat-dialog-close]="false"
+          cdkFocusInitial>Cancel</button>
+  <button mat-button
+          color="accent"
+          [mat-dialog-close]="true">Confirm</button>
+</div>

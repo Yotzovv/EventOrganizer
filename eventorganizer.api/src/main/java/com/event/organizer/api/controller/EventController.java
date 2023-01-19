@@ -8,20 +8,28 @@ import com.event.organizer.api.model.dto.EventRequestDto;
 import com.event.organizer.api.model.dto.CommentRequestDto;
 import com.event.organizer.api.model.dto.FeedbackRequestDto;
 import com.event.organizer.api.model.dto.ImageRequestDto;
+import com.event.organizer.api.search.SearchCriteria;
 import com.event.organizer.api.service.EventService;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import java.util.ArrayList;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -31,12 +39,39 @@ import org.springframework.web.bind.annotation.RestController;
 public class EventController {
 
     private final EventService eventService;
-
     private final AppUserService appUserService;
 
+    @GetMapping("/{eventId}")
+    public Event getEventById(@PathVariable long eventId, Principal principal) {
+        return eventService.getEventById(eventId, principal.getName());
+    }
+
+    @PostMapping("/{eventId}/accept")
+    public Event acceptEvent(@PathVariable long eventId, Principal principal) {
+        return eventService.acceptEvent(eventId, principal.getName());
+    }
+
+    @PostMapping("/{eventId}/reject")
+    public Event rejectEvent(@PathVariable long eventId, Principal principal) {
+        return eventService.rejectEvent(eventId, principal.getName());
+    }
+
     @GetMapping
-    public List<Event> findAll(Principal principal) {
-        return eventService.findAll(principal.getName());
+    public Page<Event> findAll(
+        @RequestParam(required = false, defaultValue = "6") int pageSize,
+        @RequestParam(required = false, defaultValue = "0") int page,
+        Principal principal
+    ) {
+        Pageable pageable = PageRequest.of(page, pageSize);
+        List<SearchCriteria> criterias = new ArrayList<>();
+
+        return eventService.findAll(principal.getName(), pageable, criterias);
+    }
+
+    @GetMapping("/pending")
+    @PreAuthorize("hasAuthority('ORGANIZER')")
+    public List<Event> findAllPending() {
+        return eventService.findAllPending();
     }
 
     @PostMapping
@@ -93,11 +128,6 @@ public class EventController {
     @PutMapping("/removeGoing")
     public void removeUserGoingToEvent(@RequestBody Long eventId, Principal principal) throws EventOrganizerException {
         eventService.removeUserGoingToEvent(principal.getName(), eventId);
-    }
-
-    @GetMapping("/getEventById")
-    public Event getEventById(long eventId, Principal principal) {
-        return eventService.getEventById(eventId, principal.getName());
     }
 
     @GetMapping("/getThisWeeksEvents")

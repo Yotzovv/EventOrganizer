@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../environment/environment';
 import { EventDto } from '../types/event.type';
+import { ListUser } from '../types/listUser.type';
 import { CreateUserDto, LoginUserDto } from '../types/user.type';
 
 @Injectable()
@@ -15,8 +16,29 @@ export class RequestService {
         console.log(this.API_URL)
     }
 
-    getAllEvents$(): Observable<any> {
-        return this.http.get(`${this.API_URL}/api/v1/events`);
+    getAllEvents$(page: number, pageSize: number): Observable<any> {
+        return this.http.get(`${this.API_URL}/api/v1/events`, {
+            params: {
+                page,
+                pageSize
+            }
+        });
+    }
+
+    getAllPendingEvents$(): Observable<any> {
+        return this.http.get(`${this.API_URL}/api/v1/events/pending`);
+    }
+
+    getEventById$(id: number | string): Observable<any> {
+        return this.http.get(`${this.API_URL}/api/v1/events/${id}`);
+    }
+
+    acceptEvent$(eventId: string | number): Observable<any> {
+        return this.http.post(`${this.API_URL}/api/v1/events/${eventId}/accept`, {});
+    }
+
+    rejectEvent$(eventId: string | number): Observable<any> {
+        return this.http.post(`${this.API_URL}/api/v1/events/${eventId}/reject`, {});
     }
 
     getWeeklyEvents$(): Observable<any> {
@@ -36,11 +58,11 @@ export class RequestService {
     }
 
     getGoingEvents$(): Observable<any> {
-        return this.http.get(`${this.API_URL}/api/v1/events/getGoingEvents`)
+        return this.http.get(`${this.API_URL}/api/v1/events/getInterestedInEvents`)
     }
 
     getHostingEvents$(): Observable<any> {
-        return this.http.get(`${this.API_URL}/api/v1/events/getHostingEvents`)
+        return this.http.get(`${this.API_URL}/api/v1/events/getInterestedInEvents`)
     }
 
     getAllUsers(): Observable<any> {
@@ -58,6 +80,10 @@ export class RequestService {
         })
     }
 
+    getCurrentLoggedInUser(): any {
+        return this.http.get(`${this.API_URL}/api/v1/account/me`);
+    }
+
     loginUser$(body: LoginUserDto) {
         const serializedForm = this.serializeLoginForm(body);
         // const serializedForm = `username=${body.username}&password=${body.password}`;
@@ -68,6 +94,22 @@ export class RequestService {
             body: serializedForm,
             // responseType: 'arraybuffer',
             // withCredentials: true,
+        });
+    }
+
+    blockUser(userEmail: string) {
+        return this.http.put(`${this.API_URL}/api/v1/account/blockUser`, userEmail, {
+            headers: {
+                'Content-Type': 'text/plain',
+            }
+        });
+    }
+
+    unblockUser(userEmail: string) {
+        return this.http.put(`${this.API_URL}/api/v1/account/unblockUser`, userEmail, {
+            headers: {
+                'Content-Type': 'text/plain',
+            }
         });
     }
 

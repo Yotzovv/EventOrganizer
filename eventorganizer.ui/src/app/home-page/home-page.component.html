@@ -3,7 +3,7 @@
     
     <search-bar (searchInput)="onFilter($event)"></search-bar>
 
-    <mat-card *ngFor="let event of allEvents">
+    <mat-card *ngFor="let event of eventPage?.content">
         <mat-card-header>
             <button [hidden]="!event.isCurrentUserInterested" (click)="userIsNotInterested(event.id)" color="warn" mat-icon-button>
                 <mat-icon>favorite</mat-icon>
@@ -37,4 +37,12 @@
             <button mat-button>SHARE</button>
         </mat-card-actions>        
     </mat-card>
+
+    <mat-paginator 
+        (page)="handlePageEvent($event)"
+        [length]="eventPage?.totalElements"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="pageSizeOptions"
+        aria-label="Select page">
+    </mat-paginator>
 </div>
