@@ -19,6 +19,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import lombok.AllArgsConstructor;
@@ -222,6 +223,20 @@ public class EventService {
         eventRepository.save(event);
     }
 
+    public void removeUserInterestedInEvent (String username, Long eventId) throws EventOrganizerException{
+        if (!eventRepository.existsById(eventId)) {
+            throw new EventOrganizerException("Event does not exist");
+        }
+
+        Event event = eventRepository.findById(eventId).get();
+        AppUser userModel = appUserService.findUserByEmail(username).get();
+        List<AppUser> allUsersInterested = new ArrayList<>(event.getUsersInterested());
+
+        allUsersInterested.remove(userModel);
+        event.setUsersInterested(allUsersInterested);
+        eventRepository.save(event);
+    }
+
     public void userIsGoingToEvent(String username, Long eventId) throws EventOrganizerException {
         if (!eventRepository.existsById(eventId)) {
             throw new EventOrganizerException("Event does not exist");
@@ -240,6 +255,27 @@ public class EventService {
         event.setUsersGoing(allUsersGoing);
 
         eventRepository.save(event);
+    }
+
+    public void removeUserGoingToEvent (String username, Long eventId) throws EventOrganizerException{
+        Optional<Event> eventOptional = eventRepository.findById(eventId);
+
+        if(!eventOptional.isPresent()){
+            throw new EventOrganizerException("Event does not exist");
+        }
+
+        Event event = eventOptional.get();
+        List<AppUser> usersGoing = new ArrayList<>(event.getUsersGoing());
+        AppUser userToRemove = usersGoing.stream()
+                .filter(user -> user.getEmail().equals(username))
+                .findFirst()
+                .orElse(null);
+
+        if (userToRemove != null) {
+            usersGoing.remove(userToRemove);
+            event.setUsersGoing(usersGoing);
+            eventRepository.save(event);
+        }
     }
 
     public List<Event> getThisWeeksEvents() {
