@@ -1,0 +1,69 @@
+<table mat-table [dataSource]="events" class="mat-elevation-z8" *ngIf="events.length > 0">
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Name </th>
+      <td mat-cell *matCellDef="let event"> {{event.name}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef> Id </th>
+      <td mat-cell *matCellDef="let event">
+        <a routerLink="/event-details/{{event.id}}">
+          {{event.id}}
+        </a>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef> Status </th>
+      <td mat-cell *matCellDef="let event"> {{event.status}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="eventType">
+      <th mat-header-cell *matHeaderCellDef> Type </th>
+      <td mat-cell *matCellDef="let event"> {{event.eventType}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="startDate">
+      <th mat-header-cell *matHeaderCellDef> Start date </th>
+      <td mat-cell *matCellDef="let event"> {{event.startDate | date: 'dd.MM.yyyy HH:mm' }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="location">
+      <th mat-header-cell *matHeaderCellDef> Location </th>
+      <td mat-cell *matCellDef="let event"> {{event.location}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="creator">
+      <th mat-header-cell *matHeaderCellDef> Creator </th>
+      <td mat-cell *matCellDef="let event"> {{event.creator.name}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef> Description </th>
+      <td mat-cell *matCellDef="let event"> {{event.description}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Actions </th>
+        <td mat-cell *matCellDef="let event">
+            <button mat-icon-button
+                    matTooltip="Accept event"
+                    matTooltipPosition="above"
+                    class="accept-event-btn"
+                    (click)="approveEvent(event)">
+                <mat-icon>check</mat-icon>
+            </button>
+            <button mat-icon-button
+                    matTooltip="Reject event"
+                    matTooltipPosition="above"
+                    class="reject-event-btn"
+                    (click)="rejectEvent(event)">
+                <mat-icon>cancel</mat-icon>
+            </button>
+        </td>
+      </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>

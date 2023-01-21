@@ -8,6 +8,12 @@ import java.util.Set;
 import javax.persistence.*;
 
 import com.event.organizer.api.appuser.AppUser;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -23,12 +29,12 @@ import lombok.Setter;
 @Table(name = "events")
 public class Event {
 
-    public static final String ACCEPTED_STATUS = "Accepted";
-    public static final String NONE_STATUS = "None";
-    public static final String REJECTED_STATUS = "Rejected";
-
+    public static final String ACCEPTED_STATUS = "ACCEPTED";
+    public static final String NONE_STATUS = "NONE";
+    public static final String REJECTED_STATUS = "REJECTED";
+    public static final String PENDING_STATUS = "PENDING";
     public static final Set<String> STATUSES =
-        new HashSet<>(Arrays.asList(NONE_STATUS, ACCEPTED_STATUS, REJECTED_STATUS));
+        new HashSet<>(Arrays.asList(NONE_STATUS, ACCEPTED_STATUS, REJECTED_STATUS, PENDING_STATUS));
 
     @Id
     @SequenceGenerator(
@@ -62,9 +68,15 @@ public class Event {
     private List<AppUser> appUsers;
 
     @ManyToMany(mappedBy = "events")
+    @ElementCollection
+    @CollectionTable(name = "event_interested", joinColumns = @JoinColumn(name = "event_id"))
+    @Column(name = "event_interested")
     private List<AppUser> usersInterested;
-
+ 
     @ManyToMany(mappedBy = "events")
+    @ElementCollection
+    @CollectionTable(name = "event_goings", joinColumns = @JoinColumn(name = "event_id"))
+    @Column(name = "event_going")
     private List<AppUser> usersGoing;
 
     @ElementCollection

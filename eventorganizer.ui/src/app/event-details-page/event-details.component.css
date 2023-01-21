@@ -8,3 +8,7 @@
 .file-input {
   display: none;
 }
+
+.block-user-btn {
+  color: red;
+}

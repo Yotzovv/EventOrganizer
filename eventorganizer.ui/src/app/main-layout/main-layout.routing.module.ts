@@ -6,6 +6,8 @@ import { HomePageComponent } from "../home-page/home-page.component";
 import { ProfilePageComponent } from "../profile-page/profile-page.component";
 import { MainGuardService } from "./main-guard.service";
 import { MainLayoutComponent } from "./main-layout.component";
+import { BlockedUsersListComponent } from '../blocked-users-list/blocked-users-list.component';
+import { OrganizerDashboardComponent } from '../organizer-dashboard/blocked-users-list/organizer-dashboard.component';
 
 const routes: Routes = [
   {
@@ -24,7 +26,16 @@ const routes: Routes = [
       },
       {
         path: 'profile',
-        component: ProfilePageComponent,
+        children: [
+          {
+            path: '',
+            component: ProfilePageComponent,
+          },
+          {
+            path: 'blocked-users',
+            component: BlockedUsersListComponent,
+          }
+        ]
       },
       {
         path: 'event-details/:id',
@@ -33,6 +44,10 @@ const routes: Routes = [
       {
         path: 'adminpage',
         component: AdminPageComponent
+      },
+      {
+        path: 'organizer/dashboard',
+        component: OrganizerDashboardComponent,
       }
     ]
   },

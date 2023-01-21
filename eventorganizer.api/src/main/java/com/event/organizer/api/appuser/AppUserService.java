@@ -14,6 +14,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -101,6 +102,34 @@ public class AppUserService implements UserDetailsService {
         userRepository.save(userToBlock);
     }
 
+    public void unblockUser(String currentUserName, String userToBlockEmail) {
+        AppUser currentUser = findValidatedUser(currentUserName);
+        AppUser userToUnBlock = findValidatedUser(userToBlockEmail);
+
+        List<AppUser> blockedUsersList = currentUser.getBlockedUsers();
+
+        AppUser blockedUserMatch = blockedUsersList.stream()
+        .filter(a -> Objects.equals(a.getEmail(), userToBlockEmail))
+        .findFirst()
+        .orElse(null);
+    
+        blockedUsersList.remove(blockedUserMatch);
+
+        List<AppUser> userToBlockBlockList = userToUnBlock.getBlockedUsers();
+        AppUser userToBlockMatch = userToBlockBlockList.stream()
+        .filter(a -> Objects.equals(a.getEmail(), currentUser.getEmail()))
+        .findFirst()
+        .orElse(null);
+
+        userToBlockBlockList.remove(userToBlockMatch);
+
+        currentUser.setBlockedUsers(blockedUsersList);
+        userToUnBlock.setBlockedUsers(userToBlockBlockList);
+
+        userRepository.save(currentUser);
+        userRepository.save(userToUnBlock);
+    }
+
     public AppUser changeAccountRole(AccountRolesRequestDto accountRolesRequestDto, String currentUserEmail) {
         AppUser currentUser = findValidatedUser(currentUserEmail);
         AppUser editedUser = findValidatedUser(accountRolesRequestDto.getEmail());
@@ -158,7 +187,7 @@ public class AppUserService implements UserDetailsService {
         appUser.setRoles(userRoleSet);
     }
 
-    private AppUser findValidatedUser(String email) {
+    public AppUser findValidatedUser(String email) {
         Optional<AppUser> editedUser = userRepository.findByEmail(email);
         validateUserExists(editedUser);
         return editedUser.get();

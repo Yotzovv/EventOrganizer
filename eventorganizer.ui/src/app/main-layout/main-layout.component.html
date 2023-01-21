@@ -29,6 +29,14 @@
             <mat-icon>view_list</mat-icon>
             <span>Admin panel</span>
         </button>
+        <button mat-menu-item routerLink="/organizer/dashboard">
+            <mat-icon>dashboard</mat-icon>
+            <span>Organizer panel</span>
+        </button>
+        <button mat-menu-item routerLink="/profile/blocked-users">
+            <mat-icon>not_interested</mat-icon>
+            <span>Blocked users</span>
+        </button>
         <button mat-menu-item
                 (click)="logout()">
             <mat-icon>exit_to_app</mat-icon>

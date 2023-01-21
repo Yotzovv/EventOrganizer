@@ -5,6 +5,7 @@ import { MaterialModule } from "../material.module";
 import { DialogAnimationsExampleDialog } from "../create-edit-event-dialog/create-event-dialog.component";
 import { MainLayoutComponent } from "./main-layout.component";
 import { MainRoutingModule } from "./main-layout.routing.module";
+import { ConfirmationDialogComponent } from "../confirmation-dialog/confirmation-dialog.component";
 
 @NgModule({
     imports: [
@@ -19,7 +20,8 @@ import { MainRoutingModule } from "./main-layout.routing.module";
     ],
     declarations: [
         MainLayoutComponent,
-        DialogAnimationsExampleDialog
+        DialogAnimationsExampleDialog,
+        ConfirmationDialogComponent,
     ],
 })
 export class MainLayoutModule {

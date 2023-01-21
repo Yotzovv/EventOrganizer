@@ -21,6 +21,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { AuthInterceptor } from './auth/auth.interceptor';
 import {MatChipsModule} from '@angular/material/chips';
 import { EventGalleryComponent } from './event-gallery/event-gallery.component';
+import { BlockedUsersListComponent } from './blocked-users-list/blocked-users-list.component';
+import { OrganizerDashboardComponent } from './organizer-dashboard/blocked-users-list/organizer-dashboard.component';
 
 @NgModule({
   imports:      [ 
@@ -42,11 +44,13 @@ import { EventGalleryComponent } from './event-gallery/event-gallery.component';
   AppComponent, 
   ProfilePageComponent, 
   AdminPageComponent,
+  EventGalleryComponent,
+  OrganizerDashboardComponent,
+  BlockedUsersListComponent,
   SearchBar,
   HomePageComponent,
   EventDetailsComponent,
-  EventGalleryComponent,
- ],
+  ],
   bootstrap:    [ AppComponent ],
   providers:    [ 
     RequestService,
