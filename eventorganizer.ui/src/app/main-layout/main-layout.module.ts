@@ -6,6 +6,8 @@ import { DialogAnimationsExampleDialog } from "../create-edit-event-dialog/creat
 import { MainLayoutComponent } from "./main-layout.component";
 import { MainRoutingModule } from "./main-layout.routing.module";
 import { ConfirmationDialogComponent } from "../confirmation-dialog/confirmation-dialog.component";
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
     imports: [
@@ -13,6 +15,8 @@ import { ConfirmationDialogComponent } from "../confirmation-dialog/confirmation
         MaterialModule,
         RouterModule,
         MainRoutingModule,
+        MatFormFieldModule,
+        MatInputModule,
     ],
     exports: [
         MainRoutingModule,
