@@ -67,11 +67,13 @@ public class Event {
     @ManyToMany(mappedBy = "events")
     private List<AppUser> appUsers;
 
-   @ElementCollection
+    @ManyToMany(mappedBy = "events")
+    @ElementCollection
     @CollectionTable(name = "event_interested", joinColumns = @JoinColumn(name = "event_id"))
     @Column(name = "event_interested")
     private List<AppUser> usersInterested;
-
+ 
+    @ManyToMany(mappedBy = "events")
     @ElementCollection
     @CollectionTable(name = "event_goings", joinColumns = @JoinColumn(name = "event_id"))
     @Column(name = "event_going")

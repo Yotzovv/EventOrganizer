@@ -118,9 +118,19 @@ public class EventController {
         eventService.userIsInterestedInEvent(principal.getName(), eventId);
     }
 
+    @PutMapping("/removeInterested")
+    public void removeUserInterestedInEvent(@RequestBody Long eventId, Principal principal) throws EventOrganizerException {
+        eventService.removeUserInterestedInEvent(principal.getName(), eventId);
+    }
+
     @PutMapping("/addGoing")
     public void userGoingToEvent(@RequestBody Long eventId, Principal principal) throws EventOrganizerException {
         eventService.userIsGoingToEvent(principal.getName(), eventId);
+    }
+
+    @PutMapping("/removeGoing")
+    public void removeUserGoingToEvent(@RequestBody Long eventId, Principal principal) throws EventOrganizerException {
+        eventService.removeUserGoingToEvent(principal.getName(), eventId);
     }
 
     @GetMapping("/getThisWeeksEvents")
