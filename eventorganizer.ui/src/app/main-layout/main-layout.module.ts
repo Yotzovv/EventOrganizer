@@ -7,6 +7,8 @@ import { MainLayoutComponent } from "./main-layout.component";
 import { MainRoutingModule } from "./main-layout.routing.module";
 import { ConfirmationDialogComponent } from "../confirmation-dialog/confirmation-dialog.component";
 import { ImagePreviewDialogComponent } from "../event-gallery/image-preview-dialog/image-preview-dialog.component";
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
     imports: [
@@ -14,6 +16,8 @@ import { ImagePreviewDialogComponent } from "../event-gallery/image-preview-dial
         MaterialModule,
         RouterModule,
         MainRoutingModule,
+        MatFormFieldModule,
+        MatInputModule,
     ],
     exports: [
         MainRoutingModule,

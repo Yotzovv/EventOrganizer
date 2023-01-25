@@ -88,6 +88,10 @@ export class RequestService {
     getCurrentLoggedInUser(): any {
         return this.http.get(`${this.API_URL}/api/v1/account/me`);
     }
+    
+    getReactedEvents() {
+        return this.http.get(`${this.API_URL}/api/v1/events/getMyGoingToAndInterestedEvents`);
+    }
 
     loginUser$(body: LoginUserDto) {
         const serializedForm = this.serializeLoginForm(body);

@@ -17,9 +17,12 @@ import java.io.IOException;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
+
 import lombok.AllArgsConstructor;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashSet;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -194,7 +197,21 @@ public class EventController {
         return eventService.getHostingEvents(username);
     }
 
-        private Event getEventModel(EventRequestDto eventRequestDto) throws EventOrganizerException {
+    @GetMapping("getMyGoingToAndInterestedEvents")
+    public Set<Event> getMyGoingToAndInterestedEvents(Principal principal)  {
+        String username = principal.getName();
+
+        List<Event> interestedEvents = eventService.getMyInterestedEvents(username);
+        List<Event> goingEvents = eventService.getMyGoingToEvents(username);
+
+        Set<Event> allEvents = new HashSet<Event>();
+        allEvents.addAll(interestedEvents);
+        allEvents.addAll(goingEvents);
+        
+        return allEvents;
+    }
+
+    private Event getEventModel(EventRequestDto eventRequestDto) throws EventOrganizerException {
         Event event = new Event();
         event.setId(eventRequestDto.getId());
         event.setName(eventRequestDto.getName());
