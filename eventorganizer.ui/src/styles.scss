@@ -37,3 +37,9 @@ mat-card-title span.card-title {
   display: flex;
   align-items: center;
 }
+
+.custom-modalbox {
+  .mat-mdc-dialog-container .mdc-dialog__surface {
+    background-color: #121212 !important;
+  }
+}

@@ -1,0 +1,21 @@
+<div class="arrow-button-left-container">
+    <div class="arrow-button-opacity">
+        <button mat-icon-button (click)="moveLeft()" [disabled]="focusedImageIdx === 0">
+            <mat-icon>
+                <mat-icon>arrow_back_ios</mat-icon>
+            </mat-icon>
+        </button>
+    </div>
+</div>
+<div style="height: 100%;">
+    <img [src]="images[focusedImageIdx].url" alt="'asd'"/>
+</div>
+<div class="arrow-button-right-container">
+    <div class="arrow-button-opacity">
+        <button mat-icon-button (click)="moveRight()" [disabled]="focusedImageIdx >= images.length - 1">
+            <mat-icon>
+                <mat-icon>arrow_forward_ios</mat-icon>
+            </mat-icon>
+        </button>
+    </div>
+</div>

@@ -1,73 +1,108 @@
-<mat-card style="width: 80%; margin-left: 10%">
-  <mat-card-header>
-    <mat-card-subtitle>{{ event.startDate | date: 'dd MMM AT hh:mm'}}</mat-card-subtitle>
-    <mat-card-title>{{ event.name }}</mat-card-title>
-    <mat-card-subtitle>{{ event.location }}</mat-card-subtitle>
-    <div style="padding: 4%"></div>
-  </mat-card-header>
-  <mat-card-content>
-    <event-gallery [images]="event.images"></event-gallery>
-    
-    <input type="file" class="file-input"
-          (change)="onFileSelected($event)" #fileUpload>
-    <div class="file-upload">
-        {{fileName || "No file uploaded yet."}}
-        <button mat-mini-fab color="primary" class="upload-btn"
-          (click)="fileUpload.click()">
-            <mat-icon>attach_file</mat-icon>
-        </button>
-    </div>
+<div class="event-details-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-subtitle>{{ event.startDate | date: 'dd MMM AT hh:mm'}}</mat-card-subtitle>
+      <mat-card-title>{{ event.name }}</mat-card-title>
+      <mat-card-subtitle>{{ event.location }}</mat-card-subtitle>
+      <div style="padding: 4%"></div>
+    </mat-card-header>
+  </mat-card>
+  
+  <div style="display: flex;">
+    <mat-card class="gallery">
+      <mat-card-header>
+        <mat-card-title>
+          <span>
+            Gallery
+          </span>
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <event-gallery [images]="event.images"></event-gallery>
+      </mat-card-content>
+      <mat-card-actions align="start" *ngIf="currentUser?.email === event.creator.email">
+        <input type="file" class="file-input"
+              (change)="onFileSelected($event)" #fileUpload>
+        <div class="file-upload">
+            {{fileName || "Upload a new event picture."}}
+            <button mat-mini-fab color="primary" class="upload-btn"
+              (click)="fileUpload.click()">
+                <mat-icon>attach_file</mat-icon>
+            </button>
+        </div>
+      </mat-card-actions>
+    </mat-card>
 
-  </mat-card-content>
-</mat-card>
-
-<mat-card style="width: 45%; margin-top: 1%; margin-left: 10%">
-  <mat-form-field size="large" class="large-input">
-    <input matInput placeholder="What are you thinking of?" [(ngModel)]="comment" />
-  </mat-form-field>
-  <mat-button-toggle (click)="addComment()" style="width: 88%; margin-left: 5%; margin-bottom: 3%" value="right">Publish</mat-button-toggle
-  >
-</mat-card>
-
-<div style="display: flex; margin-left: 10%">
-  <mat-card style="margin-top: 1%; width: 50%">
-    <mat-card-content>
-      <div mat-dialog-content class="mat-typography">
-        <mat-list>
-          <mat-list-item
-            *ngFor="let comment of event.comments"
-            style="display: contents"
+    <mat-card style="flex: 50%">
+      <mat-card-content>
+        <p class="flex-padding"><mat-icon>people</mat-icon> {{ event.interestedPeple }} people responded</p>
+        <div class="flex-padding">
+          <mat-icon>person</mat-icon>
+          <span>Event by: {{ event.creator.email }}</span>
+          <button
+            type="button"
+            mat-icon-button
+            class="block-user-btn"
+            (click)="blacklistUser(event.creator.email)"
           >
-            <h3>{{ comment.ownersUsername }} </h3>
-            <p>{{ comment.content }}</p>
-          </mat-list-item>
-        </mat-list>
-      </div>
-    </mat-card-content>
-  </mat-card>
+            <mat-icon
+              matTooltip="Block user"
+              matTooltipPosition="above"
+              >not_interested
+            </mat-icon>
+          </button>
+        </div>
+        
+        <p class="flex-padding"><mat-icon>location_on</mat-icon>{{ event.location }}</p>
+        <p class="flex-padding">{{event.description}}</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
 
-  <mat-card style="margin-top: -12%; margin-left: 1%; width: 38%; height: 40%">
-    <mat-card-content>
-      <p class="flex-padding"><mat-icon>people</mat-icon> {{ event.interestedPeple }} people responded</p>
-      <div class="flex-padding">
-        <mat-icon>person</mat-icon>
-        <span>Event by: {{ event.creator.email }}</span>
-        <button
-          type="button"
-          mat-icon-button
-          class="block-user-btn"
-          (click)="blacklistUser(event.creator.email)"
-        >
-          <mat-icon
-            matTooltip="Block user"
-            matTooltipPosition="above"
-            >not_interested
-          </mat-icon>
-        </button>
-      </div>
-      
-      <p class="flex-padding"><mat-icon>location_on</mat-icon>{{ event.location }}</p>
-      <p class="flex-padding">{{event.description}}</p>
-    </mat-card-content>
-  </mat-card>
+
+  <div style="display: flex;">
+    <mat-card style="flex: 50%;">
+      <mat-card-header>
+        <mat-card-title>
+          Comments
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div mat-dialog-content class="mat-typography">
+          <mat-list>
+            <mat-list-item
+              *ngFor="let comment of event.comments"
+              style="display: contents"
+            >
+              <h3>{{ comment.ownersUsername }} </h3>
+              <p>{{ comment.content }}</p>
+            </mat-list-item>
+          </mat-list>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <div style="flex: 50%; margin: 10px;"></div>
+  </div>
+
+  <div style="display: flex;">
+    <mat-card style="flex: 50%">
+      <mat-card-header>
+        <mat-card-title>
+          Add comment
+        </mat-card-title>
+      </mat-card-header>
+      <mat-form-field size="large" class="large-input">
+        <input matInput placeholder="What are you thinking of?" [(ngModel)]="comment" />
+      </mat-form-field>
+      <mat-button-toggle (click)="addComment()" style="width: 88%; margin-left: 5%; margin-bottom: 3%" value="right">Publish</mat-button-toggle>
+    </mat-card>
+    <div style="flex: 50%; margin: 10px;"></div>
+  </div>
 </div>
+
+
+
+<!-- <div style="display: flex; margin-left: 10%">
+
+
+</div> -->

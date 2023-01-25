@@ -9,6 +9,7 @@ import com.event.organizer.api.model.Event;
 import com.event.organizer.api.model.Feedback;
 import com.event.organizer.api.model.Image;
 import com.event.organizer.api.repository.EventRepository;
+import com.event.organizer.api.repository.ImageRepository;
 import com.event.organizer.api.search.BaseSpecification;
 import com.event.organizer.api.search.Search;
 import com.event.organizer.api.search.SearchCriteria;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.Base64;
 
 import lombok.AllArgsConstructor;
 
@@ -37,6 +39,7 @@ import javax.transaction.Transactional;
 public class EventService {
 
     private final EventRepository eventRepository;
+    private final ImageRepository imageRepository;
 
     private final AppUserService appUserService;
 
@@ -70,6 +73,7 @@ public class EventService {
     }
 
     public Event getEventById(long eventId, String currentUserEmail) {
+
         AppUser currentUser = appUserService.findUserByEmail(currentUserEmail).get();
 
         Event event = eventRepository.findById(eventId).get();
@@ -162,19 +166,24 @@ public class EventService {
         eventRepository.save(event);
     }
 
-    public void addImage(String image, Long eventId, String username) throws EventOrganizerException {
+    public void addImage(byte[] image, Long eventId, String username) throws EventOrganizerException {
         if (!eventRepository.existsById(eventId)) {
             throw new EventOrganizerException("Event does not exist");
         }
 
         Event event = eventRepository.findById(eventId).get();
         List<Image> allImages = event.getImages();
-
+    
         Image imageModel = new Image();
+
         imageModel.setUrl(image);
         imageModel.setOwnerUsername(username);
+        imageModel.setEvent(event);
+        imageModel.setCreatedDate(LocalDateTime.now());
 
-        allImages.add(imageModel);
+        Image img = imageRepository.save(imageModel);
+        
+        allImages.add(img);
         event.setImages(allImages);
 
         eventRepository.save(event);

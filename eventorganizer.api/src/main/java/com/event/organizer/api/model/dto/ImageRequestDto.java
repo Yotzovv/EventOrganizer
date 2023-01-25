@@ -1,5 +1,7 @@
 package com.event.organizer.api.model.dto;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +12,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ImageRequestDto {
-    private String url;
+    private MultipartFile file;
     private Long eventId;
 }

@@ -1,3 +1,4 @@
 export class Image {
-    uri: string;
+    id: number;
+    url: string;
 }

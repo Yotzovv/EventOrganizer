@@ -6,6 +6,7 @@ import { DialogAnimationsExampleDialog } from "../create-edit-event-dialog/creat
 import { MainLayoutComponent } from "./main-layout.component";
 import { MainRoutingModule } from "./main-layout.routing.module";
 import { ConfirmationDialogComponent } from "../confirmation-dialog/confirmation-dialog.component";
+import { ImagePreviewDialogComponent } from "../event-gallery/image-preview-dialog/image-preview-dialog.component";
 
 @NgModule({
     imports: [
@@ -22,6 +23,7 @@ import { ConfirmationDialogComponent } from "../confirmation-dialog/confirmation
         MainLayoutComponent,
         DialogAnimationsExampleDialog,
         ConfirmationDialogComponent,
+        ImagePreviewDialogComponent,
     ],
 })
 export class MainLayoutModule {

@@ -1,0 +1,30 @@
+img {
+    height: 100%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.arrow-button-left-container {
+    left: -50px;
+    top: 50%;
+    z-index: 3;
+    position: absolute;
+    button {
+        transform: scale(1.5);
+    }
+}
+
+.arrow-button-opacity {
+    position: fixed;
+}
+
+.arrow-button-right-container {
+    right: 0;
+    top: 50%;
+    z-index: 3;
+    position: absolute;
+    button {
+        transform: scale(1.5);
+    }
+}
