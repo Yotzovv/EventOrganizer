@@ -16,8 +16,29 @@ export class RequestService {
         console.log(this.API_URL)
     }
 
-    getAllEvents$(): Observable<any> {
-        return this.http.get(`${this.API_URL}/api/v1/events`);
+    getAllEvents$(page: number, pageSize: number): Observable<any> {
+        return this.http.get(`${this.API_URL}/api/v1/events`, {
+            params: {
+                page,
+                pageSize
+            }
+        });
+    }
+
+    getAllPendingEvents$(): Observable<any> {
+        return this.http.get(`${this.API_URL}/api/v1/events/pending`);
+    }
+
+    getEventById$(id: number | string): Observable<any> {
+        return this.http.get(`${this.API_URL}/api/v1/events/${id}`);
+    }
+
+    acceptEvent$(eventId: string | number): Observable<any> {
+        return this.http.post(`${this.API_URL}/api/v1/events/${eventId}/accept`, {});
+    }
+
+    rejectEvent$(eventId: string | number): Observable<any> {
+        return this.http.post(`${this.API_URL}/api/v1/events/${eventId}/reject`, {});
     }
 
     getWeeklyEvents$(): Observable<any> {
@@ -37,11 +58,11 @@ export class RequestService {
     }
 
     getGoingEvents$(): Observable<any> {
-        return this.http.get(`${this.API_URL}/api/v1/events/getGoingEvents`)
+        return this.http.get(`${this.API_URL}/api/v1/events/getInterestedInEvents`)
     }
 
     getHostingEvents$(): Observable<any> {
-        return this.http.get(`${this.API_URL}/api/v1/events/getHostingEvents`)
+        return this.http.get(`${this.API_URL}/api/v1/events/getInterestedInEvents`)
     }
 
     getAllUsers(): Observable<any> {
@@ -61,6 +82,10 @@ export class RequestService {
 
     getCurrentLoggedInUser(): any {
         return this.http.get(`${this.API_URL}/api/v1/account/me`);
+    }
+    
+    getReactedEvents() {
+        return this.http.get(`${this.API_URL}/api/v1/events/getMyGoingToAndInterestedEvents`);
     }
 
     loginUser$(body: LoginUserDto) {

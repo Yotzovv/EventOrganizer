@@ -18,8 +18,7 @@
         </button>
     </div>
 
-    <mat-menu #profileMenu="matMenu"
-                [overlapTrigger]="false">
+    <mat-menu #profileMenu="matMenu" [overlapTrigger]="false">
         <button mat-menu-item
                 routerLink="/profile">
             <mat-icon>info</mat-icon>
@@ -28,6 +27,19 @@
         <button mat-menu-item routerLink="/adminpage">
             <mat-icon>view_list</mat-icon>
             <span>Admin panel</span>
+        </button>
+       <button mat-menu-item (click)="openMyCalendarDialog($event)">
+           <mat-icon>calendar_today</mat-icon>
+           <span>My Calendar</span>
+       </button>
+        <mat-form-field id="custom-datepicker" style="display: none;">
+            <input matInput [matDatepicker]="dp3">
+            <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
+            <mat-datepicker [dateClass]="dateClass" touchUi #dp3 [disabled]="false"></mat-datepicker>
+        </mat-form-field>  
+        <button mat-menu-item routerLink="/organizer/dashboard">
+            <mat-icon>dashboard</mat-icon>
+            <span>Organizer panel</span>
         </button>
         <button mat-menu-item routerLink="/profile/blocked-users">
             <mat-icon>not_interested</mat-icon>

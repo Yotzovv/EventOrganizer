@@ -4,6 +4,8 @@ import { EventDto } from '../types/event.type';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DialogAnimationsExampleDialog } from '../create-edit-event-dialog/create-event-dialog.component'
 import { MainLayoutComponent } from '../main-layout/main-layout.component';
+import { Page } from '../types/page.type';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'home-page',
@@ -12,18 +14,25 @@ import { MainLayoutComponent } from '../main-layout/main-layout.component';
 })
 export class HomePageComponent {
   createEventDialog: MatDialogRef<DialogAnimationsExampleDialog>;
-  requestService: RequestService;
+  length = 50;
+  pageSize = 6;
+  pageIndex = 0;
+  pageSizeOptions = [3, 6, 12, 24];
+  pageEvent: PageEvent;
 
-  public allEvents: EventDto[] = [];
+  public eventPage: Page<EventDto>;
 
-  constructor(requestService: RequestService, private dialogModel: MatDialog) {
-    this.requestService = requestService;
-
-    requestService.getAllEvents$().subscribe((res) => {
-      this.allEvents = res;
-    });
+  constructor(private requestService: RequestService, private dialogModel: MatDialog) {
+    this.loadEvents();
   }
 
+  loadEvents() {
+    this.requestService.getAllEvents$(this.pageIndex, this.pageSize).subscribe((res) => {
+      this.eventPage = res;
+      // this.pageSize = this.eventPage.totalElements;
+    });
+  }
+  
   openEditEventDialog(enterAnimationDuration: string, exitAnimationDuration: string, event: EventDto): void {
     this.createEventDialog = this.dialogModel.open(DialogAnimationsExampleDialog, {
       data: {
@@ -32,46 +41,54 @@ export class HomePageComponent {
     });
   }
 
+  handlePageEvent(e: PageEvent) {
+    this.pageEvent = e;
+    this.length = e.length;
+    this.pageSize = e.pageSize;
+    this.pageIndex = e.pageIndex;
+    this.loadEvents();
+  }
+
   onFilter(filter: string) {
-    if(filter === null || filter === '') {
-      this.requestService.getAllEvents$().subscribe((res) => {
-        this.allEvents = res;
-      });
-    } else {
-      if(filter == 'week') {
-        this.requestService.getWeeklyEvents$().subscribe((res) => {
-          this.allEvents = res.filter(event => event.name.toLowerCase().includes(filter));;
-        });
-      } else if (filter == 'monthly') {
-        this.requestService.getMonthlyEvents$().subscribe((res) => {
-          this.allEvents = res.filter(event => event.name.toLowerCase().includes(filter));;
-        });
-      } else if (filter == 'local') {
-        this.requestService.getLocalEvents$().subscribe((res) => {
-          this.allEvents = res.filter(event => event.name.toLowerCase().includes(filter));;
-        });
-      } else if (filter == "interested") {
-        this.requestService.getInterestedInEvents$().subscribe((res) => {
-          this.allEvents = res.filter(event => event.name.toLowerCase().includes(filter));;
-        });
-      } else if (filter == "going") {
-        this.requestService.getGoingEvents$().subscribe((res) => {
-          this.allEvents = res.filter(event => event.name.toLowerCase().includes(filter));;
-        });
-      } else if (filter == "hosting") {
-        this.requestService.getHostingEvents$().subscribe((res) => {
-          this.allEvents = res.filter(event => event.name.toLowerCase().includes(filter));;
-        });
-      } else {
-        this.allEvents = this.allEvents.filter(event => event.name.toLowerCase().includes(filter));
+    this.requestService.getAllEvents$(this.pageIndex, this.pageSize).subscribe((page: Page<EventDto>) => {
+      this.eventPage = page;
+    });
+    // if(filter === null || filter === '') {
+    // } else {
+    //   if(filter == 'week') {
+    //     this.requestService.getWeeklyEvents$().subscribe((res) => {
+    //       this.eventPage = res.filter(event => event.name.toLowerCase().includes(filter));;
+    //     });
+    //   } else if (filter == 'monthly') {
+    //     this.requestService.getMonthlyEvents$().subscribe((res) => {
+    //       this.eventPage = res.filter(event => event.name.toLowerCase().includes(filter));;
+    //     });
+    //   } else if (filter == 'local') {
+    //     this.requestService.getLocalEvents$().subscribe((res) => {
+    //       this.eventPage = res.filter(event => event.name.toLowerCase().includes(filter));;
+    //     });
+    //   } else if (filter == "interested") {
+    //     this.requestService.getInterestedInEvents$().subscribe((res) => {
+    //       this.eventPage = res.filter(event => event.name.toLowerCase().includes(filter));;
+    //     });
+    //   } else if (filter == "going") {
+    //     this.requestService.getGoingEvents$().subscribe((res) => {
+    //       this.eventPage = res.filter(event => event.name.toLowerCase().includes(filter));;
+    //     });
+    //   } else if (filter == "hosting") {
+    //     this.requestService.getHostingEvents$().subscribe((res) => {
+    //       this.eventPage = res.filter(event => event.name.toLowerCase().includes(filter));;
+    //     });
+    //   } else {
+    //     this.eventPage = this.eventPage.filter(event => event.name.toLowerCase().includes(filter));
         
-        if(this.allEvents.length == 0) {
-          this.requestService.getAllEvents$().subscribe((res) => {
-            this.allEvents = res.filter(event => event.name.toLowerCase().includes(filter));;
-          });
-        }
-      }
-    }
+    //     if(this.eventPage.length == 0) {
+    //       this.requestService.getAllEvents$().subscribe((res) => {
+    //         this.eventPage = res.filter(event => event.name.toLowerCase().includes(filter));;
+    //       });
+    //     }
+    //   }
+    // }
   }
 
   userIsInterested(eventId: number): void {

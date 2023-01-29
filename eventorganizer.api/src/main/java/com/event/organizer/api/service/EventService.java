@@ -1,6 +1,7 @@
 package com.event.organizer.api.service;
 
 import com.event.organizer.api.appuser.AppUser;
+import com.event.organizer.api.appuser.AppUserRole;
 import com.event.organizer.api.appuser.AppUserService;
 import com.event.organizer.api.exception.EventOrganizerException;
 import com.event.organizer.api.model.Comment;
@@ -8,15 +9,24 @@ import com.event.organizer.api.model.Event;
 import com.event.organizer.api.model.Feedback;
 import com.event.organizer.api.model.Image;
 import com.event.organizer.api.repository.EventRepository;
+import com.event.organizer.api.search.BaseSpecification;
+import com.event.organizer.api.search.Search;
+import com.event.organizer.api.search.SearchCriteria;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import lombok.AllArgsConstructor;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -31,24 +41,32 @@ public class EventService {
     private final AppUserService appUserService;
 
     public List<Event> findAll(String currentUserEmail) {
-        AppUser currentUser = appUserService.findUserByEmail(currentUserEmail).get();
+        return eventRepository.findAll();
+    }
 
+    public Page<Event> findAll(String currentUserEmail, Pageable page, List<SearchCriteria> criterias) {
+        AppUser currentUser = appUserService.findUserByEmail(currentUserEmail).get();
         List<AppUser> currentUserBlockList = currentUser.getBlockedUsers();
 
-        List<Event> allEvents = eventRepository.findAll();
+        SearchCriteria notPending = new SearchCriteria("status", "=", Event.ACCEPTED_STATUS);
+        SearchCriteria notBlockedCreator = new SearchCriteria("creator", "!:", currentUserBlockList);
+        criterias.add(notPending);
+        criterias.add(notBlockedCreator);
 
-        List<Event> userEventsFeed = new ArrayList<Event>();
+        Search<Event> search = new Search<Event>(criterias);
+        
+        Page<Event> allEvents = eventRepository.findAll(search.getSpecificationList(), page);
+        return allEvents;
+    }
 
-        for (Event event : allEvents) {
-            AppUser eventCreator = event.getCreator();
-
-            if (!currentUserBlockList.contains(eventCreator)) {
-                userEventsFeed.add(event);
-            }
-
-        }
-
-        return userEventsFeed;
+    
+    public List<Event> findAllPending() {
+        List<SearchCriteria> criterias = new ArrayList<>();
+        SearchCriteria notPending = new SearchCriteria("status", "=", Event.PENDING_STATUS);
+        criterias.add(notPending);
+        Search<Event> search = new Search<Event>(criterias);
+        List<Event> allEvents = eventRepository.findAll(search.getSpecificationList());
+        return allEvents;
     }
 
     public Event getEventById(long eventId, String currentUserEmail) {
@@ -82,6 +100,12 @@ public class EventService {
 
         AppUser creator = (AppUser) appUserService.loadUserByUsername(username);
         event.setCreator(creator);
+        boolean isOrganizer = creator.getRoles().contains(AppUserRole.ORGANIZER);
+        if (isOrganizer) {
+            event.setStatus(Event.ACCEPTED_STATUS);
+        } else {
+            event.setStatus(Event.PENDING_STATUS);
+        }
         List<AppUser> appUsers = new ArrayList<>();
         appUsers.add(creator);
         event.setAppUsers(appUsers);
@@ -100,6 +124,18 @@ public class EventService {
         event.setCreator(creator);
 
         return eventRepository.save(event);
+    }
+
+    public Event acceptEvent(long eventId, String currentUserEmail) {
+        Event eventToUpdate = this.getEventById(eventId, currentUserEmail);
+        eventToUpdate.setStatus(Event.ACCEPTED_STATUS);
+        return eventRepository.save(eventToUpdate);
+    }
+
+    public Event rejectEvent(long eventId, String currentUserEmail) {
+        Event eventToUpdate = this.getEventById(eventId, currentUserEmail);
+        eventToUpdate.setStatus(Event.REJECTED_STATUS);
+        return eventRepository.save(eventToUpdate);
     }
 
     public void deleteEvent(Event event) throws EventOrganizerException {
@@ -167,6 +203,7 @@ public class EventService {
         eventRepository.save(event);
     }
 
+    // TODO: RENAME
     public void userIsInterestedInEvent(String username, Long eventId) throws EventOrganizerException {
         if (!eventRepository.existsById(eventId)) {
             throw new EventOrganizerException("Event does not exist");
@@ -187,6 +224,21 @@ public class EventService {
         eventRepository.save(event);
     }
 
+    public void removeUserInterestedInEvent (String username, Long eventId) throws EventOrganizerException{
+        if (!eventRepository.existsById(eventId)) {
+            throw new EventOrganizerException("Event does not exist");
+        }
+
+        Event event = eventRepository.findById(eventId).get();
+        AppUser userModel = appUserService.findUserByEmail(username).get();
+        List<AppUser> allUsersInterested = new ArrayList<>(event.getUsersInterested());
+
+        allUsersInterested.remove(userModel);
+        event.setUsersInterested(allUsersInterested);
+        eventRepository.save(event);
+    }
+
+    // TODO: RENAME
     public void userIsGoingToEvent(String username, Long eventId) throws EventOrganizerException {
         if (!eventRepository.existsById(eventId)) {
             throw new EventOrganizerException("Event does not exist");
@@ -205,6 +257,27 @@ public class EventService {
         event.setUsersGoing(allUsersGoing);
 
         eventRepository.save(event);
+    }
+
+    public void removeUserGoingToEvent (String username, Long eventId) throws EventOrganizerException{
+        Optional<Event> eventOptional = eventRepository.findById(eventId);
+
+        if(!eventOptional.isPresent()){
+            throw new EventOrganizerException("Event does not exist");
+        }
+
+        Event event = eventOptional.get();
+        List<AppUser> usersGoing = new ArrayList<>(event.getUsersGoing());
+        AppUser userToRemove = usersGoing.stream()
+                .filter(user -> user.getEmail().equals(username))
+                .findFirst()
+                .orElse(null);
+
+        if (userToRemove != null) {
+            usersGoing.remove(userToRemove);
+            event.setUsersGoing(usersGoing);
+            eventRepository.save(event);
+        }
     }
 
     public List<Event> getThisWeeksEvents() {
@@ -286,5 +359,25 @@ public class EventService {
                 .collect(Collectors.toList());
 
         return eventsInRangeList;
+    }
+
+    public List<Event> getMyInterestedEvents(String username) {
+        AppUser userModel = appUserService.findUserByEmail(username).get();
+        
+        List<Event> allEvents = eventRepository.findAll().stream()
+            .filter(event -> event.getUsersInterested().stream().anyMatch(user->user.getUsername().equals(username)))
+            .collect(Collectors.toList());
+
+        return allEvents;
+    }
+
+    public List<Event> getMyGoingToEvents(String username) {
+        AppUser userModel = appUserService.findUserByEmail(username).get();
+        
+        List<Event> allEvents = eventRepository.findAll().stream()
+            .filter(event -> event.getUsersGoing().stream().anyMatch(user->user.getUsername().equals(username)))
+            .collect(Collectors.toList());
+
+        return allEvents;
     }
 }
