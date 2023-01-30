@@ -27,9 +27,8 @@ export class HomePageComponent {
   }
 
   loadEvents() {
-    this.requestService.getAllEvents$(this.pageIndex, this.pageSize).subscribe((res) => {
+    this.requestService.getAllEvents$(this.pageIndex, this.pageSize, "").subscribe((res) => {
       this.eventPage = res;
-      // this.pageSize = this.eventPage.totalElements;
     });
   }
   
@@ -50,45 +49,9 @@ export class HomePageComponent {
   }
 
   onFilter(filter: string) {
-    this.requestService.getAllEvents$(this.pageIndex, this.pageSize).subscribe((page: Page<EventDto>) => {
+    this.requestService.getAllEvents$(this.pageIndex, this.pageSize, filter).subscribe((page: Page<EventDto>) => {
       this.eventPage = page;
     });
-    // if(filter === null || filter === '') {
-    // } else {
-    //   if(filter == 'week') {
-    //     this.requestService.getWeeklyEvents$().subscribe((res) => {
-    //       this.eventPage = res.filter(event => event.name.toLowerCase().includes(filter));;
-    //     });
-    //   } else if (filter == 'monthly') {
-    //     this.requestService.getMonthlyEvents$().subscribe((res) => {
-    //       this.eventPage = res.filter(event => event.name.toLowerCase().includes(filter));;
-    //     });
-    //   } else if (filter == 'local') {
-    //     this.requestService.getLocalEvents$().subscribe((res) => {
-    //       this.eventPage = res.filter(event => event.name.toLowerCase().includes(filter));;
-    //     });
-    //   } else if (filter == "interested") {
-    //     this.requestService.getInterestedInEvents$().subscribe((res) => {
-    //       this.eventPage = res.filter(event => event.name.toLowerCase().includes(filter));;
-    //     });
-    //   } else if (filter == "going") {
-    //     this.requestService.getGoingEvents$().subscribe((res) => {
-    //       this.eventPage = res.filter(event => event.name.toLowerCase().includes(filter));;
-    //     });
-    //   } else if (filter == "hosting") {
-    //     this.requestService.getHostingEvents$().subscribe((res) => {
-    //       this.eventPage = res.filter(event => event.name.toLowerCase().includes(filter));;
-    //     });
-    //   } else {
-    //     this.eventPage = this.eventPage.filter(event => event.name.toLowerCase().includes(filter));
-        
-    //     if(this.eventPage.length == 0) {
-    //       this.requestService.getAllEvents$().subscribe((res) => {
-    //         this.eventPage = res.filter(event => event.name.toLowerCase().includes(filter));;
-    //       });
-    //     }
-    //   }
-    // }
   }
 
   userIsInterested(eventId: number): void {

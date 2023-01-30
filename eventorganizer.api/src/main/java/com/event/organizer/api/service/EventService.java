@@ -25,6 +25,8 @@ import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -44,7 +46,7 @@ public class EventService {
         return eventRepository.findAll();
     }
 
-    public Page<Event> findAll(String currentUserEmail, Pageable page, List<SearchCriteria> criterias) {
+    public Page<Event> findAll(String currentUserEmail, Pageable page, List<SearchCriteria> criterias, String filter) {
         AppUser currentUser = appUserService.findUserByEmail(currentUserEmail).get();
         List<AppUser> currentUserBlockList = currentUser.getBlockedUsers();
 
@@ -56,9 +58,43 @@ public class EventService {
         Search<Event> search = new Search<Event>(criterias);
         
         Page<Event> allEvents = eventRepository.findAll(search.getSpecificationList(), page);
-        return allEvents;
+
+        List<Event> filteredEvents = new ArrayList<Event>();
+
+        if(!filter.equals("")) {
+            filteredEvents = filterEvents(allEvents, filter);
+        }
+
+        if (filteredEvents == null || filteredEvents.size() == 0) {
+            return allEvents;
+        }
+
+        List<Event> finalEvents = new ArrayList<Event>();
+
+        for(Event filteredEvent : filteredEvents) {
+            if(allEvents.stream().anyMatch(e -> e.getId() == filteredEvent.getId())) {
+                finalEvents.add(filteredEvent);
+            }
+        }
+
+        Page<Event> eventPage = new PageImpl<>(finalEvents, page, finalEvents.size());
+
+        return eventPage;
     }
 
+    public List<Event> filterEvents(Page<Event> events, String filter) {
+        if(filter == "" || filter == null) {
+            return null;
+        }
+
+        List<Event> result = new ArrayList<Event>();
+
+        if(filter.equals("week")) {
+            result = getThisWeeksEvents();
+        }
+
+        return result;
+    }
     
     public List<Event> findAllPending() {
         List<SearchCriteria> criterias = new ArrayList<>();
@@ -288,7 +324,7 @@ public class EventService {
         LocalDateTime endOfTheWeek = startOfTheWeek.plusWeeks(1);
 
         List<Event> eventsThisWeek = allEvents.stream()
-                .filter(event -> event.getStartDate().isAfter(startOfTheWeek) && event.getEndDate().isBefore(endOfTheWeek))
+                .filter(event -> event.getStartDate().isAfter(startOfTheWeek))
                 .collect(Collectors.toList());
 
         return eventsThisWeek;

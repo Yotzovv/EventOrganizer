@@ -16,11 +16,12 @@ export class RequestService {
         console.log(this.API_URL)
     }
 
-    getAllEvents$(page: number, pageSize: number): Observable<any> {
+    getAllEvents$(page: number, pageSize: number, filter: string): Observable<any> {
         return this.http.get(`${this.API_URL}/api/v1/events`, {
             params: {
                 page,
-                pageSize
+                pageSize,
+                filter
             }
         });
     }
