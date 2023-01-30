@@ -58,16 +58,14 @@ public class EventService {
         Search<Event> search = new Search<Event>(criterias);
         
         Page<Event> allEvents = eventRepository.findAll(search.getSpecificationList(), page);
-
-        List<Event> filteredEvents = new ArrayList<Event>();
-
-        if(!filter.equals("")) {
-            filteredEvents = filterEvents(allEvents, filter);
-        }
-
-        if (filteredEvents == null || filteredEvents.size() == 0) {
+        
+        if (filter.equals("")) {
             return allEvents;
         }
+
+        List<Event> filteredEvents = new ArrayList<Event>();
+        
+        filteredEvents = filterEvents(allEvents, filter, currentUser);
 
         List<Event> finalEvents = new ArrayList<Event>();
 
@@ -82,7 +80,7 @@ public class EventService {
         return eventPage;
     }
 
-    public List<Event> filterEvents(Page<Event> events, String filter) {
+    public List<Event> filterEvents(Page<Event> events, String filter, AppUser currentUser) {
         if(filter == "" || filter == null) {
             return null;
         }
@@ -91,6 +89,16 @@ public class EventService {
 
         if(filter.equals("week")) {
             result = getThisWeeksEvents();
+        } else if(filter.equals("monthly")) {
+            result = getThisMonthsEvents();
+        } else if(filter.equals("local")) {
+            result = getEventsByLocation(currentUser.getLocation());
+        } else if(filter.equals("interested")) {
+            result = getMyInterestedEvents(currentUser.getUsername());
+        } else if(filter.equals("going")) {
+            result = getMyGoingToEvents(currentUser.getUsername());
+        } else if(filter.equals("hosting")) {
+            result = getHostingEvents(currentUser.getUsername());
         }
 
         return result;
@@ -324,7 +332,7 @@ public class EventService {
         LocalDateTime endOfTheWeek = startOfTheWeek.plusWeeks(1);
 
         List<Event> eventsThisWeek = allEvents.stream()
-                .filter(event -> event.getStartDate().isAfter(startOfTheWeek))
+                .filter(event -> event.getStartDate().isAfter(startOfTheWeek) && event.getStartDate().isBefore(endOfTheWeek))
                 .collect(Collectors.toList());
 
         return eventsThisWeek;
@@ -338,7 +346,7 @@ public class EventService {
         LocalDateTime endOfTheMonth = now.with(TemporalAdjusters.lastDayOfMonth());
 
         List<Event> eventsThisWeek = allEvents.stream()
-                .filter(event -> event.getStartDate().isAfter(startOfTheMonth) && event.getEndDate().isBefore(endOfTheMonth))
+                .filter(event -> event.getStartDate().isAfter(startOfTheMonth) && event.getStartDate().isBefore(endOfTheMonth))
                 .collect(Collectors.toList());
 
         return eventsThisWeek;
