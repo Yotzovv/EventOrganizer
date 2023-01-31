@@ -63,7 +63,7 @@ export class RequestService {
     }
 
     getHostingEvents$(): Observable<any> {
-        return this.http.get(`${this.API_URL}/api/v1/events/getInterestedInEvents`)
+        return this.http.get(`${this.API_URL}/api/v1/events/getUserEvents`)
     }
 
     getAllUsers(): Observable<any> {

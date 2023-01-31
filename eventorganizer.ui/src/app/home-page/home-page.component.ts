@@ -30,6 +30,22 @@ export class HomePageComponent {
     this.requestService.getAllEvents$(this.pageIndex, this.pageSize, "").subscribe((res) => {
       this.eventPage = res;
     });
+
+    this.setReactedEvents();
+
+    this.requestService.getHostingEvents$().subscribe((res: EventDto[]) => {
+      this.eventPage.content.forEach((event) => {
+        event.cantBeEdited = res.find(e => e.id == event.id) !== undefined;
+      })
+    });
+  }
+
+  setReactedEvents() {
+    this.requestService.getReactedEvents().subscribe((reactedEvents: EventDto[]) => {     
+      this.eventPage.content.forEach((event) => {
+        event.isCurrentUserInterested = reactedEvents.find(e => e.id === event.id) !== undefined;
+      });
+    });    
   }
   
   openEditEventDialog(enterAnimationDuration: string, exitAnimationDuration: string, event: EventDto): void {
