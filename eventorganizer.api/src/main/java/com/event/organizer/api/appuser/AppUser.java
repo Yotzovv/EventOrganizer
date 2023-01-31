@@ -75,11 +75,12 @@ public class AppUser implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "event_id"))
     private List<Event> events;
 
-    public AppUser(String name, String username, String email, String password, Set<AppUserRole> roles) {
+    public AppUser(String name, String username, String email, String password, String location, Set<AppUserRole> roles) {
         this.name = name;
         this.username = username;
         this.email = email;
         this.password = password;
+        this.location = location;
         this.roles = roles;
     }
 
