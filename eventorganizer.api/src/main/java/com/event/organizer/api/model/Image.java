@@ -24,6 +24,8 @@ public class Image {
             generator = "image_sequence"
     )
     private long id;
+
+    @Column(columnDefinition = "MEDIUMTEXT")
     private String url;
     private LocalDateTime createdDate;
     private String ownerUsername;
