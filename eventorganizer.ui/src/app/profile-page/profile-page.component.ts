@@ -28,8 +28,6 @@ export class ProfilePageComponent {
       this.email.setValue(res.email);
       this.name.setValue(res.name);
       this.location.setValue(res.location);
-
-      console.log(res);
     })
   }
   // TODO: fix
@@ -68,8 +66,11 @@ export class ProfilePageComponent {
        fileReader.onload = () => {
          // Get the base64 string
          const base64String = fileReader.result as string;
+         const imageData = base64String.replace(/^data:image\/[a-z]+;base64,/, '');
+         const strippedBase64String = imageData.slice(0, -1);
+
          // Do something with the base64 string, such as sending it to a server
-         this.requestService.addProfilePicture(base64String).subscribe((res) => {});
+         this.requestService.addProfilePicture(strippedBase64String).subscribe((res) => {});
        };
      }
    }

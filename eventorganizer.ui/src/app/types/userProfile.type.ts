@@ -4,6 +4,7 @@ export class UserProfile {
     lastName: string;
     location: string;
     password: string;
+    profilePicture: string;
 
     constructor(_username: string, _firstname: string, _lastname: string, _location: string, _password: string) {
         this.username = _username;

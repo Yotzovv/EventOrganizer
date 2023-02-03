@@ -154,6 +154,8 @@ public class AppUserService implements UserDetailsService {
 
         Image profilePicture = new Image();
 
+        imageBase64 = imageBase64.substring(1, imageBase64.length() - 1);
+
         profilePicture.setUrl(imageBase64);
         profilePicture.setCreatedDate(LocalDateTime.now());
 
