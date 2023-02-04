@@ -9,6 +9,7 @@ import {Comment} from '../types/comment.type';
 import { EventDto } from "../types/event.type";
 import { ListUser } from "../types/listUser.type";
 import { Page } from "../types/page.type";
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
     selector: 'event-details',
@@ -53,6 +54,10 @@ export class EventDetailsComponent {
     
     addComment() {
         this.requestService.addComment(this.event.id, this.comment).subscribe((res) => { });
+        
+        this.requestService.getEventById$(this.event.id).subscribe((event: EventDto) => {
+            this.event = event;
+        });
     }
 
     onFileSelected(event) {

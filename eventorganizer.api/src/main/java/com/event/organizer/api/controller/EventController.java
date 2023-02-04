@@ -80,12 +80,15 @@ public class EventController {
     public Page<Event> findAll(
         @RequestParam(required = false, defaultValue = "6") int pageSize,
         @RequestParam(required = false, defaultValue = "0") int page,
+        @RequestParam(required = false, defaultValue = "") String filter,
         Principal principal
     ) {
         Pageable pageable = PageRequest.of(page, pageSize);
         List<SearchCriteria> criterias = new ArrayList<>();
 
-        return eventService.findAll(principal.getName(), pageable, criterias);
+        Page<Event> events = eventService.findAll(principal.getName(), pageable, criterias, filter);
+
+        return events;
     }
 
     @GetMapping("/pending")

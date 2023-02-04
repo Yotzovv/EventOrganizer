@@ -11,6 +11,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 })
 export class SearchBar {
   input = new FormControl('');
+  currentChipSelected: string;
 
   search: FormGroup = new FormGroup({
     input: this.input,
@@ -23,7 +24,13 @@ export class SearchBar {
   }
 
   onChipSelected(chipSelected: string) {
-    this.searchInput.emit(chipSelected);
+    if (this.currentChipSelected === chipSelected) {
+      this.currentChipSelected = '';
+    } else {
+      this.currentChipSelected = chipSelected;
+    }
+
+    this.searchInput.emit(this.currentChipSelected);
   }
 
   openDialog(): void {
