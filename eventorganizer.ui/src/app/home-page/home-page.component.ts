@@ -6,6 +6,7 @@ import { DialogAnimationsExampleDialog } from '../create-edit-event-dialog/creat
 import { MainLayoutComponent } from '../main-layout/main-layout.component';
 import { Page } from '../types/page.type';
 import { PageEvent } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'home-page',
@@ -22,7 +23,7 @@ export class HomePageComponent {
 
   public eventPage: Page<EventDto>;
 
-  constructor(private requestService: RequestService, private dialogModel: MatDialog) {
+  constructor(private requestService: RequestService, private dialogModel: MatDialog, private _snackBar: MatSnackBar) {
     this.loadEvents();
   }
 
@@ -35,7 +36,7 @@ export class HomePageComponent {
 
     this.requestService.getHostingEvents$().subscribe((res: EventDto[]) => {
       
-      this.eventPage.content.forEach((event) => {
+      this.eventPage?.content?.forEach((event) => {
         event.cantBeEdited = res.find(e => e.id == event.id) !== undefined;
       })
     });
@@ -43,7 +44,7 @@ export class HomePageComponent {
 
   setReactedEvents() {
     this.requestService.getReactedEvents().subscribe((reactedEvents: EventDto[]) => {     
-      this.eventPage.content.forEach((event) => {
+      this.eventPage?.content.forEach((event) => {
         event.isCurrentUserInterested = reactedEvents.find(e => e.id === event.id) !== undefined;
       });
     });    
@@ -53,6 +54,14 @@ export class HomePageComponent {
     this.createEventDialog = this.dialogModel.open(DialogAnimationsExampleDialog, {
       data: {
         event: event
+      }
+    })
+    this.createEventDialog.afterClosed().subscribe(res => {
+      if (res) {
+        this._snackBar.open('Event edited successfully!', 'close', {
+          duration: 3000,
+        });
+        this.loadEvents();
       }
     });
   }

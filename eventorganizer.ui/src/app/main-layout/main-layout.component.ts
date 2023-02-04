@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { DialogAnimationsExampleDialog } from '../create-edit-event-dialog/create-event-dialog.component'
 import { MatCalendarCellClassFunction, MatDatepicker } from '@angular/material/datepicker';
 import { RequestService } from '../request/request.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector: 'main-layout',
@@ -21,20 +22,27 @@ export class MainLayoutComponent {
     reactedEvents: EventDto[];
     currentUser: UserProfile;
     
-    constructor(private requestService: RequestService, private dialogModel: MatDialog, private router: Router) { 
+    constructor(private requestService: RequestService, private dialogModel: MatDialog, private router: Router,
+        private _snackBar: MatSnackBar) { 
         this.requestService.getReactedEvents().subscribe((res: any) => {
            this.reactedEvents = res;
         })
 
         this.requestService.getCurrentLoggedInUser().subscribe((res: any) => {
             this.currentUser = res;
-            this.currentUser.profilePicture = res.profilePicture.url;
         })
     }
 
     openCreateEventDialog(enterAnimationDuration: string, exitAnimationDuration: string): void {
         this.createEventDialog = this.dialogModel.open(DialogAnimationsExampleDialog, {
             data: undefined
+        });
+        this.createEventDialog.afterClosed().subscribe(res => {
+            if (res) {
+                this._snackBar.open('Event created successfully!', 'close', {
+                    duration: 3000,
+                });
+            }
         });
     }
 

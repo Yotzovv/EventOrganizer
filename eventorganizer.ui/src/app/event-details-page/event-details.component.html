@@ -1,4 +1,4 @@
-<div class="event-details-container">
+<div class="event-details-container" *ngIf="!!event">
   <mat-card>
     <mat-card-header>
       <mat-card-subtitle>{{ event.startDate | date: 'dd MMM AT hh:mm'}}</mat-card-subtitle>

@@ -12,50 +12,41 @@ import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog
 
 export class DialogAnimationsExampleDialog {   // TODO: Rename
   requestService: RequestService;
-  public eventId = new FormControl(null);
-  private eventName = new FormControl(null);
-  private startDate = new FormControl(null);
-  private endDate = new FormControl(null);
-  private status = new FormControl(null);
-  private description = new FormControl(null);
-  private location = new FormControl(null);
-  private type = new FormControl(null);
+  eventForm: FormGroup = new FormGroup({
+    id: new FormControl(null),
+    name: new FormControl(null),
+    description: new FormControl(null),
+    location: new FormControl(null),
+    startDate: new FormControl(null),
+    endDate: new FormControl(null),
+    type: new FormControl(null),
+  });
    
   constructor(public dialogRef: MatDialogRef<DialogAnimationsExampleDialog>, @Inject(MAT_DIALOG_DATA) public data: any, requestService: RequestService) {
     this.requestService = requestService;
     if(data && data.event) {
-      this.eventId.setValue(data.event.id)
-      this.eventName.setValue(data.event.name);
-      this.startDate.setValue(new Date(data.event.startDate));
-      this.endDate.setValue(new Date(data.event.endDate));
-      this.description.setValue(data.event.description);
-      this.location.setValue(data.event.location);
-      this.type.setValue(data.event.type);
+      this.eventForm.get('id').setValue(data.event.id)
+      this.eventForm.get('name').setValue(data.event.name);
+      this.eventForm.get('startDate').setValue(new Date(data.event.startDate));
+      this.eventForm.get('endDate').setValue(new Date(data.event.endDate));
+      this.eventForm.get('description').setValue(data.event.description);
+      this.eventForm.get('location').setValue(data.event.location);
+      this.eventForm.get('type').setValue(data.event.type);
     }
   }
-
-  
-  eventForm: FormGroup = new FormGroup({
-      id: this.eventId,
-      name: this.eventName,
-      description: this.description,
-      location: this.location,
-      startDate: this.startDate,
-      endDate: this.endDate,
-      status: this.status,
-  });
   
   submit() {
     if(this.eventForm.valid) {
-      this.submitEM.emit(this.eventForm.value);
-
-      if(this.eventId.value) {
-        this.requestService.updateEvent(this.eventForm.value).subscribe((res) => {});
+      if(this.data?.event?.id) {
+        this.requestService.updateEvent(this.eventForm.value).subscribe((res) => {
+          this.dialogRef.close(true);
+        });
       } else {
-        this.requestService.createEvent(this.eventForm.value).subscribe((res) => {});
+        this.requestService.createEvent(this.eventForm.value).subscribe((res) => {
+          this.dialogRef.close(true);
+        });
       }
     }
   }
 
-  @Output() submitEM = new EventEmitter();
 }

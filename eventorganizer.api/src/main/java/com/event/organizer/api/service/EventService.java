@@ -169,13 +169,19 @@ public class EventService {
         return eventRepository.save(event);
     }
 
-    public Event updateEvent(Event event, String username) throws EventOrganizerException {
-        if (!eventRepository.existsById(event.getId())) {
+    public Event updateEvent(Event eventDto, String username) throws EventOrganizerException {
+        if (!eventRepository.existsById(eventDto.getId())) {
             throw new EventOrganizerException("Event does not exist");
         }
         AppUser creator = (AppUser) appUserService.loadUserByUsername(username);
+        Event event = getEventById(eventDto.getId(), username);
 
         event.setCreator(creator);
+        event.setDescription(eventDto.getDescription());
+        event.setStartDate(eventDto.getStartDate());;
+        event.setEndDate(eventDto.getEndDate());
+        event.setLocation(eventDto.getLocation());
+        event.setName(eventDto.getName());
 
         return eventRepository.save(event);
     }
