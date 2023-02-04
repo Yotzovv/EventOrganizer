@@ -122,8 +122,14 @@ public class EventService {
 
         List<AppUser> blockedUsers = currentUser.getBlockedUsers();
 
-        for (Comment comment : event.getComments()) {
+        List<Comment> eventComments = event.getComments();
+
+        for (Comment comment : eventComments) {
             String commentCreator = comment.getOwnersUsername();
+
+            if(blockedUsers.size() == 0) {
+                eventCommentsList.add(comment);
+            }
 
             for (AppUser blockedUser : blockedUsers) {
                 if (!blockedUser.getEmail().equals(commentCreator)) {

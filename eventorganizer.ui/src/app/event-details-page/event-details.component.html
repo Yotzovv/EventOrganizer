@@ -32,7 +32,7 @@
     </mat-card-content>
   </mat-card>
 
-  <mat-card style="margin-top: -12%; margin-left: 1%; width: 38%; height: 40%">
+  <mat-card style="word-wrap: break-word;margin-top: -12%; margin-left: 1%; width: 38%; height: 40%">
     <mat-card-content>
       <p class="flex-padding"><mat-icon>people</mat-icon> {{ event.interestedPeple }} people responded</p>
       <div class="flex-padding">
@@ -53,7 +53,9 @@
       </div>
       
       <p class="flex-padding"><mat-icon>location_on</mat-icon>{{ event.location }}</p>
-      <p class="flex-padding">{{event.description}}</p>
+      <mat-card-content>
+        {{event.description}}
+      </mat-card-content>
     </mat-card-content>
   </mat-card>
 </div>
