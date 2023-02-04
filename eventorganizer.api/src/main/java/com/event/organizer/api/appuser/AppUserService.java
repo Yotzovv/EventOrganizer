@@ -146,12 +146,13 @@ public class AppUserService implements UserDetailsService {
         return userRepository.save(editedUser);
     }
 
-    public void uploadProfilePicture(String imageUrl, String currentUserEmail) {
+    public void uploadProfilePicture(byte[] imageUrl, String currentUserEmail) {
         AppUser user = findValidatedUser(currentUserEmail);
 
         Image profilePicture = new Image();
         long uniqueLong = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
 
+        
         profilePicture.setUrl(imageUrl);
         profilePicture.setCreatedDate(LocalDateTime.now());
         profilePicture.setId(uniqueLong);

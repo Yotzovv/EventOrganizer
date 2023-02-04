@@ -9,6 +9,7 @@ import javax.persistence.*;
 
 import com.event.organizer.api.appuser.AppUser;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
@@ -71,15 +72,17 @@ public class Event {
     @ElementCollection
     @CollectionTable(name = "event_interested", joinColumns = @JoinColumn(name = "event_id"))
     @Column(name = "event_interested")
+    @JsonIgnoreProperties("usersInterested")
     private List<AppUser> usersInterested;
  
     @ManyToMany(mappedBy = "events")
     @ElementCollection
     @CollectionTable(name = "event_goings", joinColumns = @JoinColumn(name = "event_id"))
     @Column(name = "event_going")
+    @JsonIgnoreProperties("usersGoing")
     private List<AppUser> usersGoing;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "event_images", joinColumns = @JoinColumn(name = "event_id"))
     @Column(name = "event_images")
     private List<Image> images;

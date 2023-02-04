@@ -73,6 +73,7 @@ public class AppUser implements UserDetails {
             name = "user_event",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "event_id"))
+    @JsonIgnoreProperties("events")
     private List<Event> events;
 
     public AppUser(String name, String username, String email, String password, Set<AppUserRole> roles) {

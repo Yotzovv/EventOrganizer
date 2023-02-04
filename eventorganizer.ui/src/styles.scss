@@ -1,5 +1,4 @@
 @use '@angular/material' as mat;
-
 @include mat.core();
 
 $my-primary: mat.define-palette(mat.$indigo-palette, 500);
@@ -37,4 +36,10 @@ mat-card-title span.card-title {
 .flex-padding {
   display: flex;
   align-items: center;
+}
+
+.custom-modalbox {
+  .mat-mdc-dialog-container .mdc-dialog__surface {
+    background-color: #121212 !important;
+  }
 }

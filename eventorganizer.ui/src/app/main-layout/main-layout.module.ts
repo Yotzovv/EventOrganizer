@@ -6,6 +6,7 @@ import { DialogAnimationsExampleDialog } from "../create-edit-event-dialog/creat
 import { MainLayoutComponent } from "./main-layout.component";
 import { MainRoutingModule } from "./main-layout.routing.module";
 import { ConfirmationDialogComponent } from "../confirmation-dialog/confirmation-dialog.component";
+import { ImagePreviewDialogComponent } from "../event-gallery/image-preview-dialog/image-preview-dialog.component";
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
@@ -26,6 +27,7 @@ import { MatInputModule } from '@angular/material/input';
         MainLayoutComponent,
         DialogAnimationsExampleDialog,
         ConfirmationDialogComponent,
+        ImagePreviewDialogComponent,
     ],
 })
 export class MainLayoutModule {

@@ -1,0 +1,20 @@
+img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    &:hover {
+        cursor: pointer;
+    };
+}
+
+.images-container {
+    display: flex;
+    width: 600px;
+    overflow: hidden;
+    background-color: #c3c3c3;
+}
+
+.gallery-container {
+    display: flex;
+    align-items: center;
+}
