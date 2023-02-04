@@ -1,18 +1,14 @@
 package com.event.organizer.api.model;
 
+import com.event.organizer.api.appuser.AppUser;
+import lombok.*;
+
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import javax.persistence.*;
-
-import com.event.organizer.api.appuser.AppUser;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @NoArgsConstructor
@@ -58,7 +54,11 @@ public class Event {
     @JoinColumn(name="event_id")
     private List<Comment> comments;
 
-    @ManyToMany(mappedBy = "events")
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "user_event",
+            joinColumns = @JoinColumn(name = "event_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<AppUser> appUsers;
 
     @ManyToMany
