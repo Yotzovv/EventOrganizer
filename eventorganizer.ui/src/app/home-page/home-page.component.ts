@@ -34,6 +34,7 @@ export class HomePageComponent {
     this.setReactedEvents();
 
     this.requestService.getHostingEvents$().subscribe((res: EventDto[]) => {
+      
       this.eventPage.content.forEach((event) => {
         event.cantBeEdited = res.find(e => e.id == event.id) !== undefined;
       })
@@ -71,14 +72,22 @@ export class HomePageComponent {
   }
 
   userIsInterested(eventId: number): void {
-    this.requestService.userIsInterested(eventId).subscribe((res) => { });
+    this.requestService.userIsInterested(eventId).subscribe((res) => { 
+      
+      this.loadEvents();
+    });
+
   }
 
   userIsNotInterested(eventId: number): void {
     this.requestService.userIsNotInterested(eventId).subscribe((res) => { });
+
+    this.loadEvents();
   }
 
   userIsGoing(eventId: number): void {
     this.requestService.userIsGoing(eventId).subscribe((res) => { });
+
+    this.loadEvents();
   }
 }
