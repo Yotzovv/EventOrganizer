@@ -39,6 +39,9 @@ export class RegisterComponent implements OnInit {
         Validators.required,
         this.checkPassword,
       ]),
+      location: new FormControl('', [
+        Validators.required,
+      ]),
     });
   }
   emaiErrors() {
@@ -76,9 +79,12 @@ export class RegisterComponent implements OnInit {
     const email = formData.value.email;
     const password = formData.value.password;
     const username = formData.value.username;
+    const location = formData.value.location;
+
     this.request.registerUser$({
       username,
       email,
+      location,
       password
     })
     .subscribe((res) => {

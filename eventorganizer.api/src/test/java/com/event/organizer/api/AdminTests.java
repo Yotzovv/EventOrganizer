@@ -46,10 +46,10 @@ public class AdminTests {
         AppUserService appUserService = mock(AppUserService.class);
         AdminService adminService = mock(AdminService.class);
 
-        AppUser user = new AppUser("user", "userUsername", "userEmail", "userPassword",
+        AppUser user = new AppUser("user", "userUsername", "userEmail", "userPassword", "Sofia",
                 Collections.singleton(new AppUserRole(AppUserRole.USER)));
 
-        AppUser editedUser = new AppUser("editedUser", "editedUserUsername", "editedUserEmail",
+        AppUser editedUser = new AppUser("editedUser", "editedUserUsername", "editedUserEmail", "Sofia",
                 "editedUserPassword",
                 Collections.singleton(new AppUserRole(AppUserRole.USER)));
 
@@ -77,10 +77,10 @@ public class AdminTests {
         AppUserService appUserService = mock(AppUserService.class);
         AdminService adminService = mock(AdminService.class);
 
-        AppUser user = new AppUser("user", "userUsername", "userEmail", "userPassword",
+        AppUser user = new AppUser("user", "userUsername", "userEmail", "userPassword", "Sofia",
                 Collections.singleton(new AppUserRole(AppUserRole.USER)));
 
-        AppUser editedUser = new AppUser("editedUser", "editedUserUsername", "editedUserEmail",
+        AppUser editedUser = new AppUser("editedUser", "editedUserUsername", "editedUserEmail", "Sofia",
                 "editedUserPassword",
                 Collections.singleton(new AppUserRole(AppUserRole.USER)));
 

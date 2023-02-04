@@ -1,3 +1,4 @@
+import { UserProfile } from './../types/userProfile.type';
 import { RequestService } from 'src/app/request/request.service';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -13,26 +14,28 @@ export class ProfilePageComponent {
   isImageSaved: boolean;
   cardImageBase64: string;
   requestService: RequestService;
+  
+  private username = new FormControl('');
+  private email = new FormControl('');
+  private name = new FormControl('');
+  private location = new FormControl('');
 
   constructor(requestService: RequestService) {
     this.requestService = requestService;
-  }
 
+    this.requestService.getCurrentLoggedInUser().subscribe(res => {
+      this.username.setValue(res.username);
+      this.email.setValue(res.email);
+      this.name.setValue(res.name);
+      this.location.setValue(res.location);
+    })
+  }
   // TODO: fix
   profileForm: FormGroup = new FormGroup({
-    username: new FormControl('pesho_pi4a', [
-      // Validators.required
-    ]),
-    firstName: new FormControl('Pesho', [
-      // Validators.required
-    ]),
-    lastName: new FormControl('Petrov', [
-      // Validators.required
-    ]),
-    email: new FormControl('pesho@abv.bg', [
-      // Validators.required,
-      // Validators.pattern(emailregex),
-    ]),
+    username: this.username,
+    email: this.email,
+    firstName: this.name,
+    location: this.location,
     password: new FormControl('qwerty123', [
       // Validators.required,
       // this.checkPassword,
@@ -42,6 +45,7 @@ export class ProfilePageComponent {
       // this.checkPassword,
     ]),
   });
+
 
    // Variable to hold the selected file
    selectedFile: File;
@@ -62,8 +66,11 @@ export class ProfilePageComponent {
        fileReader.onload = () => {
          // Get the base64 string
          const base64String = fileReader.result as string;
+         const imageData = base64String.replace(/^data:image\/[a-z]+;base64,/, '');
+         const strippedBase64String = imageData.slice(0, -1);
+
          // Do something with the base64 string, such as sending it to a server
-         this.requestService.addProfilePicture(base64String).subscribe((res) => {});
+         this.requestService.addProfilePicture(strippedBase64String).subscribe((res) => {});
        };
      }
    }

@@ -1,3 +1,4 @@
+import { UserProfile } from './../types/userProfile.type';
 import { EventDto } from 'src/app/types/event.type';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Component, ViewChild, ViewEncapsulation } from "@angular/core";
@@ -18,10 +19,16 @@ export class MainLayoutComponent {
     showCalendar: boolean = false;
 
     reactedEvents: EventDto[];
+    currentUser: UserProfile;
     
     constructor(private requestService: RequestService, private dialogModel: MatDialog, private router: Router) { 
         this.requestService.getReactedEvents().subscribe((res: any) => {
-            this.reactedEvents = res;
+           this.reactedEvents = res;
+        })
+
+        this.requestService.getCurrentLoggedInUser().subscribe((res: any) => {
+            this.currentUser = res;
+            this.currentUser.profilePicture = res.profilePicture.url;
         })
     }
 

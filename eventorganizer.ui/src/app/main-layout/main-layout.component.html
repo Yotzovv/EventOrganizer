@@ -14,8 +14,12 @@
                 [matMenuTriggerFor]="profileMenu"
                 matTooltip="test@mail.com"
                 >
-            <mat-icon>person</mat-icon>
+            <mat-icon *ngIf="!this.currentUser.profilePicture">person</mat-icon>
+            <img *ngIf="this.currentUser.profilePicture" style="border-radius: 100%;" [src]="'data:image/png;base64,' + this.currentUser.profilePicture">
         </button>
+        <p>
+            {{ this.currentUser.username }}
+        </p>
     </div>
 
     <mat-menu #profileMenu="matMenu" [overlapTrigger]="false">

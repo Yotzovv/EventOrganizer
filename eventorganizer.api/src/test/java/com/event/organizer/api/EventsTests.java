@@ -7,6 +7,7 @@ import com.event.organizer.api.appuser.UserRepository;
 import com.event.organizer.api.exception.EventOrganizerException;
 import com.event.organizer.api.model.*;
 import com.event.organizer.api.repository.EventRepository;
+import com.event.organizer.api.repository.ImageRepository;
 import com.event.organizer.api.service.EventService;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
@@ -266,7 +267,9 @@ class EventsTests {
 	@Test
 	void GivenBlockedUsers_WhenGettingAllEvents_ThenBlockedEventsAreExcluded() {
 		UserRepository userRepository = mock(UserRepository.class);
-		AppUserService userService = new AppUserService(userRepository, null, appUserRoleService);
+		ImageRepository imageRepository = mock(ImageRepository.class);
+
+		AppUserService userService = new AppUserService(userRepository, imageRepository, null, appUserRoleService);
 
 		// Set up mock user data
 		AppUser currentUser = new AppUser();
@@ -296,7 +299,9 @@ class EventsTests {
 	@Test
 	void GivenBlockedUsers_WhenGettingAllEvents_ThenBlockedCommentsAreExcluded() {
 		UserRepository userRepository = mock(UserRepository.class);
-		AppUserService userService = new AppUserService(userRepository, null, appUserRoleService);
+		ImageRepository imageRepository = mock(ImageRepository.class);
+
+		AppUserService userService = new AppUserService(userRepository, imageRepository, null, appUserRoleService);
 
 		// Set up mock user data
 		AppUser currentUser = new AppUser();

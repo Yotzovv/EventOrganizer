@@ -27,6 +27,15 @@
 
 		<p>
 			<mat-form-field>
+				<input  type="text" matInput placeholder="Location *" formControlName="location">
+				<mat-error *ngIf="checkValidation('location')">
+					{{ fieldRequired }}
+				</mat-error>
+			</mat-form-field>
+		</p>
+
+		<p>
+			<mat-form-field>
 				<input type="password" autocomplete="false" matInput placeholder="Password *" formControlName="password">
 				<mat-error *ngIf="checkValidation('password')">
 					{{ getErrorPassword() }}
