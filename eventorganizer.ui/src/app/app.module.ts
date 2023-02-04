@@ -20,6 +20,7 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { AuthInterceptor } from './auth/auth.interceptor';
 import {MatChipsModule} from '@angular/material/chips';
+import { EventGalleryComponent } from './event-gallery/event-gallery.component';
 import { BlockedUsersListComponent } from './blocked-users-list/blocked-users-list.component';
 import { OrganizerDashboardComponent } from './organizer-dashboard/blocked-users-list/organizer-dashboard.component';
 
@@ -39,15 +40,16 @@ import { OrganizerDashboardComponent } from './organizer-dashboard/blocked-users
     MatChipsModule,
     MatFormFieldModule,
   ],
-  declarations: [
-    AppComponent, 
-    ProfilePageComponent, 
-    AdminPageComponent,
-    OrganizerDashboardComponent,
-    BlockedUsersListComponent,
-    SearchBar,
-    HomePageComponent,
-    EventDetailsComponent,
+  declarations: [ 
+  AppComponent, 
+  ProfilePageComponent, 
+  AdminPageComponent,
+  EventGalleryComponent,
+  OrganizerDashboardComponent,
+  BlockedUsersListComponent,
+  SearchBar,
+  HomePageComponent,
+  EventDetailsComponent,
   ],
   bootstrap:    [ AppComponent ],
   providers:    [ 

@@ -24,6 +24,7 @@ import com.event.organizer.api.appuser.AppUser;
 import com.event.organizer.api.appuser.AppUserService;
 import com.event.organizer.api.appuser.UserRepository;
 import com.event.organizer.api.exception.EventOrganizerException;
+import com.event.organizer.api.repository.ImageRepository;
 
 @ContextConfiguration(classes = {UserRepository.class, AppUserService.class, AppUser.class})
 @SpringBootTest(properties = "spring.main.lazy-initialization=true",
@@ -63,7 +64,8 @@ class AccountTests {
 
 		// Set up class under test
 		UserRepository userRepository = mock(UserRepository.class);
-		AppUserService appUserService = new AppUserService(userRepository, null, appUserRoleService);
+		ImageRepository imageRepository = mock(ImageRepository.class);
+		AppUserService appUserService = new AppUserService(userRepository, imageRepository ,null, appUserRoleService);
 
 		// Act
 		UsernameNotFoundException thrown = Assertions.assertThrows(UsernameNotFoundException.class,
@@ -82,8 +84,10 @@ class AccountTests {
 		UserRepository mockedUserRepository = mock(UserRepository.class);
 		when(mockedUserRepository.findByEmail(editedUser.getEmail())).thenReturn(Optional.empty());
 
+		ImageRepository imageRepository = mock(ImageRepository.class);
+
 		// Set up class under test and inject mocked user repository	
-		AppUserService appUserService = new AppUserService(mockedUserRepository, null, appUserRoleService);
+		AppUserService appUserService = new AppUserService(mockedUserRepository, imageRepository, null, appUserRoleService);
 
 		// Act
 		UsernameNotFoundException thrown = Assertions.assertThrows(UsernameNotFoundException.class,
@@ -96,7 +100,9 @@ class AccountTests {
 	@Test
 	public void GivenValidData_WhenBlockingUser_ThenSuccess() {
 		UserRepository userRepository = mock(UserRepository.class);
-		AppUserService userService = new AppUserService(userRepository, null, appUserRoleService);
+		ImageRepository imageRepository = mock(ImageRepository.class);
+
+		AppUserService userService = new AppUserService(userRepository, imageRepository, null, appUserRoleService);
 
 		// Set up mock user data
 		AppUser currentUser = new AppUser();

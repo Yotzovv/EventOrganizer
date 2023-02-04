@@ -58,6 +58,6 @@ public class AccountController {
 
     @PutMapping("/addProfilePicture")
     public void uploadProfilePicture(@RequestBody String profilePictureUrl, Principal user) {
-        userService.uploadProfilePicture(profilePictureUrl, user.getName());
+        // userService.uploadProfilePicture(profilePictureUrl, user.getName());
     }
 }

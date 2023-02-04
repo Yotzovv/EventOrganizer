@@ -7,12 +7,14 @@ import { ConfirmationDialogComponent } from "../confirmation-dialog/confirmation
 import { RequestService } from "../request/request.service";
 import {Comment} from '../types/comment.type';
 import { EventDto } from "../types/event.type";
+import { ListUser } from "../types/listUser.type";
 import { Page } from "../types/page.type";
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
     selector: 'event-details',
     templateUrl: './event-details.component.html',
-    styleUrls: ['./event-details.component.css']
+    styleUrls: ['./event-details.component.scss']
 })
 
 
@@ -20,20 +22,54 @@ export class EventDetailsComponent {
     event: EventDto;
     requestService: RequestService;
     comment: string;
+    fileName: string = '';
+    currentUser: ListUser;
 
-    constructor(_requestService: RequestService, private route: ActivatedRoute, public dialog: MatDialog, private _snackBar: MatSnackBar,
+
+    constructor(private _requestService: RequestService, private route: ActivatedRoute, public dialog: MatDialog, private _snackBar: MatSnackBar,
         private router: Router) {
         const eventId: number = Number(this.route.snapshot.paramMap.get('id'));
         this.requestService = _requestService;
+        this.getEvent(eventId);
+        this.getCurrentUser$().subscribe(res => this.currentUser=res);
+    }
 
-        // TODO: Change to getEventById when API supports it.
-        _requestService.getEventById$(eventId).subscribe((event: EventDto) => {
+    getEvent(eventId: number) {
+        this._requestService.getEventById$(eventId).subscribe((event: EventDto) => {
+            event.images = event.images.map(i => {
+                i.url = 'data:image/jpg;base64,' + i.url;
+                return i;
+            });
+            event.images.sort(function(a, b) { 
+                return a.id - b.id;
+            });
+            console.log(event.images)
             this.event = event;
         });
+    }
+
+    getCurrentUser$() {
+        return this._requestService.getCurrentLoggedInUser();
     }
     
     addComment() {
         this.requestService.addComment(this.event.id, this.comment).subscribe((res) => { });
+        
+        this.requestService.getEventById$(this.event.id).subscribe((event: EventDto) => {
+            this.event = event;
+        });
+    }
+
+    onFileSelected(event) {
+        const formData: FormData = new FormData();
+        formData.append('file', event.target.files[0]);
+
+        const fileToUpload: File = event.target.files[0];
+
+        this.requestService.addEventImage(formData, this.event.id)
+        .subscribe(res => {
+            this.getEvent(this.event.id)
+        });
     }
 
     blacklistUser(email: string) {
@@ -60,4 +96,5 @@ export class EventDetailsComponent {
             this.router.navigate(['home']);
         })
     }
+
 }

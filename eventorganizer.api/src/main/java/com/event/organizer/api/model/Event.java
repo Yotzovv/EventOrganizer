@@ -9,6 +9,21 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.persistence.*;
+
+import com.event.organizer.api.appuser.AppUser;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @NoArgsConstructor
@@ -64,14 +79,16 @@ public class Event {
     @ManyToMany
     @CollectionTable(name = "event_interested", joinColumns = @JoinColumn(name = "event_id"))
     @Column(name = "event_interested")
+    @JsonIgnoreProperties("usersInterested")
     private List<AppUser> usersInterested;
 
     @ManyToMany
     @CollectionTable(name = "event_goings", joinColumns = @JoinColumn(name = "event_id"))
     @Column(name = "event_going")
+    @JsonIgnoreProperties("usersGoing")
     private List<AppUser> usersGoing;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @CollectionTable(name = "event_images", joinColumns = @JoinColumn(name = "event_id"))
     @Column(name = "event_images")
     private List<Image> images;

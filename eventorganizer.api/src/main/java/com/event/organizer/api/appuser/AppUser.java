@@ -79,6 +79,9 @@ public class AppUser implements UserDetails {
         this.roles = roles;
     }
 
+    public <T> AppUser(String s1, String s2, String s3, String s4, String s5, Set<T> singleton) {
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles.stream()
