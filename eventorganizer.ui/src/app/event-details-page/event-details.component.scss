@@ -1,0 +1,32 @@
+.large-input {
+    width: 93%;
+    margin-left: 3%;
+    margin-top: 3%;
+    border-radius: 100%;
+  }
+  
+.file-input {
+  display: none;
+}
+
+.block-user-btn {
+  color: red;
+}
+
+.event-details-container {
+  width: 80vw;
+  margin-left: 10vw;
+}
+
+mat-card {
+  margin: 10px;
+  &.gallery {
+    display: flex;
+    flex: 50%;
+  };
+}
+
+.feedback-container {
+  display: flex;
+  align-items: center;
+}

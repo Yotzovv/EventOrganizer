@@ -6,6 +6,7 @@ import { DialogAnimationsExampleDialog } from '../create-edit-event-dialog/creat
 import { MainLayoutComponent } from '../main-layout/main-layout.component';
 import { Page } from '../types/page.type';
 import { PageEvent } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'home-page',
@@ -22,21 +23,45 @@ export class HomePageComponent {
 
   public eventPage: Page<EventDto>;
 
-  constructor(private requestService: RequestService, private dialogModel: MatDialog) {
+  constructor(private requestService: RequestService, private dialogModel: MatDialog, private _snackBar: MatSnackBar) {
     this.loadEvents();
   }
 
   loadEvents() {
-    this.requestService.getAllEvents$(this.pageIndex, this.pageSize).subscribe((res) => {
+    this.requestService.getAllEvents$(this.pageIndex, this.pageSize, "").subscribe((res) => {
       this.eventPage = res;
-      // this.pageSize = this.eventPage.totalElements;
     });
+
+    this.setReactedEvents();
+
+    this.requestService.getHostingEvents$().subscribe((res: EventDto[]) => {
+      
+      this.eventPage?.content?.forEach((event) => {
+        event.cantBeEdited = res.find(e => e.id == event.id) !== undefined;
+      })
+    });
+  }
+
+  setReactedEvents() {
+    this.requestService.getReactedEvents().subscribe((reactedEvents: EventDto[]) => {     
+      this.eventPage?.content.forEach((event) => {
+        event.isCurrentUserInterested = reactedEvents.find(e => e.id === event.id) !== undefined;
+      });
+    });    
   }
   
   openEditEventDialog(enterAnimationDuration: string, exitAnimationDuration: string, event: EventDto): void {
     this.createEventDialog = this.dialogModel.open(DialogAnimationsExampleDialog, {
       data: {
         event: event
+      }
+    })
+    this.createEventDialog.afterClosed().subscribe(res => {
+      if (res) {
+        this._snackBar.open('Event edited successfully!', 'close', {
+          duration: 3000,
+        });
+        this.loadEvents();
       }
     });
   }
@@ -50,56 +75,28 @@ export class HomePageComponent {
   }
 
   onFilter(filter: string) {
-    this.requestService.getAllEvents$(this.pageIndex, this.pageSize).subscribe((page: Page<EventDto>) => {
+    this.requestService.getAllEvents$(this.pageIndex, this.pageSize, filter).subscribe((page: Page<EventDto>) => {
       this.eventPage = page;
     });
-    // if(filter === null || filter === '') {
-    // } else {
-    //   if(filter == 'week') {
-    //     this.requestService.getWeeklyEvents$().subscribe((res) => {
-    //       this.eventPage = res.filter(event => event.name.toLowerCase().includes(filter));;
-    //     });
-    //   } else if (filter == 'monthly') {
-    //     this.requestService.getMonthlyEvents$().subscribe((res) => {
-    //       this.eventPage = res.filter(event => event.name.toLowerCase().includes(filter));;
-    //     });
-    //   } else if (filter == 'local') {
-    //     this.requestService.getLocalEvents$().subscribe((res) => {
-    //       this.eventPage = res.filter(event => event.name.toLowerCase().includes(filter));;
-    //     });
-    //   } else if (filter == "interested") {
-    //     this.requestService.getInterestedInEvents$().subscribe((res) => {
-    //       this.eventPage = res.filter(event => event.name.toLowerCase().includes(filter));;
-    //     });
-    //   } else if (filter == "going") {
-    //     this.requestService.getGoingEvents$().subscribe((res) => {
-    //       this.eventPage = res.filter(event => event.name.toLowerCase().includes(filter));;
-    //     });
-    //   } else if (filter == "hosting") {
-    //     this.requestService.getHostingEvents$().subscribe((res) => {
-    //       this.eventPage = res.filter(event => event.name.toLowerCase().includes(filter));;
-    //     });
-    //   } else {
-    //     this.eventPage = this.eventPage.filter(event => event.name.toLowerCase().includes(filter));
-        
-    //     if(this.eventPage.length == 0) {
-    //       this.requestService.getAllEvents$().subscribe((res) => {
-    //         this.eventPage = res.filter(event => event.name.toLowerCase().includes(filter));;
-    //       });
-    //     }
-    //   }
-    // }
   }
 
   userIsInterested(eventId: number): void {
-    this.requestService.userIsInterested(eventId).subscribe((res) => { });
+    this.requestService.userIsInterested(eventId).subscribe((res) => { 
+      
+      this.loadEvents();
+    });
+
   }
 
   userIsNotInterested(eventId: number): void {
     this.requestService.userIsNotInterested(eventId).subscribe((res) => { });
+
+    this.loadEvents();
   }
 
   userIsGoing(eventId: number): void {
     this.requestService.userIsGoing(eventId).subscribe((res) => { });
+
+    this.loadEvents();
   }
 }

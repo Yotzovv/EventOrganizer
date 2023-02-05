@@ -1,3 +1,4 @@
+import { UserProfile } from './../types/userProfile.type';
 import { RequestService } from 'src/app/request/request.service';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -13,35 +14,44 @@ export class ProfilePageComponent {
   isImageSaved: boolean;
   cardImageBase64: string;
   requestService: RequestService;
+  
+  private username = new FormControl('');
+  private email = new FormControl('');
+  private name = new FormControl('');
+  private location = new FormControl('');
 
   constructor(requestService: RequestService) {
     this.requestService = requestService;
+
+    this.getCurrentUser();
+  }
+
+
+  getCurrentUser() {
+    this.requestService.getCurrentLoggedInUser().subscribe(res => {
+      this.username.setValue(res.username);
+      this.email.setValue(res.email);
+      this.name.setValue(res.name);
+      this.location.setValue(res.location);
+    })
   }
 
   // TODO: fix
   profileForm: FormGroup = new FormGroup({
-    username: new FormControl('pesho_pi4a', [
-      // Validators.required
-    ]),
-    firstName: new FormControl('Pesho', [
-      // Validators.required
-    ]),
-    lastName: new FormControl('Petrov', [
-      // Validators.required
-    ]),
-    email: new FormControl('pesho@abv.bg', [
-      // Validators.required,
-      // Validators.pattern(emailregex),
-    ]),
-    password: new FormControl('qwerty123', [
+    username: this.username,
+    email: this.email,
+    firstName: this.name,
+    location: this.location,
+    password: new FormControl(null, [
       // Validators.required,
       // this.checkPassword,
     ]),
-    confirmPassword: new FormControl('qwerty123', [
+    confirmPassword: new FormControl(null, [
       // Validators.required,
       // this.checkPassword,
     ]),
   });
+
 
    // Variable to hold the selected file
    selectedFile: File;
@@ -52,23 +62,33 @@ export class ProfilePageComponent {
      this.selectedFile = event.target.files[0];
    }
  
-   // Function to upload the image
    uploadImage() {
-     // Check if a file has been selected
      if (this.selectedFile) {
-       // Read the file and convert it to base64
-       const fileReader = new FileReader();
-       fileReader.readAsDataURL(this.selectedFile);
-       fileReader.onload = () => {
-         // Get the base64 string
-         const base64String = fileReader.result as string;
-         // Do something with the base64 string, such as sending it to a server
-         this.requestService.addProfilePicture(base64String).subscribe((res) => {});
-       };
+      const formData: FormData = new FormData();
+      formData.append('file', this.selectedFile);
+
+      this.requestService.addProfilePicture(formData)
+      .subscribe(res => {
+        window.location.reload();
+      });
      }
    }
 
   onSubmit() {
-
+    if (this.profileForm.valid) {
+      const userDto = this.profileForm.value;
+      Object.keys(userDto).forEach(k => {
+        if (!userDto[k]) {
+          delete userDto[k];
+        }
+      });
+      this.requestService.editAccount(userDto).subscribe(res => {
+        console.log('Update user res: ');
+        console.log(res);
+      });
+    } else {
+      console.log('Form invalid ');
+      console.log(this.profileForm);
+    }
   }
 }

@@ -5,10 +5,10 @@
 
     <mat-card *ngFor="let event of eventPage?.content">
         <mat-card-header>
-            <button [hidden]="!event.isCurrentUserInterested" (click)="userIsNotInterested(event.id)" color="warn" mat-icon-button>
-                <mat-icon>favorite</mat-icon>
-            </button>
             <div>
+                <button [hidden]="!event.isCurrentUserInterested" (click)="userIsNotInterested(event.id)" color="warn" mat-icon-button>
+                    <mat-icon>favorite</mat-icon>
+                </button>
                 <button [hidden]="event.isCurrentUserInterested" (click)="userIsInterested(event.id)" color="warn" mat-icon-button>
                     <mat-icon>favorite_border</mat-icon>
                 </button>
@@ -25,10 +25,10 @@
             <mat-card-subtitle>{{event.location}}</mat-card-subtitle>
             <mat-card-subtitle>150 going . 40 interested</mat-card-subtitle>
         </mat-card-header>
-        <mat-card-content>
-            <p>
+        <mat-card-content style="overflow: hidden;">
+            <p style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                 {{event.description}}
-            </p>    
+            </p>
         </mat-card-content>
         <p></p>
         <mat-divider></mat-divider>

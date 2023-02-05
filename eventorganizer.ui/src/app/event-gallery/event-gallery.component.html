@@ -1,0 +1,49 @@
+<!-- <mat-grid-list cols="4" rowHeight="100px" gutterSize="5" rowHeight="200">
+    <mat-grid-tile *ngFor="let image of images">
+        <img
+            (click)="openImagePreview(image)"
+            [src]="image.url"  
+            alt="'asd'" 
+            class="height-300"
+        />
+    </mat-grid-tile>
+</mat-grid-list> -->
+
+<!-- <div class="gallery-container">
+    <button mat-icon-button (click)="scrollToPrevious()">
+        <mat-icon>
+            <mat-icon>arrow_back_ios</mat-icon>
+        </mat-icon>
+    </button>
+    <div class="images-container">
+        <ng-container *ngFor="let image of images">
+            <img (click)="openImagePreview(image)"
+                 #imagesRef
+                 [src]="image.url"  
+                 alt="'asd'" 
+                 class="height-300"/>
+        </ng-container>
+    </div>
+    <button mat-icon-button (click)="scrollToNext()">
+        <mat-icon>arrow_forward_ios</mat-icon>
+    </button>
+</div> -->
+
+
+<mat-grid-list cols="4" rowHeight="200px" *ngIf="images?.length > 0">
+    <ng-container *ngFor="let image of displayedImages">
+        <mat-grid-tile [colspan]="1" [rowspan]="1">
+            <img (click)="openImagePreview(image)"
+            #imagesRef
+            [src]="image.url"  
+            alt="'asd'" 
+            class="height-300"/>
+        </mat-grid-tile>
+    </ng-container>
+</mat-grid-list>
+
+<mat-grid-list cols="1" rowHeight="200px" *ngIf="images?.length === 0">
+    <mat-grid-tile [colspan]="1" [rowspan]="1">
+        <h4>Event gallery is empty.</h4>
+    </mat-grid-tile>
+</mat-grid-list>

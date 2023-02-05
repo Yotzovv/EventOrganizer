@@ -17,6 +17,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSelectModule } from '@angular/material/select';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import {MatGridListModule} from '@angular/material/grid-list';
 
 const modules = [
   CommonModule,
@@ -38,6 +39,7 @@ const modules = [
   MatSelectModule,
   MatPaginatorModule,
   MatTooltipModule,
+  MatGridListModule,
 ];
 
 @NgModule({

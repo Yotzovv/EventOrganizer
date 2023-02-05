@@ -3,6 +3,11 @@ package com.event.organizer.api.model;
 import lombok.*;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -24,12 +29,17 @@ public class Image {
             generator = "image_sequence"
     )
     private long id;
-    private String url;
+
+    @Lob
+    @Column(name = "url", columnDefinition="LONGBLOB")
+    private byte[] url;
     private LocalDateTime createdDate;
     private String ownerUsername;
 
     @ManyToOne
     @JoinColumn(name = "event_id")
+    @JsonIgnore
     private Event event;
+
 }
 

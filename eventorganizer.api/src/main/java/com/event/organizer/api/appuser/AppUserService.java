@@ -3,6 +3,7 @@ package com.event.organizer.api.appuser;
 import com.event.organizer.api.model.Image;
 import com.event.organizer.api.model.dto.AccountRolesRequestDto;
 import com.event.organizer.api.model.dto.AccountStatusRequestDto;
+import com.event.organizer.api.repository.ImageRepository;
 import com.event.organizer.api.security.config.AdminConfig;
 import com.event.organizer.api.security.config.PasswordEncoder;
 import lombok.AllArgsConstructor;
@@ -30,11 +31,13 @@ public class AppUserService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
+    private final ImageRepository imageRepository;
+
     private final PasswordEncoder passwordEncoder;
 
     private final AppUserRoleService appUserRoleService;
 
-    public void editAccount(AppUser editedUser) throws UsernameNotFoundException {
+    public AppUser editAccount(AppUser editedUser) throws UsernameNotFoundException {
         if (editedUser == null) {
             throw new UsernameNotFoundException("User is not found.");
         }
@@ -45,7 +48,12 @@ public class AppUserService implements UserDetailsService {
         var currentUser = userRepository.findByEmail(editedUser.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MESSAGE, editedUser.getEmail())));
 
-        userRepository.save(currentUser);
+        currentUser.setEmail(editedUser.getEmail());
+        currentUser.setLocation(editedUser.getLocation());
+        currentUser.setName(editedUser.getName());
+        currentUser.setUsername(editedUser.getUsername());
+
+        return userRepository.save(editedUser);
     }
 
     @Override
@@ -146,17 +154,19 @@ public class AppUserService implements UserDetailsService {
         return userRepository.save(editedUser);
     }
 
-    public void uploadProfilePicture(String imageUrl, String currentUserEmail) {
+    public void uploadProfilePicture(byte[] imageUrl, String currentUserEmail) {
         AppUser user = findValidatedUser(currentUserEmail);
 
         Image profilePicture = new Image();
-        long uniqueLong = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
 
+        
         profilePicture.setUrl(imageUrl);
         profilePicture.setCreatedDate(LocalDateTime.now());
-        profilePicture.setId(uniqueLong);
+
+        imageRepository.save(profilePicture);
 
         user.setProfilePicture(profilePicture);
+
         userRepository.save(user);
     }
 

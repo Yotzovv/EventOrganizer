@@ -11,6 +11,9 @@ import com.event.organizer.api.model.dto.ImageRequestDto;
 import com.event.organizer.api.search.SearchCriteria;
 import com.event.organizer.api.service.EventService;
 
+import antlr.StringUtils;
+
+import java.io.IOException;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,6 +21,7 @@ import java.util.Set;
 
 import lombok.AllArgsConstructor;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashSet;
 
 import org.springframework.data.domain.Page;
@@ -34,6 +38,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("api/v1/events")
@@ -59,16 +64,29 @@ public class EventController {
         return eventService.rejectEvent(eventId, principal.getName());
     }
 
+    @PostMapping("/{eventId}/addImage")
+    public void addImage(@RequestParam MultipartFile file, @PathVariable long eventId, Principal principal) throws  EventOrganizerException {
+        try {
+            byte[] imageByteArray = file.getBytes();
+            eventService.addImage(imageByteArray, eventId, principal.getName());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @GetMapping
     public Page<Event> findAll(
         @RequestParam(required = false, defaultValue = "6") int pageSize,
         @RequestParam(required = false, defaultValue = "0") int page,
+        @RequestParam(required = false, defaultValue = "") String filter,
         Principal principal
     ) {
         Pageable pageable = PageRequest.of(page, pageSize);
         List<SearchCriteria> criterias = new ArrayList<>();
 
-        return eventService.findAll(principal.getName(), pageable, criterias);
+        Page<Event> events = eventService.findAll(principal.getName(), pageable, criterias, filter);
+
+        return events;
     }
 
     @GetMapping("/pending")
@@ -100,11 +118,6 @@ public class EventController {
     @PostMapping("/addComment")
     public void addComment(@RequestBody CommentRequestDto request, Principal principal) throws EventOrganizerException {
         eventService.addComment(request.getComment(), request.getEventId(), principal.getName());
-    }
-
-    @PostMapping("/addImage")
-    public void addImage(@RequestBody ImageRequestDto request, Principal principal) throws  EventOrganizerException {
-        eventService.addImage(request.getUrl(), request.getEventId(), principal.getName());
     }
 
     @PostMapping("/addFeedback")
