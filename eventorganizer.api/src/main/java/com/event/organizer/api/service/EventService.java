@@ -1,5 +1,5 @@
 package com.event.organizer.api.service;
-
+/**Event service class.*/
 import com.event.organizer.api.appuser.AppUser;
 import com.event.organizer.api.appuser.AppUserRole;
 import com.event.organizer.api.appuser.AppUserService;
@@ -45,10 +45,12 @@ public class EventService {
 
     private final AppUserService appUserService;
 
+    /**Populates a list with events.*/
     public List<Event> findAll(String currentUserEmail) {
         return eventRepository.findAll();
     }
 
+    /**This class returns an event object that contains a filtered list of events based on the current user and given criteria and filter.*/
     public Page<Event> findAll(String currentUserEmail, Pageable page, List<SearchCriteria> criterias, String filter) {
         AppUser currentUser = appUserService.findUserByEmail(currentUserEmail).get();
         List<AppUser> currentUserBlockList = currentUser.getBlockedUsers();
@@ -83,6 +85,7 @@ public class EventService {
         return eventPage;
     }
 
+    /**This method filters a list of events based on the given filter and current user.*/
     public List<Event> filterEvents(Page<Event> events, String filter, AppUser currentUser) {
         if(filter == "" || filter == null) {
             return null;
@@ -106,7 +109,8 @@ public class EventService {
 
         return result;
     }
-    
+
+    /**This method returns a list of all events with a PENDING_STATUS status.*/
     public List<Event> findAllPending() {
         List<SearchCriteria> criterias = new ArrayList<>();
         SearchCriteria notPending = new SearchCriteria("status", "=", Event.PENDING_STATUS);
@@ -116,6 +120,7 @@ public class EventService {
         return allEvents;
     }
 
+    /**This method returns an event by given eventId and loads its comments.*/
     public Event getEventById(long eventId, String currentUserEmail) {
 
         AppUser currentUser = appUserService.findUserByEmail(currentUserEmail).get();
@@ -147,6 +152,7 @@ public class EventService {
         return event;
     }
 
+    /**This method creates and saves an event, and it's organizer.*/
     public Event saveEvent(Event event, String username) throws EventOrganizerException {
         if (event.getId() != null && eventRepository.existsById(event.getId())) {
             throw new EventOrganizerException("Event already exist");
@@ -169,6 +175,7 @@ public class EventService {
         return eventRepository.save(event);
     }
 
+    /**This method updates an event.*/
     public Event updateEvent(Event event, String username) throws EventOrganizerException {
         if (!eventRepository.existsById(event.getId())) {
             throw new EventOrganizerException("Event does not exist");
@@ -180,18 +187,21 @@ public class EventService {
         return eventRepository.save(event);
     }
 
+    /**This method accepts and saves an event.*/
     public Event acceptEvent(long eventId, String currentUserEmail) {
         Event eventToUpdate = this.getEventById(eventId, currentUserEmail);
         eventToUpdate.setStatus(Event.ACCEPTED_STATUS);
         return eventRepository.save(eventToUpdate);
     }
 
+    /**This method rejects and saves an event.*/
     public Event rejectEvent(long eventId, String currentUserEmail) {
         Event eventToUpdate = this.getEventById(eventId, currentUserEmail);
         eventToUpdate.setStatus(Event.REJECTED_STATUS);
         return eventRepository.save(eventToUpdate);
     }
 
+    /**This method deletes an existing event.*/
     public void deleteEvent(Event event) throws EventOrganizerException {
         if (!eventRepository.existsById(event.getId())) {
             throw new EventOrganizerException("Event does not exist");
@@ -199,6 +209,7 @@ public class EventService {
         eventRepository.delete(event);
     }
 
+    /**This method adds comment to an event.*/
     public void addComment(String comment, Long eventId, String username) throws EventOrganizerException {
         if (!eventRepository.existsById(eventId)) {
             throw new EventOrganizerException("Event does not exist");
@@ -216,6 +227,7 @@ public class EventService {
         eventRepository.save(event);
     }
 
+    /**This method adds image to an event.*/
     public void addImage(byte[] image, Long eventId, String username) throws EventOrganizerException {
         if (!eventRepository.existsById(eventId)) {
             throw new EventOrganizerException("Event does not exist");
@@ -239,6 +251,7 @@ public class EventService {
         eventRepository.save(event);
     }
 
+    /**This method adds feedback (as comment and rating) to an event.*/
     public void addFeedback(Integer rating, String comment, Long eventId, String username) throws EventOrganizerException {
         if (!eventRepository.existsById(eventId)) {
             throw new EventOrganizerException("Event does not exist");
@@ -262,6 +275,7 @@ public class EventService {
         eventRepository.save(event);
     }
 
+    /**This method updates an event.*/
     // TODO: RENAME
     public void userIsInterestedInEvent(String username, Long eventId) throws EventOrganizerException {
         if (!eventRepository.existsById(eventId)) {
@@ -283,6 +297,7 @@ public class EventService {
         eventRepository.save(event);
     }
 
+    /**This method removes a user as 'interested' an event.*/
     public void removeUserInterestedInEvent (String username, Long eventId) throws EventOrganizerException{
         if (!eventRepository.existsById(eventId)) {
             throw new EventOrganizerException("Event does not exist");
@@ -297,6 +312,7 @@ public class EventService {
         eventRepository.save(event);
     }
 
+    /**This method sets a user going to an event.*/
     // TODO: RENAME
     public void userIsGoingToEvent(String username, Long eventId) throws EventOrganizerException {
         if (!eventRepository.existsById(eventId)) {
@@ -318,6 +334,7 @@ public class EventService {
         eventRepository.save(event);
     }
 
+    /**This method removes a user that's 'going' to an event.*/
     public void removeUserGoingToEvent (String username, Long eventId) throws EventOrganizerException{
         Optional<Event> eventOptional = eventRepository.findById(eventId);
 
@@ -339,6 +356,7 @@ public class EventService {
         }
     }
 
+    /**This method returns a list of events for the current week.*/
     public List<Event> getThisWeeksEvents() {
         List<Event> allEvents = eventRepository.findAll();
 
@@ -352,7 +370,7 @@ public class EventService {
 
         return eventsThisWeek;
     }
-
+    /**This method returns a list with the events for the current month.*/
     public List<Event> getThisMonthsEvents() {
         List<Event> allEvents = eventRepository.findAll();
 
@@ -367,6 +385,7 @@ public class EventService {
         return eventsThisWeek;
     }
 
+    /**This method returns a list with events for a given location.*/
     public List<Event> getEventsByLocation(String location) {
         List<Event> allEvents = eventRepository.findAll();
         List<Event> localEvents = allEvents.stream().filter(event -> event.getLocation().contains(location))
@@ -375,6 +394,7 @@ public class EventService {
         return localEvents;
     }
 
+    /**This method returns a list with users that are interested in a given event.*/
     public List<AppUser> getUsersInterestedInEvent(long eventId) throws EventOrganizerException {
         if (!eventRepository.existsById(eventId)) {
             throw new EventOrganizerException("Event does not exist");
@@ -385,6 +405,7 @@ public class EventService {
         return interestedUsersList;
     }
 
+    /**This method returns a list with users that are going to a given event.*/
     public List<AppUser> getUsersGoingToEvent(long eventId) throws EventOrganizerException {
         if (!eventRepository.existsById(eventId)) {
             throw new EventOrganizerException("Event does not exist");
@@ -394,7 +415,7 @@ public class EventService {
 
         return goingUsersList;
     }
-
+    /**This method returns a list with events by given type.*/
     public List<Event> getEventsByType(String type) {
         List<Event> allEvents = eventRepository.findAll();
         List<Event> eventsByTypeList = allEvents.stream().filter(event -> event.getEventType().equals(type))
@@ -403,6 +424,7 @@ public class EventService {
         return eventsByTypeList;
     }
 
+    /**This method retrieves all the events hosted by a particular user.*/
     public List<Event> getHostingEvents(String username) {
         AppUser userModel = appUserService.findUserByEmail(username).get();
         List<Event> userEvents = userModel.getEvents();
@@ -410,6 +432,7 @@ public class EventService {
         return userEvents;
     }
 
+    /**This method returns a list with events in a given time window.*/
     public List<Event> getEventsByDateRange(LocalDateTime startRange, LocalDateTime endRange) {
         List<Event> allEvents = eventRepository.findAll();
 
@@ -420,6 +443,7 @@ public class EventService {
         return eventsInRangeList;
     }
 
+    /**This method returns a list with the events the currently logged-in user is interested in.*/
     public List<Event> getMyInterestedEvents(String username) {
         AppUser userModel = appUserService.findUserByEmail(username).get();
         
@@ -430,6 +454,7 @@ public class EventService {
         return allEvents;
     }
 
+    /**This method returns a list with the events the currently logged-in user is going to.*/
     public List<Event> getMyGoingToEvents(String username) {
         AppUser userModel = appUserService.findUserByEmail(username).get();
         

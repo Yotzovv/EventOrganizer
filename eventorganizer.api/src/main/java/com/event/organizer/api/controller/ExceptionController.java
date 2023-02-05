@@ -1,5 +1,5 @@
 package com.event.organizer.api.controller;
-
+/**Connection with the front-end for when an error occurs. Returns an error page.*/
 import com.event.organizer.api.exception.EventOrganizerException;
 import org.springdoc.api.ErrorMessage;
 import org.springframework.http.HttpStatus;

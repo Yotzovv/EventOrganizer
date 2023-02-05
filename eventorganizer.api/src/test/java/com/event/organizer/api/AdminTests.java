@@ -1,5 +1,5 @@
 package com.event.organizer.api;
-
+/**Tests for the functionalities of the "admin" entity.*/
 import com.event.organizer.api.appuser.AppUser;
 import com.event.organizer.api.appuser.AppUserRole;
 import com.event.organizer.api.appuser.AppUserService;

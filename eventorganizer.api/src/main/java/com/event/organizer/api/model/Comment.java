@@ -1,5 +1,5 @@
 package com.event.organizer.api.model;
-
+/**Comment DTO. Makes a model for the database.*/
 import lombok.*;
 
 import javax.persistence.*;

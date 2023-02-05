@@ -1,5 +1,5 @@
 package com.event.organizer.api.appuser;
-
+/**DB search for user by email.*/
 import java.util.Optional;
 import javax.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;

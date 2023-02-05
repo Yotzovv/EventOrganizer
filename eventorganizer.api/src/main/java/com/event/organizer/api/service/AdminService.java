@@ -1,5 +1,8 @@
 package com.event.organizer.api.service;
-
+/**Admin service class. Has classes for:
+ * - checking whether the user exists and has admin privileges
+ * - changing a user's role
+ * - changing a user's account status*/
 import com.event.organizer.api.appuser.AppUser;
 import com.event.organizer.api.appuser.AppUserRole;
 import com.event.organizer.api.appuser.UserRepository;

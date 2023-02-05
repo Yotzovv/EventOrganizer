@@ -1,5 +1,5 @@
 package com.event.organizer.api.repository;
-
+/**Interface for 'image'.*/
 import com.event.organizer.api.model.Image;
 
 import org.springframework.data.jpa.repository.JpaRepository;

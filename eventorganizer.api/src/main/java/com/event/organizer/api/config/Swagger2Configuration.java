@@ -1,5 +1,5 @@
 package com.event.organizer.api.config;
-
+/**Configuration for 'swagger'.*/
 import static springfox.documentation.builders.PathSelectors.regex;
 
 import org.springframework.context.annotation.Bean;

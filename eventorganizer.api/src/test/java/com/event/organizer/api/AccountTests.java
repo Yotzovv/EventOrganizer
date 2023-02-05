@@ -1,5 +1,5 @@
 package com.event.organizer.api;
-
+/**Tests for the functionalities of the "account" entity.*/
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;

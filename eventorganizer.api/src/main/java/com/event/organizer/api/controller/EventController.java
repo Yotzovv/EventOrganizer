@@ -1,5 +1,5 @@
 package com.event.organizer.api.controller;
-
+/**Connection with the front-end for the 'event'.*/
 import com.event.organizer.api.appuser.AppUser;
 import com.event.organizer.api.appuser.AppUserService;
 import com.event.organizer.api.exception.EventOrganizerException;

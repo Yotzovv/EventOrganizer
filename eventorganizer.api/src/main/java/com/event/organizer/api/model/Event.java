@@ -1,5 +1,5 @@
 package com.event.organizer.api.model;
-
+/**Event DTO. Makes a model for the database.*/
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashSet;

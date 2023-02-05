@@ -1,5 +1,5 @@
 package com.event.organizer.api.appuser.registration;
-
+/**Registration service. Signs up a user.*/
 import com.event.organizer.api.appuser.AppUser;
 import com.event.organizer.api.appuser.AppUserRole;
 import com.event.organizer.api.appuser.AppUserRoleRepository;

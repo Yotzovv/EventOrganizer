@@ -1,5 +1,5 @@
 package com.event.organizer.api.controller;
-
+/**Connection with the front-end for the 'admin'.*/
 import com.event.organizer.api.appuser.AppUserRole;
 import com.event.organizer.api.service.AdminService;
 import lombok.AllArgsConstructor;

@@ -1,5 +1,5 @@
 package com.event.organizer.api.model;
-
+/**Feedback DTO. Makes a model for the database.*/
 import lombok.*;
 
 import javax.persistence.*;

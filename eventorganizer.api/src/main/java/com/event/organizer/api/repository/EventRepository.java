@@ -1,5 +1,5 @@
 package com.event.organizer.api.repository;
-
+/**Interface for 'event'.*/
 import com.event.organizer.api.model.Event;
 
 import org.springframework.data.domain.Page;

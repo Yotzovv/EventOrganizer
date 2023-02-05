@@ -1,5 +1,5 @@
 package com.event.organizer.api.search;
-
+/**Search model.*/
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

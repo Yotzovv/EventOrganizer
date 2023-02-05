@@ -1,5 +1,5 @@
 package com.event.organizer.api.filter;
-
+/**Config for Jwt.*/
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;

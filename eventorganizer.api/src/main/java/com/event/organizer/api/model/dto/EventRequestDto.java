@@ -1,5 +1,5 @@
 package com.event.organizer.api.model.dto;
-
+/**Event request DTO. Makes a model for the database.*/
 import java.time.LocalDateTime;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;

@@ -1,5 +1,5 @@
 package com.event.organizer.api.appuser;
-
+/**Returns the appropriate account role.*/
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,5 +1,5 @@
 package com.event.organizer.api.model.dto;
-
+/**Account roles DTO. Makes a model for the database.*/
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

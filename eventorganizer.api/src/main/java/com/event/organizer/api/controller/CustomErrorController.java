@@ -1,5 +1,5 @@
 package com.event.organizer.api.controller;
-
+/**Connection with the front-end for when an error occurs. Returns an error page.*/
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.web.bind.annotation.RequestMapping;

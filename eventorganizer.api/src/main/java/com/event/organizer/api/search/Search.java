@@ -1,4 +1,5 @@
 package com.event.organizer.api.search;
+/**Search function.*/
 import java.util.List;
 import org.springframework.data.jpa.domain.Specification;
 

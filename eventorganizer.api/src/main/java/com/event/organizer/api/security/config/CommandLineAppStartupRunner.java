@@ -1,5 +1,5 @@
 package com.event.organizer.api.security.config;
-
+/**Logger service*/
 import com.event.organizer.api.appuser.AppUser;
 import com.event.organizer.api.appuser.AppUserService;
 import lombok.AllArgsConstructor;

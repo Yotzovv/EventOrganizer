@@ -1,5 +1,5 @@
 package com.event.organizer.api.security.config;
-
+/**Sets an admin status to an account .*/
 import com.event.organizer.api.appuser.AppUser;
 import com.event.organizer.api.appuser.AppUserRoleRepository;
 import lombok.AllArgsConstructor;

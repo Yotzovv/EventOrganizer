@@ -1,5 +1,5 @@
 package com.event.organizer.api.appuser;
-
+/**DB model for the user.*/
 import com.event.organizer.api.model.Event;
 import com.event.organizer.api.model.Image;
 import com.fasterxml.jackson.annotation.JsonIgnore;

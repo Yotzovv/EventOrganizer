@@ -1,5 +1,5 @@
 package com.event.organizer.api.appuser;
-
+/**DB search for users by roles.*/
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

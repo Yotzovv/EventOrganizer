@@ -1,4 +1,5 @@
 package com.event.organizer.api.search;
+/**Filters results.*/
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;

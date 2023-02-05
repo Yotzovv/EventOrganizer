@@ -1,5 +1,5 @@
 package com.event.organizer.api.appuser;
-
+/**Creates a table with all account roles.*/
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

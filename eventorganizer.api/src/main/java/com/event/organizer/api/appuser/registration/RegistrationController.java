@@ -1,5 +1,6 @@
 package com.event.organizer.api.appuser.registration;
-
+/**Makes the connection with the front-end.
+ * /registration sends info and this class directs it to the back-end.*/
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,5 +1,5 @@
 package com.event.organizer.api.security.config;
-
+/**Saves a change in a user's account status*/
 import com.event.organizer.api.appuser.AppUserRole;
 import com.event.organizer.api.appuser.AppUserRoleRepository;
 import lombok.AllArgsConstructor;

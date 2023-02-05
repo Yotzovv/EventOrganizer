@@ -1,5 +1,5 @@
 package com.event.organizer.api.data;
-
+/**REST with some samples.*/
 import io.swagger.annotations.ApiModelProperty;
 import java.util.Arrays;
 import java.util.List;

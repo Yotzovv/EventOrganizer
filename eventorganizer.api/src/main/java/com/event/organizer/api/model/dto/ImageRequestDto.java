@@ -1,5 +1,5 @@
 package com.event.organizer.api.model.dto;
-
+/**Image request DTO. Makes a model for the database.*/
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.AllArgsConstructor;
