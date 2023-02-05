@@ -68,8 +68,6 @@ public class EventController {
     public void addImage(@RequestParam MultipartFile file, @PathVariable long eventId, Principal principal) throws  EventOrganizerException {
         try {
             byte[] imageByteArray = file.getBytes();
-            String encoded64 = new String(imageByteArray);
-            
             eventService.addImage(imageByteArray, eventId, principal.getName());
         } catch (IOException e) {
             e.printStackTrace();

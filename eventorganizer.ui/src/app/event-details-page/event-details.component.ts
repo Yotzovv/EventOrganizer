@@ -39,7 +39,7 @@ export class EventDetailsComponent {
     getEvent(eventId: number) {
         this._requestService.getEventById$(eventId).subscribe((event: EventDto) => {
             event.images = event.images.map(i => {
-                i.url = 'data:image/jpg;base64,' + i.url;
+                i.url = 'data:image/png;base64' + i.url;
                 return i;
             });
             event.images.sort(function(a, b) { 
@@ -68,8 +68,6 @@ export class EventDetailsComponent {
     onFileSelected(event) {
         const formData: FormData = new FormData();
         formData.append('file', event.target.files[0]);
-
-        const fileToUpload: File = event.target.files[0];
 
         this.requestService.addEventImage(formData, this.event.id)
         .subscribe(res => {

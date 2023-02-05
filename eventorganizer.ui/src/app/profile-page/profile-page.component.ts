@@ -23,6 +23,11 @@ export class ProfilePageComponent {
   constructor(requestService: RequestService) {
     this.requestService = requestService;
 
+    this.getCurrentUser();
+  }
+
+
+  getCurrentUser() {
     this.requestService.getCurrentLoggedInUser().subscribe(res => {
       this.username.setValue(res.username);
       this.email.setValue(res.email);
@@ -30,6 +35,7 @@ export class ProfilePageComponent {
       this.location.setValue(res.location);
     })
   }
+
   // TODO: fix
   profileForm: FormGroup = new FormGroup({
     username: this.username,
@@ -56,22 +62,15 @@ export class ProfilePageComponent {
      this.selectedFile = event.target.files[0];
    }
  
-   // Function to upload the image
    uploadImage() {
-     // Check if a file has been selected
      if (this.selectedFile) {
-       // Read the file and convert it to base64
-       const fileReader = new FileReader();
-       fileReader.readAsDataURL(this.selectedFile);
-       fileReader.onload = () => {
-         // Get the base64 string
-         const base64String = fileReader.result as string;
-         const imageData = base64String.replace(/^data:image\/[a-z]+;base64,/, '');
-         const strippedBase64String = imageData.slice(0, -1);
+      const formData: FormData = new FormData();
+      formData.append('file', this.selectedFile);
 
-         // Do something with the base64 string, such as sending it to a server
-         this.requestService.addProfilePicture(strippedBase64String).subscribe((res) => {});
-       };
+      this.requestService.addProfilePicture(formData)
+      .subscribe(res => {
+        window.location.reload();
+      });
      }
    }
 
