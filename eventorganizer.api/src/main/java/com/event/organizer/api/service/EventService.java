@@ -111,7 +111,7 @@ public class EventService {
     
     public List<Event> findAllPending() {
         List<SearchCriteria> criterias = new ArrayList<>();
-        SearchCriteria notPending = new SearchCriteria("status", "=", Event.PENDING_STATUS);
+        SearchCriteria notPending = new SearchCriteria("status", "=", Event.NONE_STATUS);
         criterias.add(notPending);
         Search<Event> search = new Search<Event>(criterias);
         List<Event> allEvents = eventRepository.findAll(search.getSpecificationList());
@@ -156,11 +156,12 @@ public class EventService {
 
         AppUser creator = (AppUser) appUserService.loadUserByUsername(username);
         event.setCreator(creator);
+
         boolean isOrganizer = creator.getRoles().contains(AppUserRole.ORGANIZER);
         if (isOrganizer) {
             event.setStatus(Event.ACCEPTED_STATUS);
         } else {
-            event.setStatus(Event.PENDING_STATUS);
+            event.setStatus(Event.NONE_STATUS);
         }
         List<AppUser> appUsers = new ArrayList<>();
         appUsers.add(creator);
@@ -418,7 +419,6 @@ public class EventService {
     public List<Event> getHostingEvents(String username) {
         AppUser userModel = appUserService.findUserByEmail(username).get();
         List<Event> userEvents = userModel.getEvents();
-
         return userEvents;
     }
 

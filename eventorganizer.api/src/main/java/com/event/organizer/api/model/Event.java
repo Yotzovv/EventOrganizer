@@ -1,5 +1,9 @@
 package com.event.organizer.api.model;
 
+import com.event.organizer.api.appuser.AppUser;
+import lombok.*;
+
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -30,12 +34,12 @@ import lombok.Setter;
 @Table(name = "events")
 public class Event {
 
-    public static final String ACCEPTED_STATUS = "ACCEPTED";
-    public static final String NONE_STATUS = "NONE";
-    public static final String REJECTED_STATUS = "REJECTED";
-    public static final String PENDING_STATUS = "PENDING";
+    public static final String ACCEPTED_STATUS = "Accepted";
+    public static final String NONE_STATUS = "None";
+    public static final String REJECTED_STATUS = "Rejected";
+
     public static final Set<String> STATUSES =
-        new HashSet<>(Arrays.asList(NONE_STATUS, ACCEPTED_STATUS, REJECTED_STATUS, PENDING_STATUS));
+        new HashSet<>(Arrays.asList(NONE_STATUS, ACCEPTED_STATUS, REJECTED_STATUS));
 
     @Id
     @SequenceGenerator(
@@ -65,18 +69,20 @@ public class Event {
     @JoinColumn(name="event_id")
     private List<Comment> comments;
 
-    @ManyToMany(mappedBy = "events")
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "user_event",
+            joinColumns = @JoinColumn(name = "event_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<AppUser> appUsers;
 
-    @ManyToMany(mappedBy = "events")
-    @ElementCollection
+    @ManyToMany
     @CollectionTable(name = "event_interested", joinColumns = @JoinColumn(name = "event_id"))
     @Column(name = "event_interested")
     @JsonIgnoreProperties("usersInterested")
     private List<AppUser> usersInterested;
- 
-    @ManyToMany(mappedBy = "events")
-    @ElementCollection
+
+    @ManyToMany
     @CollectionTable(name = "event_goings", joinColumns = @JoinColumn(name = "event_id"))
     @Column(name = "event_going")
     @JsonIgnoreProperties("usersGoing")
