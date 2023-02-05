@@ -1,0 +1,15 @@
+com.event.organizer.api
+com.event.organizer.api.appuser
+com.event.organizer.api.appuser.password
+com.event.organizer.api.appuser.registration
+com.event.organizer.api.config
+com.event.organizer.api.controller
+com.event.organizer.api.data
+com.event.organizer.api.exception
+com.event.organizer.api.filter
+com.event.organizer.api.model
+com.event.organizer.api.model.dto
+com.event.organizer.api.repository
+com.event.organizer.api.search
+com.event.organizer.api.security.config
+com.event.organizer.api.service
