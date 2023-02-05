@@ -9,6 +9,7 @@ import com.event.organizer.api.model.Event;
 import com.event.organizer.api.model.Feedback;
 import com.event.organizer.api.model.Image;
 import com.event.organizer.api.repository.EventRepository;
+import com.event.organizer.api.repository.FeedbackRepository;
 import com.event.organizer.api.repository.ImageRepository;
 import com.event.organizer.api.search.BaseSpecification;
 import com.event.organizer.api.search.Search;
@@ -42,6 +43,7 @@ public class EventService {
 
     private final EventRepository eventRepository;
     private final ImageRepository imageRepository;
+    private final FeedbackRepository feedbackRepository;
 
     private final AppUserService appUserService;
 
@@ -261,8 +263,13 @@ public class EventService {
         feedbackModel.setRating(rating);
         feedbackModel.setComment(comment);
         feedbackModel.setOwnerUsername(username);
+        feedbackModel.setOwnerUsername(username);
+        feedbackModel.setCreatedDate(LocalDateTime.now());
+        feedbackModel.setEvent(event);
 
-        allFeedbacks.add(feedbackModel);
+        Feedback feedback = feedbackRepository.save(feedbackModel);
+
+        allFeedbacks.add(feedback);
         event.setFeedbacks(allFeedbacks);
 
         eventRepository.save(event);

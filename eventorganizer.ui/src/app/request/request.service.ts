@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../environment/environment';
 import { EventDto } from '../types/event.type';
+import { FeedbackDto } from '../types/feedback.dto';
 import { ListUser } from '../types/listUser.type';
 import { CreateUserDto, LoginUserDto } from '../types/user.type';
 
@@ -75,8 +76,7 @@ export class RequestService {
     }
 
     addEventImage(formData: FormData, eventId: number) {
-        return this.http.post(`${this.API_URL}/api/v1/events/${eventId}/addImage`, formData,
-        );
+        return this.http.post(`${this.API_URL}/api/v1/events/${eventId}/addImage`, formData);
     }
 
     registerUser$(body: CreateUserDto) {
@@ -160,6 +160,15 @@ export class RequestService {
               'Content-Type': 'application/json',
             },
           })          
+    }
+
+    addFeedback(body: FeedbackDto) {
+        return this.http.post(`${this.API_URL}/api/v1/events/addFeedback`, body, {
+            headers: {
+                'Content-Type': 'application/json',
+              },
+        }
+        );
     }
 
     addComment(eventId: number, comment: string): Observable<any> {

@@ -23,6 +23,7 @@ import {MatChipsModule} from '@angular/material/chips';
 import { EventGalleryComponent } from './event-gallery/event-gallery.component';
 import { BlockedUsersListComponent } from './blocked-users-list/blocked-users-list.component';
 import { OrganizerDashboardComponent } from './organizer-dashboard/blocked-users-list/organizer-dashboard.component';
+import { EventFeedbackComponent } from './event-feedback/event-feedback.component';
 
 @NgModule({
   imports:      [ 
@@ -45,6 +46,7 @@ import { OrganizerDashboardComponent } from './organizer-dashboard/blocked-users
   ProfilePageComponent, 
   AdminPageComponent,
   EventGalleryComponent,
+  EventFeedbackComponent,
   OrganizerDashboardComponent,
   BlockedUsersListComponent,
   SearchBar,

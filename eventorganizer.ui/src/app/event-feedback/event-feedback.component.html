@@ -1,0 +1,6 @@
+<div>
+    <ng-container *ngFor="let star of starRating.stars">
+        <mat-icon (click)="starClicked(star)">{{ star.filled ? 'star_rate' : 'star_outline' }}</mat-icon>
+    </ng-container>
+    <span>{{ avgRating }} / 5</span>
+</div>
