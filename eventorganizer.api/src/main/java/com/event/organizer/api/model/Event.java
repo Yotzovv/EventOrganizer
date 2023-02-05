@@ -68,11 +68,9 @@ public class Event {
     @ManyToMany(mappedBy = "events")
     private List<AppUser> appUsers;
 
-    @ManyToMany(mappedBy = "events")
-    @ElementCollection
+    @ManyToMany
     @CollectionTable(name = "event_interested", joinColumns = @JoinColumn(name = "event_id"))
     @Column(name = "event_interested")
-    @JsonIgnoreProperties("usersInterested")
     private List<AppUser> usersInterested;
  
     @ManyToMany(mappedBy = "events")
