@@ -1,6 +1,11 @@
-<div>
-    <ng-container *ngFor="let star of starRating.stars">
-        <mat-icon (click)="starClicked(star)">{{ star.filled ? 'star_rate' : 'star_outline' }}</mat-icon>
-    </ng-container>
-    <span>{{ avgRating }} / 5</span>
+<div class="feedback-container">
+    <div *ngFor="let star of starRating.stars">
+        <mat-icon *ngIf="star.filled" class="star-icon" color="primary" (click)="starClicked(star)">star.filled</mat-icon>
+        <mat-icon *ngIf="!star.filled" class="star-icon" (click)="starClicked(star)">star_outline</mat-icon>
+    </div>
+    <div style="padding-left: 10px" *ngIf="event?.feedbacks.length > 0">
+        <strong>{{ avgRating }} / 5</strong>
+        from <strong>{{ event?.feedbacks.length }}</strong> users 
+    </div>
+    <span style="padding-left: 10px" *ngIf="event?.feedbacks.length === 0">No ratings</span>
 </div>

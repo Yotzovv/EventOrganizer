@@ -10,6 +10,8 @@ import { EventDto } from "../types/event.type";
 import { ListUser } from "../types/listUser.type";
 import { Page } from "../types/page.type";
 import { ChangeDetectorRef } from '@angular/core';
+import { Feedback } from "../types/feedback.dto";
+import { StarRating } from "../types/star-rating.type";
 
 @Component({
     selector: 'event-details',
@@ -45,6 +47,10 @@ export class EventDetailsComponent {
             });
             this.event = event;
         });
+    }
+
+    getStars(f: Feedback) {
+        return new StarRating(f.rating).stars;
     }
 
     getCurrentUser$() {

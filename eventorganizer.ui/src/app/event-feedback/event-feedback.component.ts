@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { RequestService } from '../request/request.service';
 import { EventDto } from '../types/event.type';
 import { Feedback, FeedbackDto } from '../types/feedback.dto';
+import { ListUser } from '../types/listUser.type';
 import { Star, StarRating } from '../types/star-rating.type';
 import { EventFeedbackModalComponent } from './event-feedback-modal/event-feedback-modal.component';
 
@@ -16,7 +17,10 @@ export class EventFeedbackComponent implements OnChanges {
   @Input() event: EventDto;
   starRating: StarRating;
 
-  avgRating: number = 1;
+  @Input()
+  currentUser: ListUser;
+
+  avgRating: number = 0;
 
   constructor(
     public dialog: MatDialog,
@@ -30,8 +34,11 @@ export class EventFeedbackComponent implements OnChanges {
 
   calculateRating() {
     const ratingsCnt = this.event.feedbacks.length;
-    const ratingsSum = this.event.feedbacks.reduce((acc, current) => acc + current.rating, 0);
-    this.avgRating = Math.round(ratingsSum / ratingsCnt);
+    let ratingsSum = 0;
+    if (this.event.feedbacks.length > 0) {
+      ratingsSum = this.event.feedbacks.reduce((acc, current) => acc + current.rating, 0);
+      this.avgRating = Math.round(ratingsSum / ratingsCnt);
+    }
     this.starRating = new StarRating(this.avgRating);
   }
 
@@ -50,8 +57,12 @@ export class EventFeedbackComponent implements OnChanges {
           comment,
         }
         this.request.addFeedback(feedbackDto).subscribe(res => {
-          console.log(res);
-        })
+          this.event.feedbacks.push(<Feedback>{
+            ...feedbackDto,
+            ownerUsername: this.currentUser.username,
+          });
+          this.calculateRating();
+        });
       } else {
         // reset to default rating;
         this.calculateRating();

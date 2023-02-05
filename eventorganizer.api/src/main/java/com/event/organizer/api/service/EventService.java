@@ -263,7 +263,6 @@ public class EventService {
         feedbackModel.setRating(rating);
         feedbackModel.setComment(comment);
         feedbackModel.setOwnerUsername(username);
-        feedbackModel.setOwnerUsername(username);
         feedbackModel.setCreatedDate(LocalDateTime.now());
         feedbackModel.setEvent(event);
 

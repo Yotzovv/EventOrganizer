@@ -1,0 +1,10 @@
+.star-icon {
+    &:hover {
+        cursor: pointer;
+    };
+}
+
+.feedback-container {
+    display: flex;
+    align-items: center;
+}
