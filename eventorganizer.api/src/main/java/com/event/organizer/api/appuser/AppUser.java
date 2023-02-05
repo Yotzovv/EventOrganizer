@@ -68,21 +68,18 @@ public class AppUser implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "blocked_user_id"))
     private List<AppUser> blockedUsers;
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_event",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "event_id"))
-    @JsonIgnoreProperties("events")
+    @ManyToMany(mappedBy = "appUsers")
     private List<Event> events;
 
-    public AppUser(String name, String username, String email, String password, String location, Set<AppUserRole> roles) {
+    public AppUser(String name, String username, String email, String password, Set<AppUserRole> roles) {
         this.name = name;
         this.username = username;
         this.email = email;
         this.password = password;
-        this.location = location;
         this.roles = roles;
+    }
+
+    public <T> AppUser(String s1, String s2, String s3, String s4, String s5, Set<T> singleton) {
     }
 
     @Override
