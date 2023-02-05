@@ -43,7 +43,6 @@ export class EventDetailsComponent {
             event.images.sort(function(a, b) { 
                 return a.id - b.id;
             });
-            console.log(event.images)
             this.event = event;
         });
     }
@@ -53,11 +52,11 @@ export class EventDetailsComponent {
     }
     
     addComment() {
-        this.requestService.addComment(this.event.id, this.comment).subscribe((res) => { });
-        
-        this.requestService.getEventById$(this.event.id).subscribe((event: EventDto) => {
-            this.event = event;
-        });
+        this.requestService.addComment(this.event.id, this.comment).subscribe((res) => { 
+            // reset comment textarea after submitting
+            this.comment = '';
+         });
+        this.getEvent(this.event.id);
     }
 
     onFileSelected(event) {

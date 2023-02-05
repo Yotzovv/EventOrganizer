@@ -94,7 +94,9 @@
       <mat-form-field size="large" class="large-input">
         <input matInput placeholder="What are you thinking of?" [(ngModel)]="comment" />
       </mat-form-field>
-      <mat-button-toggle (click)="addComment()" style="width: 88%; margin-left: 5%; margin-bottom: 3%" value="right">Publish</mat-button-toggle>
+      <mat-card-actions>
+        <mat-button-toggle (click)="addComment()" style="width: 88%; margin-left: 5%; margin-bottom: 3%" value="right">Publish</mat-button-toggle>
+      </mat-card-actions>
     </mat-card>
     <div style="flex: 50%; margin: 10px;"></div>
   </div>
