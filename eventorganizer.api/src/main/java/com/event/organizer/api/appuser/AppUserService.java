@@ -37,7 +37,7 @@ public class AppUserService implements UserDetailsService {
 
     private final AppUserRoleService appUserRoleService;
 
-    public void editAccount(AppUser editedUser) throws UsernameNotFoundException {
+    public AppUser editAccount(AppUser editedUser) throws UsernameNotFoundException {
         if (editedUser == null) {
             throw new UsernameNotFoundException("User is not found.");
         }
@@ -48,7 +48,12 @@ public class AppUserService implements UserDetailsService {
         var currentUser = userRepository.findByEmail(editedUser.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MESSAGE, editedUser.getEmail())));
 
-        userRepository.save(currentUser);
+        currentUser.setEmail(editedUser.getEmail());
+        currentUser.setLocation(editedUser.getLocation());
+        currentUser.setName(editedUser.getName());
+        currentUser.setUsername(editedUser.getUsername());
+
+        return userRepository.save(editedUser);
     }
 
     @Override

@@ -82,12 +82,12 @@ public class Event {
     @JsonIgnoreProperties("usersGoing")
     private List<AppUser> usersGoing;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "event_images", joinColumns = @JoinColumn(name = "event_id"))
     @Column(name = "event_images")
     private List<Image> images;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "event_feedbacks", joinColumns = @JoinColumn(name = "event_id"))
     @Column(name = "event_feedbacks")
     private List<Feedback> feedbacks;

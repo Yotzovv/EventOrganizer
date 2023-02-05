@@ -13,7 +13,7 @@
                 <input type="file" (change)="onFileChange($event)" />
 
                 <!-- Button to trigger the image upload -->
-                <button (click)="uploadImage()">Upload Image</button>
+                <button type="button" (click)="uploadImage()">Upload Image</button>
             </div>
 
             <p>
@@ -64,12 +64,10 @@
                     <input type="password" autocomplete="false" matInput placeholder="Confirm password" formControlName="confirmPassword">
                 </mat-form-field>
             </p>
+
+            <button [disabled]="profileForm.invalid" class="button" type="submit" mat-raised-button color="primary">Save</button>
                 
             </form>
         </mat-card-content>
-    
-        <mat-card-actions>
-            <button [disabled]="profileForm.invalid" class="button" type="submit" mat-raised-button color="primary">Save</button>
-        </mat-card-actions>
     </mat-card>
 </div>

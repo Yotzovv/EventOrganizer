@@ -1,4 +1,4 @@
-<div class="event-details-container">
+<div class="event-details-container" *ngIf="!!event">
   <mat-card>
     <mat-card-header>
       <mat-card-subtitle>{{ event.startDate | date: 'dd MMM AT hh:mm'}}</mat-card-subtitle>
@@ -35,6 +35,7 @@
 
     <mat-card style="flex: 50%">
       <mat-card-content>
+        <event-feedback [currentUser]="currentUser" [event]="event"></event-feedback>
         <p class="flex-padding"><mat-icon>people</mat-icon> {{ event.interestedPeple }} people responded</p>
         <div class="flex-padding">
           <mat-icon>person</mat-icon>
@@ -57,6 +58,8 @@
         <p class="flex-padding">{{event.description}}</p>
       </mat-card-content>
     </mat-card>
+
+
   </div>
 
 
@@ -81,7 +84,29 @@
         </div>
       </mat-card-content>
     </mat-card>
-    <div style="flex: 50%; margin: 10px;"></div>
+    <mat-card style="flex: 50%">
+      <mat-card-header>
+        <mat-card-title>Feedback</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-card *ngFor="let f of event?.feedbacks">
+          <mat-card-header>
+            <mat-card-title>
+              <div class="feedback-container">
+                <ng-container *ngFor="let star of getStars(f)">
+                  <mat-icon *ngIf="star.filled" class="star-icon" color="primary">star.filled</mat-icon>
+                  <mat-icon *ngIf="!star.filled" class="star-icon">star_outline</mat-icon>
+                </ng-container>
+                <strong style="padding-left: 10px">{{ f.rating }} / 5</strong>
+              </div>
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <strong>{{f.ownerUsername}}: </strong>{{f.comment}}
+          </mat-card-content>
+        </mat-card>
+      </mat-card-content>
+    </mat-card>
   </div>
 
   <div style="display: flex;">
@@ -94,7 +119,9 @@
       <mat-form-field size="large" class="large-input">
         <input matInput placeholder="What are you thinking of?" [(ngModel)]="comment" />
       </mat-form-field>
-      <mat-button-toggle (click)="addComment()" style="width: 88%; margin-left: 5%; margin-bottom: 3%" value="right">Publish</mat-button-toggle>
+      <mat-card-actions>
+        <mat-button-toggle (click)="addComment()" style="width: 88%; margin-left: 5%; margin-bottom: 3%" value="right">Publish</mat-button-toggle>
+      </mat-card-actions>
     </mat-card>
     <div style="flex: 50%; margin: 10px;"></div>
   </div>

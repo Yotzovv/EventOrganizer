@@ -5,10 +5,10 @@
 
     <mat-card *ngFor="let event of eventPage?.content">
         <mat-card-header>
-            <button [hidden]="!event.isCurrentUserInterested" (click)="userIsNotInterested(event.id)" color="warn" mat-icon-button>
-                <mat-icon>favorite</mat-icon>
-            </button>
             <div>
+                <button [hidden]="!event.isCurrentUserInterested" (click)="userIsNotInterested(event.id)" color="warn" mat-icon-button>
+                    <mat-icon>favorite</mat-icon>
+                </button>
                 <button [hidden]="event.isCurrentUserInterested" (click)="userIsInterested(event.id)" color="warn" mat-icon-button>
                     <mat-icon>favorite_border</mat-icon>
                 </button>

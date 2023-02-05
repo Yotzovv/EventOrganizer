@@ -10,6 +10,8 @@ import { EventDto } from "../types/event.type";
 import { ListUser } from "../types/listUser.type";
 import { Page } from "../types/page.type";
 import { ChangeDetectorRef } from '@angular/core';
+import { Feedback } from "../types/feedback.dto";
+import { StarRating } from "../types/star-rating.type";
 
 @Component({
     selector: 'event-details',
@@ -37,15 +39,18 @@ export class EventDetailsComponent {
     getEvent(eventId: number) {
         this._requestService.getEventById$(eventId).subscribe((event: EventDto) => {
             event.images = event.images.map(i => {
-                i.url = 'data:image/jpg;base64,' + i.url;
+                i.url = 'data:image/png;base64' + i.url;
                 return i;
             });
             event.images.sort(function(a, b) { 
                 return a.id - b.id;
             });
-            console.log(event.images)
             this.event = event;
         });
+    }
+
+    getStars(f: Feedback) {
+        return new StarRating(f.rating).stars;
     }
 
     getCurrentUser$() {
@@ -53,18 +58,16 @@ export class EventDetailsComponent {
     }
     
     addComment() {
-        this.requestService.addComment(this.event.id, this.comment).subscribe((res) => { });
-        
-        this.requestService.getEventById$(this.event.id).subscribe((event: EventDto) => {
-            this.event = event;
-        });
+        this.requestService.addComment(this.event.id, this.comment).subscribe((res) => { 
+            // reset comment textarea after submitting
+            this.comment = '';
+         });
+        this.getEvent(this.event.id);
     }
 
     onFileSelected(event) {
         const formData: FormData = new FormData();
         formData.append('file', event.target.files[0]);
-
-        const fileToUpload: File = event.target.files[0];
 
         this.requestService.addEventImage(formData, this.event.id)
         .subscribe(res => {

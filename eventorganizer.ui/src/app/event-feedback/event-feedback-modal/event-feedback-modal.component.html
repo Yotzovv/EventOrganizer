@@ -1,0 +1,24 @@
+
+<form [formGroup]="feedbackForm" (ngSubmit)="submit()">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>Add rating</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <mat-form-field>
+                <textarea
+                    matInput
+                    formControlName="comment"
+                    placeholder="Comment"
+                    matTextareaAutosize
+                    matAutosizeMinRows="3"
+                    matAutosizeMaxRows="5"
+              ></textarea>
+            </mat-form-field>
+        </mat-card-content>
+        <mat-card-actions>
+            <button type="submit" mat-raised-button color="primary">Submit</button>
+            <button type="button" mat-raised-button (click)="close()">Cancel</button>
+        </mat-card-actions>
+    </mat-card>
+</form>

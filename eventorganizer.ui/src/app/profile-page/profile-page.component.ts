@@ -23,6 +23,11 @@ export class ProfilePageComponent {
   constructor(requestService: RequestService) {
     this.requestService = requestService;
 
+    this.getCurrentUser();
+  }
+
+
+  getCurrentUser() {
     this.requestService.getCurrentLoggedInUser().subscribe(res => {
       this.username.setValue(res.username);
       this.email.setValue(res.email);
@@ -30,17 +35,18 @@ export class ProfilePageComponent {
       this.location.setValue(res.location);
     })
   }
+
   // TODO: fix
   profileForm: FormGroup = new FormGroup({
     username: this.username,
     email: this.email,
     firstName: this.name,
     location: this.location,
-    password: new FormControl('qwerty123', [
+    password: new FormControl(null, [
       // Validators.required,
       // this.checkPassword,
     ]),
-    confirmPassword: new FormControl('qwerty123', [
+    confirmPassword: new FormControl(null, [
       // Validators.required,
       // this.checkPassword,
     ]),
@@ -56,26 +62,33 @@ export class ProfilePageComponent {
      this.selectedFile = event.target.files[0];
    }
  
-   // Function to upload the image
    uploadImage() {
-     // Check if a file has been selected
      if (this.selectedFile) {
-       // Read the file and convert it to base64
-       const fileReader = new FileReader();
-       fileReader.readAsDataURL(this.selectedFile);
-       fileReader.onload = () => {
-         // Get the base64 string
-         const base64String = fileReader.result as string;
-         const imageData = base64String.replace(/^data:image\/[a-z]+;base64,/, '');
-         const strippedBase64String = imageData.slice(0, -1);
+      const formData: FormData = new FormData();
+      formData.append('file', this.selectedFile);
 
-         // Do something with the base64 string, such as sending it to a server
-         this.requestService.addProfilePicture(strippedBase64String).subscribe((res) => {});
-       };
+      this.requestService.addProfilePicture(formData)
+      .subscribe(res => {
+        window.location.reload();
+      });
      }
    }
 
   onSubmit() {
-
+    if (this.profileForm.valid) {
+      const userDto = this.profileForm.value;
+      Object.keys(userDto).forEach(k => {
+        if (!userDto[k]) {
+          delete userDto[k];
+        }
+      });
+      this.requestService.editAccount(userDto).subscribe(res => {
+        console.log('Update user res: ');
+        console.log(res);
+      });
+    } else {
+      console.log('Form invalid ');
+      console.log(this.profileForm);
+    }
   }
 }

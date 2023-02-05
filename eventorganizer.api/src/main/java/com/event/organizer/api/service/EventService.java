@@ -9,6 +9,7 @@ import com.event.organizer.api.model.Event;
 import com.event.organizer.api.model.Feedback;
 import com.event.organizer.api.model.Image;
 import com.event.organizer.api.repository.EventRepository;
+import com.event.organizer.api.repository.FeedbackRepository;
 import com.event.organizer.api.repository.ImageRepository;
 import com.event.organizer.api.search.BaseSpecification;
 import com.event.organizer.api.search.Search;
@@ -42,6 +43,7 @@ public class EventService {
 
     private final EventRepository eventRepository;
     private final ImageRepository imageRepository;
+    private final FeedbackRepository feedbackRepository;
 
     private final AppUserService appUserService;
 
@@ -169,13 +171,19 @@ public class EventService {
         return eventRepository.save(event);
     }
 
-    public Event updateEvent(Event event, String username) throws EventOrganizerException {
-        if (!eventRepository.existsById(event.getId())) {
+    public Event updateEvent(Event eventDto, String username) throws EventOrganizerException {
+        if (!eventRepository.existsById(eventDto.getId())) {
             throw new EventOrganizerException("Event does not exist");
         }
         AppUser creator = (AppUser) appUserService.loadUserByUsername(username);
+        Event event = getEventById(eventDto.getId(), username);
 
         event.setCreator(creator);
+        event.setDescription(eventDto.getDescription());
+        event.setStartDate(eventDto.getStartDate());
+        event.setEndDate(eventDto.getEndDate());
+        event.setLocation(eventDto.getLocation());
+        event.setName(eventDto.getName());
 
         return eventRepository.save(event);
     }
@@ -255,8 +263,12 @@ public class EventService {
         feedbackModel.setRating(rating);
         feedbackModel.setComment(comment);
         feedbackModel.setOwnerUsername(username);
+        feedbackModel.setCreatedDate(LocalDateTime.now());
+        feedbackModel.setEvent(event);
 
-        allFeedbacks.add(feedbackModel);
+        Feedback feedback = feedbackRepository.save(feedbackModel);
+
+        allFeedbacks.add(feedback);
         event.setFeedbacks(allFeedbacks);
 
         eventRepository.save(event);

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../environment/environment';
 import { EventDto } from '../types/event.type';
+import { FeedbackDto } from '../types/feedback.dto';
 import { ListUser } from '../types/listUser.type';
 import { CreateUserDto, LoginUserDto } from '../types/user.type';
 
@@ -75,14 +76,19 @@ export class RequestService {
     }
 
     addEventImage(formData: FormData, eventId: number) {
-        return this.http.post(`${this.API_URL}/api/v1/events/${eventId}/addImage`, formData,
-        );
+        return this.http.post(`${this.API_URL}/api/v1/events/${eventId}/addImage`, formData);
     }
 
     registerUser$(body: CreateUserDto) {
         return this.http.request('POST', `${this.API_URL}/api/v1/registration`, {
             body,
             responseType: 'text'
+        })
+    }
+
+    editAccount(body: CreateUserDto) {
+        return this.http.post(`${this.API_URL}/api/v1/account/editAccount`, {
+            body,
         })
     }
 
@@ -156,6 +162,15 @@ export class RequestService {
           })          
     }
 
+    addFeedback(body: FeedbackDto) {
+        return this.http.post(`${this.API_URL}/api/v1/events/addFeedback`, body, {
+            headers: {
+                'Content-Type': 'application/json',
+              },
+        }
+        );
+    }
+
     addComment(eventId: number, comment: string): Observable<any> {
         return this.http.post(`${this.API_URL}/api/v1/events/addComment`, {comment, eventId}, {
             headers: {
@@ -212,12 +227,8 @@ export class RequestService {
         });
     }
 
-    addProfilePicture(imageBase64: string) {
-        return this.http.put(`${this.API_URL}/api/v1/account/addProfilePicture`, JSON.stringify(imageBase64), {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-        });
+    addProfilePicture(formData: FormData) {
+        return this.http.post(`${this.API_URL}/api/v1/account/addProfilePicture`, formData);
     }
 
 

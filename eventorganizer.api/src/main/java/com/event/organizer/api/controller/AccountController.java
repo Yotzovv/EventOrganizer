@@ -7,7 +7,9 @@ import com.event.organizer.api.model.dto.AccountStatusRequestDto;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 
@@ -18,8 +20,9 @@ import java.util.List;
 public class AccountController {
 
     private final AppUserService userService;
-
-    public void editAccount(AppUser account) {
+    
+    @PostMapping("/editAccount")
+    public void editAccount(@RequestBody AppUser account) {
         userService.editAccount(account);
     }
 
@@ -56,8 +59,15 @@ public class AccountController {
         return userService.changeAccountStatus(user.getName(), accountStatusRequestDto);
     }
 
-    @PutMapping("/addProfilePicture")
-    public void uploadProfilePicture(@RequestBody String profilePictureUrl, Principal user) {
+    @PostMapping("/addProfilePicture")
+    public void uploadProfilePicture(@RequestParam MultipartFile file, Principal user) {
         // userService.uploadProfilePicture(profilePictureUrl, user.getName());
+        try {
+            byte[] imageByteArray = file.getBytes();
+            userService.uploadProfilePicture(imageByteArray, user.getName());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
 }

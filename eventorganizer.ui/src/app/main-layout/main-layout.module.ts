@@ -9,6 +9,7 @@ import { ConfirmationDialogComponent } from "../confirmation-dialog/confirmation
 import { ImagePreviewDialogComponent } from "../event-gallery/image-preview-dialog/image-preview-dialog.component";
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { EventFeedbackModalComponent } from "../event-feedback/event-feedback-modal/event-feedback-modal.component";
 
 @NgModule({
     imports: [
@@ -28,6 +29,7 @@ import { MatInputModule } from '@angular/material/input';
         DialogAnimationsExampleDialog,
         ConfirmationDialogComponent,
         ImagePreviewDialogComponent,
+        EventFeedbackModalComponent,
     ],
 })
 export class MainLayoutModule {
