@@ -7,6 +7,7 @@ import com.event.organizer.api.appuser.UserRepository;
 import com.event.organizer.api.exception.EventOrganizerException;
 import com.event.organizer.api.model.*;
 import com.event.organizer.api.repository.EventRepository;
+import com.event.organizer.api.repository.FeedbackRepository;
 import com.event.organizer.api.repository.ImageRepository;
 import com.event.organizer.api.service.EventService;
 import org.junit.Assert;
@@ -58,9 +59,9 @@ class EventsTests {
 		when(eventRepository.existsById(event.getId())).thenReturn(true);
 
 		ImageRepository imageRepository = mock(ImageRepository.class);
+		FeedbackRepository feedbackRepository = mock(FeedbackRepository.class);
 
-		// Create an EventOrganizer instance and call the addComment method
-		EventService eventService = new EventService(eventRepository, imageRepository ,appUserService);
+		EventService eventService = new EventService(eventRepository, imageRepository ,feedbackRepository, appUserService);
 		when(eventRepository.findById(event.getId())).thenReturn(Optional.of(event));
 
 		eventService.addComment("This is a comment", event.getId(), "admin");
@@ -84,8 +85,9 @@ class EventsTests {
 
 		// Create an EventOrganizer instance and call the addComment method
 		ImageRepository imageRepository = mock(ImageRepository.class);
+		FeedbackRepository feedbackRepository = mock(FeedbackRepository.class);
 
-		EventService eventService = new EventService(eventRepository, imageRepository ,appUserService);
+		EventService eventService = new EventService(eventRepository, imageRepository ,feedbackRepository, appUserService);
 
 		// Verify that an EventOrganizerException is thrown when the event does not
 		// exist
@@ -133,9 +135,10 @@ class EventsTests {
 
 		// Create an EventOrganizer instance and call the addImage method
 		ImageRepository imageRepository = mock(ImageRepository.class);
+		
+		FeedbackRepository feedbackRepository = mock(FeedbackRepository.class);
 
-		// Create an EventOrganizer instance and call the addComment method
-		EventService eventService = new EventService(eventRepository, imageRepository ,appUserService);
+		EventService eventService = new EventService(eventRepository, imageRepository ,feedbackRepository, appUserService);
 
 		// Verify that an EventOrganizerException is thrown when the event does not
 		// exist
@@ -158,8 +161,9 @@ class EventsTests {
 
 		when(eventRepository.existsById(event.getId())).thenReturn(true);
 
-		// Create an EventOrganizer instance and call the addFeedback method
-		EventService eventService = new EventService(eventRepository, imageRepository ,appUserService);
+		FeedbackRepository feedbackRepository = mock(FeedbackRepository.class);
+
+		EventService eventService = new EventService(eventRepository, imageRepository ,feedbackRepository, appUserService);
 		when(eventRepository.findById(event.getId())).thenReturn(Optional.of(event));
 
 		eventService.addFeedback(1, "feedbackComment", event.getId(), "admin");
@@ -208,8 +212,9 @@ class EventsTests {
 
 		ImageRepository imageRepository = mock(ImageRepository.class);
 
-		// Create an EventOrganizer instance and call the addComment method
-		EventService eventService = new EventService(eventRepository, imageRepository ,appUserService);
+		FeedbackRepository feedbackRepository = mock(FeedbackRepository.class);
+
+		EventService eventService = new EventService(eventRepository, imageRepository ,feedbackRepository, appUserService);
 		when(eventRepository.findById(event.getId())).thenReturn(Optional.of(event));
 		when(appUserService.findUserByEmail(appUser.getUsername())).thenReturn(Optional.of(appUser));
 
@@ -239,8 +244,9 @@ class EventsTests {
 
 		ImageRepository imageRepository = mock(ImageRepository.class);
 
-		// Create an EventOrganizer instance and call the addComment method
-		EventService eventService = new EventService(eventRepository, imageRepository ,appUserService);
+		FeedbackRepository feedbackRepository = mock(FeedbackRepository.class);
+
+		EventService eventService = new EventService(eventRepository, imageRepository ,feedbackRepository, appUserService);
 		when(eventRepository.findById(event.getId())).thenReturn(Optional.of(event));
 		when(appUserService.findUserByEmail(appUser.getUsername())).thenReturn(Optional.of(appUser));
 
@@ -268,8 +274,9 @@ class EventsTests {
 
 		ImageRepository imageRepository = mock(ImageRepository.class);
 
-		// Create an EventOrganizer instance and call the addComment method
-		EventService eventService = new EventService(eventRepository, imageRepository ,appUserService);
+		FeedbackRepository feedbackRepository = mock(FeedbackRepository.class);
+
+		EventService eventService = new EventService(eventRepository, imageRepository ,feedbackRepository, appUserService);
 
 		// Verify that an EventOrganizerException is thrown when the event does not
 		// exist
@@ -303,8 +310,9 @@ class EventsTests {
 		EventRepository mockedEventRepository = mock(EventRepository.class);
 		when(mockedEventRepository.findAll()).thenReturn(dummyEventsList());
 
-		// Create an EventOrganizer instance and call the addComment method
-		EventService eventService = new EventService(mockedEventRepository, imageRepository, userService);
+		FeedbackRepository feedbackRepository = mock(FeedbackRepository.class);
+
+		EventService eventService = new EventService(mockedEventRepository, imageRepository ,feedbackRepository, userService);
 
 		List<Event> currentUserEventFeed = eventService.findAll(currentUser.getEmail());
 
@@ -336,8 +344,9 @@ class EventsTests {
 		EventRepository mockedEventRepository = mock(EventRepository.class);
 		when(mockedEventRepository.findById(1L)).thenReturn(Optional.of(dummyEventWithComments()));
 
-		// Create an EventOrganizer instance and call the addComment method
-		EventService eventService = new EventService(mockedEventRepository, imageRepository ,userService);
+		FeedbackRepository feedbackRepository = mock(FeedbackRepository.class);
+
+		EventService eventService = new EventService(mockedEventRepository, imageRepository ,feedbackRepository, userService);
 
 		Event currentUserEventFeed = eventService.getEventById(1, currentUser.getEmail());
 
@@ -613,7 +622,9 @@ class EventsTests {
 		EventRepository eventRepository = mock(EventRepository.class);
 		AppUserService appUserService = mock(AppUserService.class);
 		ImageRepository imageRepository = mock(ImageRepository.class);
-		EventService eventService = new EventService(eventRepository, imageRepository, appUserService);
+		FeedbackRepository feedbackRepository = mock(FeedbackRepository.class);
+
+		EventService eventService = new EventService(eventRepository, imageRepository, feedbackRepository, appUserService);
 		
 		Long nonExistentEventId = 12345L;
 
@@ -629,7 +640,9 @@ class EventsTests {
 		EventRepository eventRepository = mock(EventRepository.class);
 		AppUserService appUserService = mock(AppUserService.class);
 		ImageRepository imageRepository = mock(ImageRepository.class);
-		EventService eventService = new EventService(eventRepository, imageRepository, appUserService);
+		FeedbackRepository feedbackRepository = mock(FeedbackRepository.class);
+
+		EventService eventService = new EventService(eventRepository, imageRepository, feedbackRepository, appUserService);
 
 		Event event = new Event();
 		event.setUsersInterested(null);
@@ -646,7 +659,9 @@ class EventsTests {
 		EventRepository eventRepository = mock(EventRepository.class);
 		AppUserService appUserService = mock(AppUserService.class);
 		ImageRepository imageRepository = mock(ImageRepository.class);
-		EventService eventService = new EventService(eventRepository, imageRepository, appUserService);
+		FeedbackRepository feedbackRepository = mock(FeedbackRepository.class);
+
+		EventService eventService = new EventService(eventRepository, imageRepository, feedbackRepository, appUserService);
 		
 		Event event = new Event();
 		event.setId(1l);
@@ -676,7 +691,9 @@ class EventsTests {
 		EventRepository eventRepository = mock(EventRepository.class);
 		AppUserService appUserService = mock(AppUserService.class);
 		ImageRepository imageRepository = mock(ImageRepository.class);
-		EventService eventService = new EventService(eventRepository, imageRepository, appUserService);
+		FeedbackRepository feedbackRepository = mock(FeedbackRepository.class);
+
+		EventService eventService = new EventService(eventRepository, imageRepository, feedbackRepository, appUserService);
 	
 		Long nonExistentEventId = 12345L;
 
@@ -693,7 +710,9 @@ class EventsTests {
 		EventRepository eventRepository = mock(EventRepository.class);
 		AppUserService appUserService = mock(AppUserService.class);
 		ImageRepository imageRepository = mock(ImageRepository.class);
-		EventService eventService = new EventService(eventRepository, imageRepository, appUserService);
+		FeedbackRepository feedbackRepository = mock(FeedbackRepository.class);
+
+		EventService eventService = new EventService(eventRepository, imageRepository, feedbackRepository, appUserService);
 
 		eventRepository.save(event);
 		
@@ -708,7 +727,9 @@ class EventsTests {
 		AppUserService appUserService = mock(AppUserService.class);
 
 		ImageRepository imageRepository = mock(ImageRepository.class);
-		EventService eventService = new EventService(eventRepository, imageRepository, appUserService);
+		FeedbackRepository feedbackRepository = mock(FeedbackRepository.class);
+
+		EventService eventService = new EventService(eventRepository, imageRepository, feedbackRepository, appUserService);
 
 		AppUser appUser = new AppUser();
 		appUser.setEmail("testuser@example.com");
