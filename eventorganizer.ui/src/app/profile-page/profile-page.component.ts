@@ -36,11 +36,11 @@ export class ProfilePageComponent {
     email: this.email,
     firstName: this.name,
     location: this.location,
-    password: new FormControl('qwerty123', [
+    password: new FormControl(null, [
       // Validators.required,
       // this.checkPassword,
     ]),
-    confirmPassword: new FormControl('qwerty123', [
+    confirmPassword: new FormControl(null, [
       // Validators.required,
       // this.checkPassword,
     ]),
@@ -76,6 +76,20 @@ export class ProfilePageComponent {
    }
 
   onSubmit() {
-
+    if (this.profileForm.valid) {
+      const userDto = this.profileForm.value;
+      Object.keys(userDto).forEach(k => {
+        if (!userDto[k]) {
+          delete userDto[k];
+        }
+      });
+      this.requestService.editAccount(userDto).subscribe(res => {
+        console.log('Update user res: ');
+        console.log(res);
+      });
+    } else {
+      console.log('Form invalid ');
+      console.log(this.profileForm);
+    }
   }
 }

@@ -178,7 +178,7 @@ public class EventService {
 
         event.setCreator(creator);
         event.setDescription(eventDto.getDescription());
-        event.setStartDate(eventDto.getStartDate());;
+        event.setStartDate(eventDto.getStartDate());
         event.setEndDate(eventDto.getEndDate());
         event.setLocation(eventDto.getLocation());
         event.setName(eventDto.getName());

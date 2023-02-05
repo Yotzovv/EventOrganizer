@@ -86,6 +86,12 @@ export class RequestService {
         })
     }
 
+    editAccount(body: CreateUserDto) {
+        return this.http.post(`${this.API_URL}/api/v1/account/editAccount`, {
+            body,
+        })
+    }
+
     getCurrentLoggedInUser(): any {
         return this.http.get(`${this.API_URL}/api/v1/account/me`);
     }

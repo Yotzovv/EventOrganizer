@@ -18,8 +18,9 @@ import java.util.List;
 public class AccountController {
 
     private final AppUserService userService;
-
-    public void editAccount(AppUser account) {
+    
+    @PostMapping("/editAccount")
+    public void editAccount(@RequestBody AppUser account) {
         userService.editAccount(account);
     }
 
