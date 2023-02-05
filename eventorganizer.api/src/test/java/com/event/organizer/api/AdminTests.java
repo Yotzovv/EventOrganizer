@@ -65,8 +65,8 @@ public class AdminTests {
 
         UserNotAdminException thrown = Assertions.assertThrows(UserNotAdminException.class, () -> adminService.changeAccountRole(
                 user.getEmail(),
-                editedUser.getEmail(),
-                new AppUserRole(AppUserRole.CLIENT)
+                emailOfEditedUser,
+                appUserRole
         ));
         
         Assertions.assertTrue(thrown.getMessage().contentEquals("User is not an admin."));

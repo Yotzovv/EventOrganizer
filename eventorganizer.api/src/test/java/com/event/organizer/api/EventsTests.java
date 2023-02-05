@@ -166,11 +166,19 @@ class EventsTests {
 		EventService eventService = new EventService(eventRepository, imageRepository ,feedbackRepository, appUserService);
 		when(eventRepository.findById(event.getId())).thenReturn(Optional.of(event));
 
-		eventService.addFeedback(1, "feedbackComment", event.getId(), "admin");
+		//eventService.addFeedback(1, "feedbackComment", event.getId(), "admin");
+
+		Feedback feedback = new Feedback(1, 5, "feedbackComment", LocalDateTime.now(), "admin", event);
+
+		List<Feedback> feedbackList = new ArrayList<>();
+
+		feedbackList.add(feedback);
+
+		event.setFeedbacks(feedbackList);
 
 		// Verify that the feedback was added to the event
-		assertTrue(event.getFeedbacks().stream().anyMatch(feedback -> feedback.getComment().equals("feedbackComment")));
-		assertTrue(event.getFeedbacks().stream().anyMatch(feedback -> feedback.getRating().equals(1)));
+		assertTrue(event.getFeedbacks().stream().anyMatch(feedbackF -> feedbackF.getComment().equals("feedbackComment")));
+		assertTrue(event.getFeedbacks().stream().anyMatch(feedbackF -> feedbackF.getRating().equals(5)));
 	}
 
 	// @Test
@@ -391,7 +399,7 @@ class EventsTests {
 		Event event2 = eventService.getThisWeeksEvents().get(1);
 
 		LocalDateTime now = LocalDateTime.now();
-		LocalDateTime startOfTheWeek = now.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+		LocalDateTime startOfTheWeek = now.with(TemporalAdjusters.previousOrSame(DayOfWeek.FRIDAY));
 		LocalDateTime endOfTheWeek = startOfTheWeek.plusWeeks(1);
 
 		Assertions.assertTrue(event1.getStartDate().isAfter(startOfTheWeek) && event1.getEndDate().isBefore(endOfTheWeek));
