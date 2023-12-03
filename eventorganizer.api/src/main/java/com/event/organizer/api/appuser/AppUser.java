@@ -69,6 +69,7 @@ public class AppUser implements UserDetails {
     private List<AppUser> blockedUsers;
 
     @ManyToMany(mappedBy = "appUsers")
+    @JsonIgnore
     private List<Event> events;
 
     public AppUser(String name, String username, String email, String password, String location, Set<AppUserRole> roles) {
